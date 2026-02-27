@@ -37,9 +37,16 @@
                 </div>
             </div>
 
-            <div class="header-right">
-                <div class="glass-card compact" style="padding: 10px 20px;">
-                    <span class="mini-label" style="margin-bottom: 2px;">Tổng Doanh Thu</span>
+            <div class="header-right" style="display:flex; gap:15px;">
+                <div class="glass-card compact"
+                    style="padding: 10px 20px; border-color: var(--warning); background: rgba(230, 81, 0, 0.05);">
+                    <span class="mini-label" style="margin-bottom: 2px; color: var(--warning); font-weight: 800;">Mục
+                        Tiêu Tháng</span>
+                    <span id="monthlyGoal" style="font-size: 1.25rem; font-weight: 800; color: var(--warning);">0
+                        đ</span>
+                </div>
+                <div class="glass-card compact" style="padding: 10px 20px; border-color: var(--primary);">
+                    <span class="mini-label" style="margin-bottom: 2px;">Thực Đạt</span>
                     <span id="overallRevenue" style="font-size: 1.25rem; font-weight: 800; color: var(--primary);">0
                         đ</span>
                 </div>

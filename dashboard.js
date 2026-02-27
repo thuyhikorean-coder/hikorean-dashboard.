@@ -233,6 +233,9 @@ function initDashboard() {
     const revEl = document.getElementById('overallRevenue');
     if (revEl) revEl.textContent = formatCurrency(d.summary.totalRevenue);
 
+    const goalEl = document.getElementById('monthlyGoal');
+    if (goalEl) goalEl.textContent = formatCurrency(d.summary.revenueGoal);
+
     const updateEl = document.getElementById('lastUpdate');
     if (updateEl) updateEl.textContent = `Sync: ${new Date().toLocaleTimeString('vi-VN')}`;
 
