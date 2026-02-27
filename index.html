@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HIKOREAN 2026 - BSC & OKR Dashboard</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Boxicons (Icons) -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- Chart.js (Charts) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo-area">
+                    <div class="logo-icon"><i class='bx bxs-dashboard'></i></div>
+                    <h1>HIKOREAN DASHBOARD</h1>
+                </div>
+                <div class="subtitle">
+                    <i class='bx bx-check-circle'></i> <span id="lastUpdate">V1.2 Loading...</span>
+                    <span class="divider">|</span>
+                    <i class='bx bxs-calendar-event'></i> <span>Tháng 02/2026</span>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="glass-card compact" style="padding: 10px 20px;">
+                    <span class="mini-label" style="margin-bottom: 2px;">Tổng Doanh Thu</span>
+                    <span id="overallRevenue" style="font-size: 1.25rem; font-weight: 800; color: var(--primary);">0
+                        đ</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Viewport -->
+        <div class="dashboard-viewport">
+            <!-- Command Center Layout -->
+            <main class="command-center">
+                <!-- Strategic Overview Section -->
+                <section class="ops-grid-top">
+                    <div class="card-okr">
+                        <div class="glass-card">
+                            <h3 class="card-title"><i class='bx bx-target-lock'></i> Mục tiêu OKR Hikorean</h3>
+                            <div id="okr-list">
+                                <!-- Filled by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-bsc">
+                        <div class="glass-card">
+                            <h3 class="card-title"><i class='bx bx-grid-alt'></i> BSC Scorecard</h3>
+                            <div class="table-wrapper">
+                                <table class="compact-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Khía cạnh / KPI</th>
+                                            <th>Thực đạt</th>
+                                            <th>Mục tiêu</th>
+                                            <th>Trạng thái</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="summary-metrics">
+                                        <!-- Filled by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Middle Section: Performance Visualization -->
+                <section class="ops-grid-mid">
+                    <div class="card-chart-large">
+                        <div class="glass-card">
+                            <h3 class="card-title"><i class='bx bx-line-chart'></i> Timeline Doanh thu</h3>
+                            <div class="chart-container-ops">
+                                <canvas id="revenueTrendChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-funnel">
+                        <div class="glass-card">
+                            <h3 class="card-title"><i class='bx bx-filter-alt'></i> Phễu Data & Leads</h3>
+                            <div id="funnel-container" class="funnel-modern">
+                                <!-- Filled by JS -->
+                            </div>
+                            <div class="mini-meta" style="margin-top: 15px; display: flex; gap: 10px;">
+                                <div class="mini-chip">Upsale: <span id="upsellPotential">0</span></div>
+                                <div class="mini-chip">Refund/Rủi ro: <span id="refundRate">0%</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Bottom Section: Operational Tracking -->
+                <section class="ops-grid-bottom">
+                    <!-- Column 1: Sale Performance Detail -->
+                    <div class="card-sub">
+                        <div class="glass-card">
+                            <h3 class="card-title"><i class='bx bxs-user-check'></i> Hiệu suất Sale</h3>
+                            <div class="table-wrapper">
+                                <table class="compact-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Tên Sale</th>
+                                            <th>Doanh thu</th>
+                                            <th>Combo %</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="sales-detail-list"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Sale Engagement -->
+                    <div class="card-sub">
+                        <div class="glass-card">
+                            <h3 class="card-title"><i class='bx bx-message-dots'></i> Tracking Sale</h3>
+                            <div class="table-wrapper">
+                                <table class="compact-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Sale</th>
+                                            <th>Khách Cũ</th>
+                                            <th>Lead Sâu</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="sales-engagement-list"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 3: Class Outcomes -->
+                    <div class="card-sub">
+                        <div class="glass-card">
+                            <h3 class="card-title"><i class='bx bx-check-circle'></i> Lớp Kết Khóa</h3>
+                            <div class="table-wrapper">
+                                <table class="compact-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã Lớp</th>
+                                            <th>Sĩ Số</th>
+                                            <th>Điểm ra</th>
+                                            <th>C.Cần</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="compliance-table"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 4: Course Pie & Upsell -->
+                    <div class="card-sub">
+                        <div class="glass-card">
+                            <h3 class="card-title"><i class='bx bx-pie-chart-alt'></i> Tỉ trọng SP</h3>
+                            <div class="chart-container-mini" style="height:150px">
+                                <canvas id="courseRevenueChart"></canvas>
+                            </div>
+                            <div id="course-list" style="margin-top: 10px;"></div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- Connection Guide -->
+        <div class="connect-hint" id="openSyncDocs">
+            <i class='bx bx-link-external'></i> Click vào đây để xem hướng dẫn kết nối Real-time với Google Sheets của
+            bạn
+        </div>
+    </div>
+
+    <!-- Modal Connection Simulation -->
+    <div id="syncModal"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; backdrop-filter: blur(5px); justify-content:center; align-items:center;">
+        <div class="glass-card" style="max-width: 600px; width: 90%; border-color: var(--primary);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 2rem;">
+                <h2>Kết nối Dữ liệu Real-time</h2>
+                <button id="closeModal"
+                    style="background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer;">&times;</button>
+            </div>
+            <div style="line-height: 1.6;">
+                <p>Để dashboard này tự động cập nhật từ các file bạn đã gửi, hãy làm theo các bước:</p>
+                <ol style="margin: 1.5rem 0; padding-left: 1.5rem; color: var(--text-main);">
+                    <li style="margin-bottom: 0.8rem;">Mở Google Sheets, vào <b>Tệp (File) > Chia sẻ > Xuất bản lên
+                            web</b>.</li>
+                    <li style="margin-bottom: 0.8rem;">Chọn <b>Toàn bộ tài liệu</b> và định dạng là <b>Dấu phẩy
+                            (CSV)</b>.</li>
+                    <li style="margin-bottom: 0.8rem;">Copy link nhận được vào phần cài đặt (Config) của App này.</li>
+                    <li style="margin-bottom: 0.8rem;">Dashboard sẽ tự động cập nhật mỗi khi bạn tải lại trang.</li>
+                </ol>
+                <button id="btnConfirmSync" class="tab-btn active"
+                    style="width:100%; margin-top: 1.5rem; justify-content:center;">Xác nhận & Đồng bộ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts with Cache Busting -->
+    <script src="data.js?v=1.2"></script>
+    <script src="dashboard.js?v=1.2"></script>
+
+</body>
+
+</html>
