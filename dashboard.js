@@ -71,6 +71,8 @@ function processAllData(data) {
     if (!window.DASHBOARD_DATA) window.DASHBOARD_DATA = {};
     const d = DASHBOARD_DATA;
     if (!d.summary) d.summary = {};
+    if (!d.summary.revenueGoal || d.summary.revenueGoal === 0) d.summary.revenueGoal = 285160000;
+    if (!d.summary.mktTarget) d.summary.mktTarget = 12;
     if (!d.financial) d.financial = {};
     if (!d.customer) d.customer = {};
     if (!d.process) d.process = {};

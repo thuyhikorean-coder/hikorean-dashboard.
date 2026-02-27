@@ -1,4 +1,4 @@
-const DASHBOARD_DATA = {
+window.DASHBOARD_DATA = {
     updateDate: "Đang cập nhật...",
     month: "Tháng 2, 2026",
 
