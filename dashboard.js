@@ -8,9 +8,22 @@ const CONFIG = {
     SOCIAL_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSO-aSIrwtMiGFGMpxSqRhIFo7PMA9Uebo7FBxY1rhm_jbUi2cY4Kz3XTXbwVfi7Q/pub?gid=578202755&single=true&output=csv'
 };
 
+let CURRENT_RAW_DATA = null;
+
 document.addEventListener('DOMContentLoaded', () => {
     console.clear();
-    console.log("HIKOREAN DASHBOARD V1.2 starting...");
+    console.log("HIKOREAN DASHBOARD starting...");
+
+    const selector = document.getElementById('monthSelector');
+    if (selector) {
+        selector.addEventListener('change', () => {
+            if (CURRENT_RAW_DATA) {
+                processAllData(CURRENT_RAW_DATA);
+                initDashboard();
+            }
+        });
+    }
+
     fetchRealTimeData();
 });
 
@@ -31,6 +44,7 @@ async function fetchRealTimeData() {
 
     await Promise.all(fetchPromises);
     console.log("All sync promises finished.");
+    CURRENT_RAW_DATA = data;
 
     try {
         processAllData(data);
@@ -68,8 +82,10 @@ function parseCSV(csvText) {
 
 function isFromTargetMonth(dateStr) {
     if (!dateStr) return false;
-    const m = "03";
-    const y = "2026";
+    const selector = document.getElementById('monthSelector');
+    const selectedValue = selector ? selector.value : "03-2026"; // Default
+    const [m, y] = selectedValue.split('-');
+
     // Checks for YYYY-MM, DD-MM-YYYY, or DD/MM/YYYY
     return dateStr.includes(`${y}-${m}`) || dateStr.includes(`${m}-${y}`) || dateStr.includes(`${m}/${y}`);
 }
