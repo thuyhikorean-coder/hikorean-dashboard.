@@ -66,6 +66,14 @@ function parseCSV(csvText) {
     }).filter(row => row.length >= 2);
 }
 
+function isFromTargetMonth(dateStr) {
+    if (!dateStr) return false;
+    const m = "03";
+    const y = "2026";
+    // Checks for YYYY-MM, DD-MM-YYYY, or DD/MM/YYYY
+    return dateStr.includes(`${y}-${m}`) || dateStr.includes(`${m}-${y}`) || dateStr.includes(`${m}/${y}`);
+}
+
 function processAllData(data) {
     // Structural Safety Check - Ensure all categories exist
     if (!window.DASHBOARD_DATA) window.DASHBOARD_DATA = {};
@@ -92,6 +100,7 @@ function processAllData(data) {
     if (rowsSale.length > 1) {
         let revBySale = {}, revByCourse = {}, comboCount = {}, orderCount = {}, dailyMap = {};
         rowsSale.slice(1).forEach(row => {
+            if (!isFromTargetMonth(row[0])) return;
             const status = row[9]?.toUpperCase();
             if (status === 'DONE' || status === 'DEPOSIT') {
                 const amount = parseMoney(row[8]);
@@ -128,6 +137,7 @@ function processAllData(data) {
     if (rowsMkt.length > 1) {
         let mktCost = 0, mktLeads = 0, mktData = 0;
         rowsMkt.slice(1).forEach(row => {
+            if (!isFromTargetMonth(row[0])) return;
             if (row[1]) mktCost += parseMoney(row[1]);
             if (row[4]) mktData += (parseInt(row[4].replace(/[^0-9]/g, '')) || 0);
             if (row[5]) mktLeads += (parseInt(row[5].replace(/[^0-9]/g, '')) || 0);
@@ -150,6 +160,7 @@ function processAllData(data) {
     if (rowsTrack.length > 1) {
         let engagement = {};
         rowsTrack.slice(1).forEach(row => {
+            if (!isFromTargetMonth(row[0])) return;
             const name = row[1]?.trim();
             if (!name) return;
             const interaction = parseInt(row[3]) || 0;
@@ -164,6 +175,7 @@ function processAllData(data) {
     if (rowsQlclD.length > 1) {
         let teacherFee = 0, totalAtt = 0, classCount = 0;
         rowsQlclD.slice(1).forEach(row => {
+            if (!isFromTargetMonth(row[0])) return;
             if (row[11]) teacherFee += parseMoney(row[11]);
             const att = parseFloat(row[5]?.toString().replace(',', '.')) || 0;
             if (att > 0) { totalAtt += att; classCount++; }
@@ -178,6 +190,7 @@ function processAllData(data) {
     if (rowsQlclO.length > 1) {
         let finishedClasses = [];
         rowsQlclO.slice(1).forEach(row => {
+            if (!isFromTargetMonth(row[2])) return;
             if (row[0]) {
                 finishedClasses.push({
                     id: row[0],
@@ -202,6 +215,7 @@ function processAllData(data) {
         let pot = 0;
         let upsellList = [];
         rowsUp.slice(1).forEach(r => {
+            if (!isFromTargetMonth(r[2])) return;
             const val = parseMoney(r[5]);
             pot += val;
             if (val > 0 && upsellList.length < 5) {

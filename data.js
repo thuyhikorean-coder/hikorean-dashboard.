@@ -1,6 +1,6 @@
 window.DASHBOARD_DATA = {
     updateDate: "Đang cập nhật...",
-    month: "Tháng 2, 2026",
+    month: "Tháng 3, 2026",
 
     summary: {
         totalRevenue: 0,
