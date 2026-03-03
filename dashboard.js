@@ -95,7 +95,7 @@ function processAllData(data) {
     if (!window.DASHBOARD_DATA) window.DASHBOARD_DATA = {};
     const d = DASHBOARD_DATA;
     if (!d.summary) d.summary = {};
-    if (!d.summary.revenueGoal || d.summary.revenueGoal === 0) d.summary.revenueGoal = 285160000;
+    if (!d.summary.revenueGoal || d.summary.revenueGoal === 0) d.summary.revenueGoal = 394000000;
     if (!d.summary.mktTarget) d.summary.mktTarget = 12;
     if (!d.financial) d.financial = {};
     if (!d.customer) d.customer = {};
@@ -114,18 +114,26 @@ function processAllData(data) {
     // 1. FINANCIAL (Sale Performance)
     let totalRev = 0;
     if (rowsSale.length > 1) {
-        let revBySale = {}, revByCourse = {}, comboCount = {}, orderCount = {}, dailyMap = {};
+        let revBySale = {}, revByCourse = {}, comboCount = {}, orderCount = {}, dailyMap = {}, newCount = {}, upCount = {};
         rowsSale.slice(1).forEach(row => {
             if (!isFromTargetMonth(row[0])) return;
             const status = row[9]?.toUpperCase();
             if (status === 'DONE' || status === 'DEPOSIT') {
                 const amount = parseMoney(row[8]);
                 const saleName = row[3]?.trim() || 'N/A';
+                const type = row[5]?.toUpperCase() || '';
                 const isCombo = row[7]?.toUpperCase() === 'YES';
 
                 totalRev += amount;
                 revBySale[saleName] = (revBySale[saleName] || 0) + amount;
                 orderCount[saleName] = (orderCount[saleName] || 0) + 1;
+
+                if (type.includes('MỚI') || type.includes('NEW')) {
+                    newCount[saleName] = (newCount[saleName] || 0) + 1;
+                } else if (type.includes('CŨ') || type.includes('UPSELL') || type.includes('UP')) {
+                    upCount[saleName] = (upCount[saleName] || 0) + 1;
+                }
+
                 if (isCombo) comboCount[saleName] = (comboCount[saleName] || 0) + 1;
 
                 const cName = row[6]?.split('-')[0]?.trim() || 'Khác';
@@ -138,12 +146,14 @@ function processAllData(data) {
         DASHBOARD_DATA.financial.revenueBySale = revBySale;
         DASHBOARD_DATA.financial.revenueByCourse = revByCourse;
 
-        // Calculate Combo Rates
+        // Calculate Combo Rates & Sprint Progress
         let saleStats = {};
         Object.keys(revBySale).forEach(name => {
             saleStats[name] = {
                 rev: revBySale[name],
-                comboRate: orderCount[name] > 0 ? ((comboCount[name] || 0) / orderCount[name] * 100).toFixed(0) : 0
+                comboRate: orderCount[name] > 0 ? ((comboCount[name] || 0) / orderCount[name] * 100).toFixed(0) : 0,
+                newCount: newCount[name] || 0,
+                upCount: upCount[name] || 0
             };
         });
         DASHBOARD_DATA.financial.saleStats = saleStats;
@@ -271,6 +281,20 @@ function initDashboard() {
     const updateEl = document.getElementById('lastUpdate');
     if (updateEl) updateEl.textContent = `Sync: ${new Date().toLocaleTimeString('vi-VN')}`;
 
+    // Sprint Banner countdown
+    const sprintDate = new Date("2026-03-21T00:00:00+07:00");
+    const today = new Date();
+    const daysLeft = Math.max(0, Math.floor((sprintDate - today) / (1000 * 60 * 60 * 24)));
+    const dlEl = document.getElementById('daysLeft');
+    const bannerEl = document.getElementById('sprintBanner');
+    const selector = document.getElementById('monthSelector');
+    if (selector && selector.value === '03-2026') {
+        if (bannerEl) bannerEl.style.display = 'flex';
+        if (dlEl) dlEl.textContent = daysLeft;
+    } else {
+        if (bannerEl) bannerEl.style.display = 'none';
+    }
+
     renderOKRs();
     renderBSCTable();
     renderFunnel();
@@ -369,7 +393,8 @@ function renderSalesList() {
         <tr>
             <td style="font-weight:600;">${name}</td>
             <td style="font-weight:700; color:var(--danger);">${(s.rev / 1000000).toFixed(1)}M</td>
-            <td style="text-align:right;"><span class="badge badge-process">${s.comboRate}%</span></td>
+            <td style="text-align:right;"><span class="badge ${s.newCount >= 26 ? 'badge-process' : 'badge-danger'}">${s.newCount}/26</span></td>
+            <td style="text-align:right;"><span class="badge ${s.upCount >= 17 ? 'badge-process' : 'badge-danger'}">${s.upCount}/17</span></td>
         </tr>
     `).join('');
 }

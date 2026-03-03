@@ -4,7 +4,7 @@ window.DASHBOARD_DATA = {
 
     summary: {
         totalRevenue: 0,
-        revenueGoal: 285160000,
+        revenueGoal: 394000000,
         mktCost: 0,
         mktTarget: 12,
         mktCostRatio: 0,
@@ -49,7 +49,7 @@ window.DASHBOARD_DATA = {
             id: 'O1',
             objective: 'Tăng trưởng Doanh thu & Tối ưu Chi phí',
             krs: [
-                { name: 'Doanh thu tháng (Mục tiêu: 285tr)', current: 0, target: 285, unit: 'Tr', progress: 0 },
+                { name: 'Doanh thu tháng (Mục tiêu: 394tr)', current: 0, target: 394, unit: 'Tr', progress: 0 },
                 { name: 'Tối ưu MKT/DT (Mục tiêu: 12%)', current: 0, target: 12, unit: '%', progress: 0 }
             ]
         },

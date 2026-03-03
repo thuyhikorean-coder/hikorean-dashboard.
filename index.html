@@ -58,6 +58,15 @@
             </div>
         </header>
 
+        <!-- Sprint Banner -->
+        <div id="sprintBanner" class="sprint-banner"
+            style="display:flex; justify-content:center; align-items:center; background: rgba(211,47,47,0.1); border: 1px dashed var(--danger); color: var(--danger); padding: 10px 15px; border-radius: 8px; margin: 0 40px 15px 40px; font-weight: 700; gap: 8px; font-size: 1.05rem; box-shadow: 0 4px 10px rgba(211,47,47,0.1);">
+            <i class='bx bxs-hot bx-tada' style="font-size: 1.5rem;"></i>
+            <span>CHIẾN DỊCH 20 NGÀY ĐÊM: Còn <span id="daysLeft"
+                    style="font-weight:900; text-decoration: underline;">...</span> ngày nữa tới mốc 20/03</span>
+            <i class='bx bxs-hot bx-tada' style="font-size: 1.5rem;"></i>
+        </div>
+
         <!-- Main Dashboard Viewport -->
         <div class="dashboard-viewport">
             <!-- Command Center Layout -->
@@ -130,9 +139,10 @@
                                 <table class="compact-table">
                                     <thead>
                                         <tr>
-                                            <th>Tên Sale</th>
-                                            <th>Doanh thu</th>
-                                            <th>Combo %</th>
+                                            <th>Sale</th>
+                                            <th>D.Thu</th>
+                                            <th>New</th>
+                                            <th>Up</th>
                                         </tr>
                                     </thead>
                                     <tbody id="sales-detail-list"></tbody>
