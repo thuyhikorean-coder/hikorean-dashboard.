@@ -114,6 +114,7 @@ function processAllData(data) {
     // 1. FINANCIAL (Sale Performance)
     let totalRev = 0;
     let totalNewRev = 0;
+    let totalUpRev = 0;
 
     if (rowsSale.length > 1) {
         let revBySale = {}, revByCourse = {}, comboCount = {}, orderCount = {}, dailyMap = {}, newCount = {}, upCount = {};
@@ -135,6 +136,7 @@ function processAllData(data) {
                     totalNewRev += amount;
                 } else if (type.includes('CŨ') || type.includes('UPSELL') || type.includes('UP')) {
                     upCount[saleName] = (upCount[saleName] || 0) + 1;
+                    totalUpRev += amount;
                 }
 
                 if (isCombo) comboCount[saleName] = (comboCount[saleName] || 0) + 1;
@@ -160,6 +162,7 @@ function processAllData(data) {
         });
         DASHBOARD_DATA.summary.totalRevenue = totalRev;
         DASHBOARD_DATA.summary.totalNewRevenue = totalNewRev;
+        DASHBOARD_DATA.summary.totalUpRevenue = totalUpRev;
         DASHBOARD_DATA.financial.dailyRevenue = Object.entries(dailyMap).map(([date, value]) => ({ date, value })).sort();
         DASHBOARD_DATA.financial.revenueBySale = revBySale;
         DASHBOARD_DATA.financial.revenueByCourse = revByCourse;
@@ -330,11 +333,18 @@ function processAllData(data) {
 
 function initDashboard() {
     const d = DASHBOARD_DATA;
+
     const revEl = document.getElementById('overallRevenue');
     if (revEl) revEl.textContent = formatCurrency(d.summary.totalRevenue);
 
     const goalEl = document.getElementById('monthlyGoal');
     if (goalEl) goalEl.textContent = formatCurrency(d.summary.revenueGoal);
+
+    const newRevEl = document.getElementById('newRevenue');
+    if (newRevEl) newRevEl.textContent = formatCurrency(d.summary.totalNewRevenue || 0);
+
+    const upRevEl = document.getElementById('upRevenue');
+    if (upRevEl) upRevEl.textContent = formatCurrency(d.summary.totalUpRevenue || 0);
 
     const updateEl = document.getElementById('lastUpdate');
     if (updateEl) updateEl.textContent = `Sync: ${new Date().toLocaleTimeString('vi-VN')}`;
