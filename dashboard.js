@@ -113,6 +113,8 @@ function processAllData(data) {
 
     // 1. FINANCIAL (Sale Performance)
     let totalRev = 0;
+    let totalNewRev = 0;
+
     if (rowsSale.length > 1) {
         let revBySale = {}, revByCourse = {}, comboCount = {}, orderCount = {}, dailyMap = {}, newCount = {}, upCount = {};
         rowsSale.slice(1).forEach(row => {
@@ -130,6 +132,7 @@ function processAllData(data) {
 
                 if (type.includes('MỚI') || type.includes('NEW')) {
                     newCount[saleName] = (newCount[saleName] || 0) + 1;
+                    totalNewRev += amount;
                 } else if (type.includes('CŨ') || type.includes('UPSELL') || type.includes('UP')) {
                     upCount[saleName] = (upCount[saleName] || 0) + 1;
                 }
@@ -156,6 +159,7 @@ function processAllData(data) {
             }
         });
         DASHBOARD_DATA.summary.totalRevenue = totalRev;
+        DASHBOARD_DATA.summary.totalNewRevenue = totalNewRev;
         DASHBOARD_DATA.financial.dailyRevenue = Object.entries(dailyMap).map(([date, value]) => ({ date, value })).sort();
         DASHBOARD_DATA.financial.revenueBySale = revBySale;
         DASHBOARD_DATA.financial.revenueByCourse = revByCourse;
@@ -195,9 +199,10 @@ function processAllData(data) {
             if (row[5]) mktLeads += (parseInt(row[5].replace(/[^0-9]/g, '')) || 0);
         });
         DASHBOARD_DATA.summary.mktCost = mktCost;
-        // Fix: Use DASHBOARD_DATA reference instead of local totalRev which might be undefined if logic changes
-        const currentRev = DASHBOARD_DATA.summary.totalRevenue;
-        DASHBOARD_DATA.summary.mktCostRatio = currentRev > 0 ? ((mktCost / currentRev) * 100).toFixed(1) : 0;
+
+        // Fix: MKT Cost Ratio calculated specifically on NEW Revenue (Target: 306M)
+        const currentNewRev = DASHBOARD_DATA.summary.totalNewRevenue || 0;
+        DASHBOARD_DATA.summary.mktCostRatio = currentNewRev > 0 ? ((mktCost / currentNewRev) * 100).toFixed(1) : 0;
 
         const doneCount = rowsSale.filter(r => {
             if (!isFromTargetMonth(r[0])) return false;
@@ -265,8 +270,29 @@ function processAllData(data) {
     }
 
     if (rowsSocial.length > 1) {
-        let f = 0; rowsSocial.slice(1).forEach(r => { if (r[2]) f += parseMoney(r[2]); });
-        DASHBOARD_DATA.growth.totalFollowers = f;
+        let f = 0;
+        let ytLatest = 0;
+        let fbLatest = 0;
+        let hitVideos = 0;
+
+        rowsSocial.slice(1).forEach(r => {
+            if (!isFromTargetMonth(r[0])) return;
+            const platform = r[1]?.toUpperCase() || '';
+            const followers = parseMoney(r[2]) || 0;
+            const views1k = parseInt(r[3]) || 0;
+
+            if (platform.includes('FACEBOOK') || platform.includes('FANPAGE')) {
+                fbLatest = followers; // Keeps the latest reported value (Cumulative)
+            } else if (platform.includes('YOUTUBE') || platform.includes('YT')) {
+                ytLatest = followers; // Keeps the latest reported value (Cumulative)
+            }
+            hitVideos += views1k; // Sum hits in month
+        });
+
+        DASHBOARD_DATA.growth.totalFollowers = fbLatest + ytLatest;
+        DASHBOARD_DATA.growth.fbFollowers = fbLatest;
+        DASHBOARD_DATA.growth.ytFollowers = ytLatest;
+        DASHBOARD_DATA.growth.hitVideos = hitVideos;
     }
 
     if (rowsUp.length > 1) {
@@ -363,7 +389,7 @@ function renderBSCTable() {
     if (!tbody) return;
     const items = [
         { kpi: 'Doanh thu thuần', actual: formatCurrency(d.summary.totalRevenue), target: formatCurrency(d.summary.revenueGoal), status: d.summary.totalRevenue >= d.summary.revenueGoal ? 'process' : 'finance' },
-        { kpi: 'Tỉ suất MKT/DT', actual: `${d.summary.mktCostRatio}%`, target: `< ${d.summary.mktTarget}%`, status: d.summary.mktCostRatio <= d.summary.mktTarget ? 'process' : 'finance' },
+        { kpi: 'Tỉ suất MKT/DT New', actual: `${d.summary.mktCostRatio}%`, target: `< ${d.summary.mktTarget}%`, status: d.summary.mktCostRatio <= d.summary.mktTarget ? 'process' : 'finance' },
         { kpi: 'Tỉ suất GV/DT', actual: `${d.summary.teacherCostRatio}%`, target: '20-25%', status: 'process' },
         { kpi: 'HV Đạt chuẩn (>7đ)', actual: `${d.growth.avgPassRate}%`, target: '> 90%', status: d.growth.avgPassRate >= 90 ? 'process' : 'finance' },
         { kpi: 'Chuyên cần (Đi học)', actual: `${d.process.avgAttendance}%`, target: '> 90%', status: d.process.avgAttendance >= 90 ? 'process' : 'process' },
@@ -385,21 +411,35 @@ function renderFunnel() {
     const container = document.getElementById('funnel-container');
     if (!container) return;
     const steps = [
-        { label: 'Data', val: f.totalData, color: 'rgba(242,201,76,0.1)' },
-        { label: 'SĐT (Leads)', val: f.totalLeads, color: 'rgba(242,201,76,0.2)' },
-        { label: 'Đơn hàng (Orders)', val: f.totalOrders, color: 'rgba(242,201,76,0.5)' }
+        { label: 'SĐT (Leads) / Mục tiêu 265', val: `${f.totalLeads} / 265`, color: 'rgba(242,201,76,0.2)' },
+        { label: 'Đơn Tự Chạy (Orders)', val: f.totalOrders, color: 'rgba(242,201,76,0.5)' }
     ];
     container.innerHTML = steps.map(s => `
         <div style="background:${s.color}; padding:8px; border-radius:6px; text-align:center; border:1px solid rgba(255,255,255,0.05); margin-bottom:5px;">
-            <div style="font-size:0.7rem; color:var(--text-muted)">${s.label}</div>
-            <div style="font-size:1rem; font-weight:800; color:var(--primary)">${s.val}</div>
+            <div style="font-size:0.75rem; color:var(--text-muted); font-weight: 500;">${s.label}</div>
+            <div style="font-size:1.1rem; font-weight:800; color:var(--primary)">${s.val}</div>
         </div>
     `).join('');
 
+    // Dynamic Meta Chips (Report Progress & Upsell Rate)
     const chipUp = document.getElementById('reportProgress');
-    if (chipUp) chipUp.textContent = `92%`; // Standard default placeholder, to be bound real if needed
+    if (chipUp) chipUp.textContent = `92%`; // Binding this to QLCL later if needed
+
     const chipRef = document.getElementById('upsellRate');
     if (chipRef) chipRef.textContent = `${DASHBOARD_DATA.summary.upsellRate || 0}%`;
+
+    // New MKT Chips
+    const mktFB = document.getElementById('mktFB');
+    if (mktFB) mktFB.textContent = `${DASHBOARD_DATA.growth.fbFollowers || 0} / 1000`;
+
+    const mktYT = document.getElementById('mktYT');
+    if (mktYT) mktYT.textContent = `${DASHBOARD_DATA.growth.ytFollowers || 0} / 500`;
+
+    const mktViews = document.getElementById('mktViews');
+    if (mktViews) mktViews.textContent = `${DASHBOARD_DATA.growth.hitVideos || 0}`;
+
+    const mktCostNew = document.getElementById('mktCostRatioNew');
+    if (mktCostNew) mktCostNew.textContent = `${DASHBOARD_DATA.summary.mktCostRatio}%`;
 }
 
 function renderFinishedClasses() {

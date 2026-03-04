@@ -17,7 +17,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Custom Style -->
-    <link rel="stylesheet" href="style.css?v=2.0">
+    <link rel="stylesheet" href="style.css?v=2.1">
 </head>
 
 <body>
@@ -137,6 +137,31 @@
                                 <div class="mini-chip">Tỉ lệ Upsale: <span id="upsellRate"
                                         style="color:var(--process);">0%</span></div>
                             </div>
+
+                            <!-- MKT KPIs -->
+                            <div
+                                style="margin-top: 15px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px;">
+                                <div style="display: flex; flex-direction: column; gap: 8px;">
+                                    <div
+                                        style="display:flex; justify-content:space-between; font-size: 0.8rem; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 6px;">
+                                        <span style="color:var(--text-muted);"><i class='bx bxl-facebook-square'></i>
+                                            Fanpage (Tích Luỹ):</span>
+                                        <span id="mktFB" style="color:var(--info); font-weight:700;">-- / 1000</span>
+                                    </div>
+                                    <div
+                                        style="display:flex; justify-content:space-between; font-size: 0.8rem; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 6px;">
+                                        <span style="color:var(--text-muted);"><i class='bx bxl-youtube'></i> YouTube
+                                            (Tích Luỹ):</span>
+                                        <span id="mktYT" style="color:var(--danger); font-weight:700;">-- / 500</span>
+                                    </div>
+                                    <div
+                                        style="display:flex; justify-content:space-between; font-size: 0.8rem; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 6px;">
+                                        <span style="color:var(--text-muted);"><i class='bx bx-play-circle'></i> Video >
+                                            1k Views (Tổng):</span>
+                                        <span id="mktViews" style="color:var(--process); font-weight:700;">--</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -252,8 +277,8 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <!-- Scripts with Cache Busting -->
-    <script src="data.js?v=2.0"></script>
-    <script src="dashboard.js?v=2.0"></script>
+    <script src="data.js?v=2.1"></script>
+    <script src="dashboard.js?v=2.1"></script>
 
 </body>
 
