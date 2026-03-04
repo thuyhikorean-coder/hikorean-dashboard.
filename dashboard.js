@@ -133,7 +133,7 @@ function processAllData(data) {
                 revBySale[saleName] = (revBySale[saleName] || 0) + amount;
                 orderCount[saleName] = (orderCount[saleName] || 0) + 1;
 
-                if (source === 'MKT-ADS') {
+                if (source === 'MKT-ADS' || source.includes('REMIND') || source.includes('RE-MARKETING')) {
                     totalMktAdsRev += amount;
                 }
 
@@ -220,7 +220,8 @@ function processAllData(data) {
             const source = r[4]?.trim().toUpperCase() || '';
             const type = r[5]?.toUpperCase() || '';
             const isNew = type.includes('MỚI') || type.includes('NEW');
-            return (source === 'MKT-ADS') && (status === 'DONE' || status === 'DEPOSIT');
+            const isMktTarget = source === 'MKT-ADS' || source.includes('REMIND') || source.includes('RE-MARKETING');
+            return isMktTarget && (status === 'DONE' || status === 'DEPOSIT');
         }).length;
         DASHBOARD_DATA.customer.funnel = {
             totalData: mktData,
