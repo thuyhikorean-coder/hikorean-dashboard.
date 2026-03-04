@@ -676,4 +676,6 @@ function initCharts() {
     create('salesRevenueChart', 'bar', Object.keys(d.financial.revenueBySale), Object.values(d.financial.revenueBySale), '#1565C0');
 }
 
-function formatCurrency(n) { return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(n); }
+function formatCurrency(n) {
+    return (parseFloat(n) || 0).toLocaleString('vi-VN') + ' đ';
+}
