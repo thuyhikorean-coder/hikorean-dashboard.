@@ -506,10 +506,26 @@ function renderRaceCards() {
         let dailyColor = dailyProgress >= 100 ? 'var(--process)' : (dailyProgress >= 50 ? 'var(--warning)' : 'var(--danger)');
         let sprintColor = sprintProgress >= 100 ? 'var(--process)' : 'var(--primary)';
 
+        let isWinner = dailyProgress >= 100;
+        let badgeHTML = isWinner ? `<span style="color: #FFD700; margin-left:5px; font-size:1rem; text-shadow: 0 0 5px rgba(255,215,0,0.5);" class="bx-tada">🏆 HOÀN THÀNH</span>` : '';
+
+        // Fire confetti!
+        if (isWinner && window.confetti) {
+            setTimeout(() => {
+                confetti({
+                    particleCount: 150,
+                    spread: 80,
+                    origin: { y: 0.6 },
+                    colors: ['#FFD700', '#FFA500', '#00FF7F', '#00BFFF', '#FF1493'],
+                    zIndex: 9999
+                });
+            }, 800 + (Math.random() * 500)); // slight random delay if both hit it
+        }
+
         html += `
-            <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05);">
+            <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); ${isWinner ? 'box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); border-color: rgba(255, 215, 0, 0.4);' : ''}">
                 <div style="display:flex; justify-content:space-between; margin-bottom: 6px;">
-                    <span style="font-weight: 800; color: var(--text-main); font-size: 0.9rem;"><i class='bx bxs-user-rectangle'></i> ${name}</span>
+                    <span style="font-weight: 800; color: var(--text-main); font-size: 0.9rem; display: flex; align-items: center;"><i class='bx bxs-user-rectangle' style="margin-right: 5px;"></i> ${name} ${badgeHTML}</span>
                     <span style="font-weight: 700; color: var(--accent); font-size: 0.85rem;">${(s.rev / 1000000).toFixed(1)} / 197M</span>
                 </div>
                 
