@@ -8,16 +8,17 @@
     /* More visible Muted Brown */
     --primary: #D4AF37;
     /* Metallic Gold */
-    --primary-glow: rgba(212, 175, 55, 0.3);
-    --accent: #5D4037;
-    /* Dark Bronze */
+    --primary-glow: rgba(212, 175, 55, 0.2);
+    --accent: #795548;
+    /* Lighter, softer Bronze */
     --success: #1B5E20;
     --danger: #B71C1C;
     --warning: #E65100;
     --info: #0D47A1;
-    --glass-border: rgba(93, 64, 55, 0.25);
-    /* Sharper border */
-    --glass-shadow: 0 12px 40px rgba(45, 27, 23, 0.12);
+    --glass-border: rgba(121, 85, 72, 0.15);
+    /* Softer border */
+    --glass-shadow: 0 4px 20px rgba(45, 27, 23, 0.06);
+    /* Lighter shadow */
     --card-radius: 12px;
 }
 
@@ -92,43 +93,45 @@ body {
 /* Glass Card */
 .glass-card {
     background: var(--bg-panel);
-    border: 1.5px solid var(--glass-border);
-    /* Thicker for clarity */
+    border: 1px solid var(--glass-border);
+    /* Thinner for sleeker look */
     border-radius: var(--card-radius);
-    padding: 20px;
+    padding: 16px;
     box-shadow: var(--glass-shadow);
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
 }
 
 .glass-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--primary);
-    box-shadow: 0 15px 45px rgba(45, 27, 23, 0.18);
+    transform: translateY(-2px);
+    border-color: rgba(212, 175, 55, 0.4);
+    box-shadow: 0 8px 30px rgba(45, 27, 23, 0.1);
 }
 
 /* Grid System */
 .command-center {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
 }
 
 .ops-grid-top {
     display: grid;
-    grid-template-columns: 1fr 1.6fr;
-    gap: 20px;
+    grid-template-columns: 1fr 1.8fr;
+    gap: 16px;
 }
 
 .ops-grid-mid {
     display: grid;
-    grid-template-columns: 1.3fr 1.2fr 1fr;
-    gap: 20px;
+    grid-template-columns: 1.2fr 1FR 0.8fr;
+    /* Adjusted for tighter race card & funnel */
+    gap: 16px;
 }
 
 .ops-grid-bottom {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
+    gap: 16px;
 }
 
 /* Titles */
@@ -137,14 +140,13 @@ body {
     font-weight: 800;
     color: var(--accent);
     text-transform: uppercase;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     display: flex;
     align-items: center;
-    gap: 8px;
-    border-bottom: 1px solid rgba(93, 64, 55, 0.15);
-    padding-bottom: 8px;
-    letter-spacing: 1px;
+    gap: 6px;
 }
+
+
 
 .card-title i {
     color: var(--primary);
