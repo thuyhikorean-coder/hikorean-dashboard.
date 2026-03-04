@@ -1,0 +1,249 @@
+:root {
+    --bg-main: #F4F7FB; 
+    --bg-panel: rgba(255, 255, 255, 0.85); 
+    --text-main: #1E293B; 
+    --text-muted: #64748B; 
+    --primary: #3B82F6; 
+    --primary-glow: rgba(59, 130, 246, 0.15);
+    --accent: #94A3B8; 
+    --success: #10B981; 
+    --danger: #EF4444; 
+    --warning: #F59E0B; 
+    --info: #8B5CF6; 
+    --glass-border: rgba(255, 255, 255, 0.4); 
+    --glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.03); 
+    --card-radius: 16px; 
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 40%);
+    background-attachment: fixed;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+.dashboard-container {
+    max-width: 1650px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+}
+
+.header-left .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.header-left .logo-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--primary);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #fff;
+    box-shadow: 0 8px 16px var(--primary-glow);
+}
+
+.header-left h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--text-main);
+    letter-spacing: -0.5px;
+}
+
+.header-left .subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+/* Glass Card */
+.glass-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--card-radius);
+    padding: 24px;
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    height: 100%;
+}
+
+.glass-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+}
+
+/* Grid System */
+.command-center {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.ops-grid-top {
+    display: grid;
+    grid-template-columns: 1fr 1.8fr;
+    gap: 24px;
+}
+
+.ops-grid-mid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 0.9fr;
+    gap: 24px;
+}
+
+.ops-grid-bottom {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+/* Titles */
+.card-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-title i {
+    color: var(--primary);
+    font-size: 1.1rem;
+    background: var(--primary-glow);
+    padding: 6px;
+    border-radius: 8px;
+}
+
+/* Table Design */
+.compact-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.compact-table th {
+    text-align: left;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    padding: 12px 8px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.compact-table tr {
+    transition: background 0.2s;
+}
+
+.compact-table td {
+    padding: 14px 8px;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    border-bottom: 1px solid rgba(0,0,0,0.02);
+}
+
+.compact-table tr:hover td {
+    background: rgba(0,0,0,0.02);
+}
+
+/* Progress */
+.progress-container {
+    height: 8px;
+    background: rgba(0,0,0,0.05);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 8px 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), #60A5FA);
+    box-shadow: 0 0 10px var(--primary-glow);
+}
+
+/* Charts */
+.chart-container-ops {
+    height: 280px;
+}
+
+.chart-container-mini {
+    height: 180px;
+}
+
+/* Badges */
+.badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.badge-process {
+    background: #DCFCE7;
+    color: #15803D;
+}
+
+.badge-finance {
+    background: #FEE2E2;
+    color: #B91C1C;
+}
+
+.badge-growth {
+    background: #DBEAFE;
+    color: #1D4ED8;
+}
+
+/* Funnel Sections */
+.mini-chip {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.05);
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 10px;
+}
