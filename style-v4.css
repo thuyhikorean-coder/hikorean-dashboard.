@@ -38,7 +38,7 @@ body {
 .dashboard-container {
     max-width: 1650px;
     margin: 0 auto;
-    padding: 24px;
+    padding: 12px 24px;
 }
 
 /* Header */
@@ -46,8 +46,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
-    padding-bottom: 20px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.03);
 }
 
