@@ -115,6 +115,7 @@ function processAllData(data) {
     let totalRev = 0;
     let totalNewRev = 0;
     let totalUpRev = 0;
+    let totalMktAdsRev = 0;
 
     if (rowsSale.length > 1) {
         let revBySale = {}, revByCourse = {}, comboCount = {}, orderCount = {}, dailyMap = {}, newCount = {}, upCount = {};
@@ -124,12 +125,17 @@ function processAllData(data) {
             if (status === 'DONE' || status === 'DEPOSIT') {
                 const amount = parseMoney(row[8]);
                 const saleName = row[3]?.trim() || 'N/A';
+                const source = row[4]?.trim().toUpperCase() || '';
                 const type = row[5]?.toUpperCase() || '';
                 const isCombo = row[7]?.toUpperCase() === 'YES';
 
                 totalRev += amount;
                 revBySale[saleName] = (revBySale[saleName] || 0) + amount;
                 orderCount[saleName] = (orderCount[saleName] || 0) + 1;
+
+                if (source === 'MKT-ADS') {
+                    totalMktAdsRev += amount;
+                }
 
                 if (type.includes('MỚI') || type.includes('NEW')) {
                     newCount[saleName] = (newCount[saleName] || 0) + 1;
@@ -163,6 +169,7 @@ function processAllData(data) {
         DASHBOARD_DATA.summary.totalRevenue = totalRev;
         DASHBOARD_DATA.summary.totalNewRevenue = totalNewRev;
         DASHBOARD_DATA.summary.totalUpRevenue = totalUpRev;
+        DASHBOARD_DATA.summary.totalMktAdsRevenue = totalMktAdsRev;
         DASHBOARD_DATA.financial.dailyRevenue = Object.entries(dailyMap).map(([date, value]) => ({ date, value })).sort();
         DASHBOARD_DATA.financial.revenueBySale = revBySale;
         DASHBOARD_DATA.financial.revenueByCourse = revByCourse;
@@ -203,16 +210,17 @@ function processAllData(data) {
         });
         DASHBOARD_DATA.summary.mktCost = mktCost;
 
-        // Fix: MKT Cost Ratio calculated specifically on NEW Revenue (Target: 306M)
-        const currentNewRev = DASHBOARD_DATA.summary.totalNewRevenue || 0;
-        DASHBOARD_DATA.summary.mktCostRatio = currentNewRev > 0 ? ((mktCost / currentNewRev) * 100).toFixed(1) : 0;
+        // Fix: MKT Cost Ratio is strictly against MKT-ADS revenue sum, not just any NEW revenue
+        const currentMktAdsRev = DASHBOARD_DATA.summary.totalMktAdsRevenue || 0;
+        DASHBOARD_DATA.summary.mktCostRatio = currentMktAdsRev > 0 ? ((mktCost / currentMktAdsRev) * 100).toFixed(1) : 0;
 
         const doneCount = rowsSale.filter(r => {
             if (!isFromTargetMonth(r[0])) return false;
             const status = r[9]?.toUpperCase();
+            const source = r[4]?.trim().toUpperCase() || '';
             const type = r[5]?.toUpperCase() || '';
             const isNew = type.includes('MỚI') || type.includes('NEW');
-            return isNew && (status === 'DONE' || status === 'DEPOSIT');
+            return (source === 'MKT-ADS') && (status === 'DONE' || status === 'DEPOSIT');
         }).length;
         DASHBOARD_DATA.customer.funnel = {
             totalData: mktData,
@@ -399,7 +407,7 @@ function renderBSCTable() {
     if (!tbody) return;
     const items = [
         { kpi: 'Doanh thu thuần', actual: formatCurrency(d.summary.totalRevenue), target: formatCurrency(d.summary.revenueGoal), status: d.summary.totalRevenue >= d.summary.revenueGoal ? 'process' : 'finance' },
-        { kpi: 'Tỉ suất MKT/DT New', actual: `${d.summary.mktCostRatio}%`, target: `< ${d.summary.mktTarget}%`, status: d.summary.mktCostRatio <= d.summary.mktTarget ? 'process' : 'finance' },
+        { kpi: 'Tỉ suất MKT/DT (Ads)', actual: `${d.summary.mktCostRatio}%`, target: `< ${d.summary.mktTarget}%`, status: d.summary.mktCostRatio <= d.summary.mktTarget ? 'process' : 'finance' },
         { kpi: 'Tỉ suất GV/DT', actual: `${d.summary.teacherCostRatio}%`, target: '20-25%', status: 'process' },
         { kpi: 'HV Đạt chuẩn (>7đ)', actual: `${d.growth.avgPassRate}%`, target: '> 90%', status: d.growth.avgPassRate >= 90 ? 'process' : 'finance' },
         { kpi: 'Chuyên cần (Đi học)', actual: `${d.process.avgAttendance}%`, target: '> 90%', status: d.process.avgAttendance >= 90 ? 'process' : 'process' },
