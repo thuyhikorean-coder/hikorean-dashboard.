@@ -138,7 +138,21 @@ function processAllData(data) {
 
                 const cName = row[6]?.split('-')[0]?.trim() || 'Khác';
                 revByCourse[cName] = (revByCourse[cName] || 0) + amount;
-                if (row[0]) dailyMap[row[0].substring(5, 10)] = (dailyMap[row[0].substring(5, 10)] || 0) + amount;
+                if (row[0]) {
+                    const dKey = row[0].substring(5, 10);
+                    dailyMap[dKey] = (dailyMap[dKey] || 0) + amount;
+                }
+            }
+        });
+
+        let latestDate = Object.keys(dailyMap).sort().pop() || '';
+        let todayRevBySale = {};
+        rowsSale.slice(1).forEach(row => {
+            if (!isFromTargetMonth(row[0])) return;
+            const status = row[9]?.toUpperCase();
+            if ((status === 'DONE' || status === 'DEPOSIT') && row[0].includes(latestDate)) {
+                const saleName = row[3]?.trim() || 'N/A';
+                todayRevBySale[saleName] = (todayRevBySale[saleName] || 0) + parseMoney(row[8]);
             }
         });
         DASHBOARD_DATA.summary.totalRevenue = totalRev;
@@ -158,10 +172,12 @@ function processAllData(data) {
                 rev: revBySale[name],
                 comboRate: orderCount[name] > 0 ? ((comboCount[name] || 0) / orderCount[name] * 100).toFixed(0) : 0,
                 newCount: newCount[name] || 0,
-                upCount: upCount[name] || 0
+                upCount: upCount[name] || 0,
+                todayRev: todayRevBySale[name] || 0
             };
         });
         DASHBOARD_DATA.financial.saleStats = saleStats;
+        DASHBOARD_DATA.financial.latestDate = latestDate;
 
         // Calculate Global Upsell Rate based on target of 65% for BSC
         const totalEligibleUpsellLeads = 53; // Hardcoded from user context ("Tháng 3 chị count ra 53 người dưới 2 triệu")
@@ -318,6 +334,7 @@ function initDashboard() {
     renderSalesList();
     renderEngagementList();
     renderCourseList();
+    renderRaceCards();
     initCharts();
 }
 
@@ -441,6 +458,61 @@ function renderCourseList() {
             <span style="font-weight:700; color:var(--info)">${(val / 1000000).toFixed(1)}M</span>
         </div>
     `).join('');
+}
+
+function renderRaceCards() {
+    const container = document.getElementById('race-container');
+    if (!container) return;
+
+    // Specifically target the 2 core warriors defined by the user
+    const targets = ['Khánh Linh', 'Hồng Thơm'];
+    const goalPerSale = 197000000;
+    const dailyTarget = 9850000;
+    const stats = DASHBOARD_DATA.financial.saleStats || {};
+
+    let html = '';
+    targets.forEach(name => {
+        let s = stats[name] || { rev: 0, todayRev: 0 };
+
+        let sprintProgress = Math.min(100, Math.round((s.rev / goalPerSale) * 100));
+        let dailyProgress = Math.min(100, Math.round((s.todayRev / dailyTarget) * 100));
+
+        let dailyColor = dailyProgress >= 100 ? 'var(--process)' : (dailyProgress >= 50 ? 'var(--warning)' : 'var(--danger)');
+        let sprintColor = sprintProgress >= 100 ? 'var(--process)' : 'var(--primary)';
+
+        html += `
+            <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                <div style="display:flex; justify-content:space-between; margin-bottom: 6px;">
+                    <span style="font-weight: 800; color: var(--text-main); font-size: 0.9rem;"><i class='bx bxs-user-rectangle'></i> ${name}</span>
+                    <span style="font-weight: 700; color: var(--accent); font-size: 0.85rem;">${(s.rev / 1000000).toFixed(1)} / 197M</span>
+                </div>
+                
+                <!-- Daily Mini Tracker -->
+                <div style="margin-bottom: 8px;">
+                    <div style="display:flex; justify-content:space-between; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 3px;">
+                        <span>Doanh thu ngày nay: <strong style="color:${dailyColor}">${(s.todayRev / 1000000).toFixed(1)}M</strong> / 9.85M</span>
+                        <span>${dailyProgress}%</span>
+                    </div>
+                    <div class="progress-container" style="height: 6px; margin: 0; background: rgba(0,0,0,0.1);">
+                        <div class="progress-fill" style="width: ${dailyProgress}%; background: ${dailyColor}; box-shadow: 0 0 5px ${dailyColor};"></div>
+                    </div>
+                </div>
+
+                <!-- Sprint Goal Tracker -->
+                <div>
+                    <div style="display:flex; justify-content:space-between; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 3px;">
+                        <span>Tổng kết 20 ngày: </span>
+                        <span style="font-weight: 700; color: ${sprintColor}">${sprintProgress}%</span>
+                    </div>
+                    <div class="progress-container" style="height: 6px; margin: 0; background: rgba(0,0,0,0.1);">
+                        <div class="progress-fill" style="width: ${sprintProgress}%; background: ${sprintColor}; box-shadow: 0 0 5px ${sprintColor};"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
 }
 
 let charts = {};

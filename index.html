@@ -17,7 +17,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Custom Style -->
-    <link rel="stylesheet" href="style.css?v=1.4">
+    <link rel="stylesheet" href="style.css?v=1.5">
 </head>
 
 <body>
@@ -109,8 +109,18 @@
                     <div class="card-chart-large">
                         <div class="glass-card">
                             <h3 class="card-title"><i class='bx bx-line-chart'></i> Timeline Doanh thu</h3>
-                            <div class="chart-container-ops">
+                            <div class="chart-container-ops" style="height: 230px;">
                                 <canvas id="revenueTrendChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-race">
+                        <div class="glass-card" style="height: 100%;">
+                            <h3 class="card-title" style="color:var(--danger);"><i class='bx bxs-hot bx-tada'></i> Cuộc
+                                Đua 20 Ngày Đêm</h3>
+                            <div id="race-container">
+                                <!-- Filled by JS -->
                             </div>
                         </div>
                     </div>
@@ -239,8 +249,8 @@
     </div>
 
     <!-- Scripts with Cache Busting -->
-    <script src="data.js?v=1.4"></script>
-    <script src="dashboard.js?v=1.4"></script>
+    <script src="data.js?v=1.5"></script>
+    <script src="dashboard.js?v=1.5"></script>
 
 </body>
 
