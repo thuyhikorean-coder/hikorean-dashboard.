@@ -1,18 +1,18 @@
 :root {
-    --bg-main: #F4F7FB; 
-    --bg-panel: rgba(255, 255, 255, 0.85); 
-    --text-main: #1E293B; 
-    --text-muted: #64748B; 
-    --primary: #3B82F6; 
-    --primary-glow: rgba(59, 130, 246, 0.15);
-    --accent: #94A3B8; 
-    --success: #10B981; 
-    --danger: #EF4444; 
-    --warning: #F59E0B; 
-    --info: #8B5CF6; 
-    --glass-border: rgba(255, 255, 255, 0.4); 
-    --glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.03); 
-    --card-radius: 16px; 
+    --bg-main: #FCFAF2;
+    --bg-panel: rgba(255, 255, 255, 0.85);
+    --text-main: #3E2723;
+    --text-muted: #795548;
+    --primary: #D4AF37;
+    --primary-glow: rgba(212, 175, 55, 0.15);
+    --accent: #A1887F;
+    --success: #2E7D32;
+    --danger: #C62828;
+    --warning: #EF6C00;
+    --info: #1565C0;
+    --glass-border: rgba(121, 85, 72, 0.2);
+    --glass-shadow: 0 4px 24px rgba(62, 39, 35, 0.03);
+    --card-radius: 16px;
 }
 
 * {
@@ -28,8 +28,8 @@ body {
     min-height: 100vh;
     overflow-x: hidden;
     background-image:
-        radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.05) 0%, transparent 40%);
+        radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(121, 85, 72, 0.05) 0%, transparent 40%);
     background-attachment: fixed;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
@@ -48,7 +48,7 @@ body {
     align-items: center;
     margin-bottom: 24px;
     padding-bottom: 20px;
-    border-bottom: 1px solid rgba(0,0,0,0.03);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
 }
 
 .header-left .logo-area {
@@ -163,7 +163,7 @@ body {
     text-transform: uppercase;
     font-weight: 600;
     letter-spacing: 0.5px;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .compact-table tr {
@@ -174,17 +174,17 @@ body {
     padding: 14px 8px;
     font-size: 0.9rem;
     color: var(--text-main);
-    border-bottom: 1px solid rgba(0,0,0,0.02);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.02);
 }
 
 .compact-table tr:hover td {
-    background: rgba(0,0,0,0.02);
+    background: rgba(0, 0, 0, 0.02);
 }
 
 /* Progress */
 .progress-container {
     height: 8px;
-    background: rgba(0,0,0,0.05);
+    background: rgba(0, 0, 0, 0.05);
     border-radius: 8px;
     overflow: hidden;
     margin: 8px 0;
@@ -192,7 +192,7 @@ body {
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--primary), #60A5FA);
+    background: linear-gradient(90deg, var(--primary), #FFD700);
     box-shadow: 0 0 10px var(--primary-glow);
 }
 
@@ -214,29 +214,29 @@ body {
 }
 
 .badge-process {
-    background: #DCFCE7;
-    color: #15803D;
+    background: #E8F5E9;
+    color: #2E7D32;
 }
 
 .badge-finance {
-    background: #FEE2E2;
-    color: #B91C1C;
+    background: #FFEBEE;
+    color: #C62828;
 }
 
 .badge-growth {
-    background: #DBEAFE;
-    color: #1D4ED8;
+    background: #E3F2FD;
+    color: #1565C0;
 }
 
 /* Funnel Sections */
 .mini-chip {
     background: #fff;
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     padding: 8px 16px;
     border-radius: 12px;
     font-size: 0.85rem;
     font-weight: 600;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 }
 
 ::-webkit-scrollbar {
