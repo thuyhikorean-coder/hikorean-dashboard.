@@ -183,7 +183,7 @@ function processAllData(data) {
         const currentRev = DASHBOARD_DATA.summary.totalRevenue;
         DASHBOARD_DATA.summary.mktCostRatio = currentRev > 0 ? ((mktCost / currentRev) * 100).toFixed(1) : 0;
 
-        const doneCount = rowsSale.filter(r => r[9]?.toUpperCase() === 'DONE').length;
+        const doneCount = rowsSale.filter(r => isFromTargetMonth(r[0]) && r[9]?.toUpperCase() === 'DONE').length;
         DASHBOARD_DATA.customer.funnel = {
             totalData: mktData,
             totalLeads: mktLeads,
