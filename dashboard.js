@@ -467,7 +467,7 @@ function renderRaceCards() {
     // Specifically target the 2 core warriors defined by the user
     const targets = ['Khánh Linh', 'Hồng Thơm'];
     const goalPerSale = 197000000;
-    const dailyTarget = 9850000;
+    const dailyTarget = 9800000;
     const stats = DASHBOARD_DATA.financial.saleStats || {};
 
     let dateText = 'nay';
@@ -532,7 +532,7 @@ function renderRaceCards() {
                 <!-- Daily Mini Tracker -->
                 <div style="margin-bottom: 8px;">
                     <div style="display:flex; justify-content:space-between; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 3px;">
-                        <span>Doanh thu ngày ${dateText}: <strong style="color:${dailyColor}">${(s.todayRev / 1000000).toFixed(1)}M</strong> / 9.85M</span>
+                        <span>Doanh thu ngày ${dateText}: <strong style="color:${dailyColor}">${(s.todayRev / 1000000).toFixed(1)}M</strong> / 9.8M</span>
                         <span>${dailyProgress}%</span>
                     </div>
                     <div class="progress-container" style="height: 6px; margin: 0; background: rgba(0,0,0,0.1);">
