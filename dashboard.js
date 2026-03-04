@@ -422,7 +422,7 @@ function renderFunnel() {
     if (!container) return;
     const steps = [
         { label: 'SĐT (Leads) / Mục tiêu 265', val: `${f.totalLeads} / 265`, color: 'rgba(242,201,76,0.2)' },
-        { label: 'Đơn Tự Chạy (Orders)', val: f.totalOrders, color: 'rgba(242,201,76,0.5)' }
+        { label: 'Đơn đã chốt', val: f.totalOrders, color: 'rgba(242,201,76,0.5)' }
     ];
     container.innerHTML = steps.map(s => `
         <div style="background:${s.color}; padding:8px; border-radius:6px; text-align:center; border:1px solid rgba(255,255,255,0.05); margin-bottom:5px;">
