@@ -472,9 +472,27 @@ function renderRaceCards() {
 
     let dateText = 'nay';
     if (DASHBOARD_DATA.financial.latestDate) {
-        let parts = DASHBOARD_DATA.financial.latestDate.split('-');
-        if (parts.length === 2) {
-            dateText = `${parseInt(parts[1])}/${parseInt(parts[0])}`;
+        let rawDate = DASHBOARD_DATA.financial.latestDate;
+
+        // Handle YYYY-MM-DD or MM-DD (from substring 5,10)
+        if (rawDate.includes('-')) {
+            let parts = rawDate.split('-');
+            if (parts.length === 2) {
+                // MM-DD -> DD/MM
+                dateText = `${parseInt(parts[1])}/${parseInt(parts[0])}`;
+            } else if (parts.length >= 3) {
+                // YYYY-MM-DD -> DD/MM
+                dateText = `${parseInt(parts[2])}/${parseInt(parts[1])}`;
+            }
+        }
+        // Handle DD/MM/YYYY
+        else if (rawDate.includes('/')) {
+            let parts = rawDate.split('/');
+            if (parts.length >= 2) {
+                dateText = `${parseInt(parts[0])}/${parseInt(parts[1])}`;
+            }
+        } else {
+            dateText = rawDate;
         }
     }
 
