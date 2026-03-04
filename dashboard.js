@@ -183,7 +183,13 @@ function processAllData(data) {
         const currentRev = DASHBOARD_DATA.summary.totalRevenue;
         DASHBOARD_DATA.summary.mktCostRatio = currentRev > 0 ? ((mktCost / currentRev) * 100).toFixed(1) : 0;
 
-        const doneCount = rowsSale.filter(r => isFromTargetMonth(r[0]) && r[9]?.toUpperCase() === 'DONE').length;
+        const doneCount = rowsSale.filter(r => {
+            if (!isFromTargetMonth(r[0])) return false;
+            const status = r[9]?.toUpperCase();
+            const type = r[5]?.toUpperCase() || '';
+            const isNew = type.includes('MỚI') || type.includes('NEW');
+            return isNew && (status === 'DONE' || status === 'DEPOSIT');
+        }).length;
         DASHBOARD_DATA.customer.funnel = {
             totalData: mktData,
             totalLeads: mktLeads,
