@@ -6,7 +6,7 @@ const CONFIG = {
     SALE_TRACKING_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFwJIH_mrYmSIpD-BcHmrYi_xHkGte5YZIdfVUjh8prRMaxVRmI7HRsUK2Cj3hGQ/pub?gid=11036957&single=true&output=csv',
     UPSALE_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRzh_K2wpZTdnolPCRzYhVQxkq0B39c2zYRB4OLRsybc8LwAMFxsrCP98RRjbI--g/pub?gid=548776730&single=true&output=csv',
     SOCIAL_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSO-aSIrwtMiGFGMpxSqRhIFo7PMA9Uebo7FBxY1rhm_jbUi2cY4Kz3XTXbwVfi7Q/pub?gid=578202755&single=true&output=csv',
-    FEEDBACK_URL: '' // CHỊ COPY LINK XUẤT CSV CỦA FILE FEEDBACK DÁN VÀO ĐÂY NHÉ
+    FEEDBACK_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTsv4tsHlXao_Awr8Xe1RI3tzGkL11KMJga_vlXv7_y8Nz6jwbfzoaoBUTbTk63TiUYz2shPpG0cEof/pub?gid=0&single=true&output=csv'
 };
 
 let CURRENT_RAW_DATA = null;
