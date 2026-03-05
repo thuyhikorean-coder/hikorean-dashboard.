@@ -517,18 +517,18 @@
                         body: formData
                     }).then(res => console.log('Đã gửi lên Sheet'))
                         .catch(err => console.error(err));
-                } else {
-                    // Tạm thời lưu tạm vào LocalStorage nếu chưa cấu hình Google Sheet
-                    let mockFeedbacks = JSON.parse(localStorage.getItem('hikorean_feedbacks') || '[]');
-                    mockFeedbacks.push({
-                        name: document.getElementById('studentName').value,
-                        class: document.getElementById('className').value,
-                        teacher: document.getElementById('teacherName').value,
-                        overall: avg,
-                        date: new Date().toLocaleDateString('vi-VN')
-                    });
-                    localStorage.setItem('hikorean_feedbacks', JSON.stringify(mockFeedbacks));
                 }
+
+                // LUÔN LƯU VÀO BỘ NHỚ TRÌNH DUYỆT ĐỂ BẢNG DASHBOARD ĐỌC ĐƯỢC NGAY LẬP TỨC
+                let mockFeedbacks = JSON.parse(localStorage.getItem('hikorean_feedbacks') || '[]');
+                mockFeedbacks.push({
+                    name: document.getElementById('studentName').value,
+                    class: document.getElementById('className').value,
+                    teacher: document.getElementById('teacherName').value,
+                    overall: avg,
+                    date: new Date().toLocaleDateString('vi-VN')
+                });
+                localStorage.setItem('hikorean_feedbacks', JSON.stringify(mockFeedbacks));
 
                 // Show Success
                 document.getElementById('feedbackForm').style.display = 'none';
