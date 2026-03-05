@@ -90,6 +90,19 @@ function isFromTargetMonth(dateStr) {
     return dateStr.includes(`${y}-${m}`) || dateStr.includes(`${m}-${y}`) || dateStr.includes(`${m}/${y}`);
 }
 
+function standardizeDate(dateStr) {
+    if (!dateStr) return '';
+    if (dateStr.includes('/')) {
+        const parts = dateStr.split('/');
+        if (parts.length >= 3) return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+    } else if (dateStr.includes('-')) {
+        const parts = dateStr.split('-');
+        if (parts[0].length === 4) return `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
+        if (parts[2].length === 4) return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+    }
+    return dateStr;
+}
+
 function processAllData(data) {
     // Structural Safety Check - Ensure all categories exist
     if (!window.DASHBOARD_DATA) window.DASHBOARD_DATA = {};
@@ -150,20 +163,26 @@ function processAllData(data) {
                 const cName = row[6]?.split('-')[0]?.trim() || 'Khác';
                 revByCourse[cName] = (revByCourse[cName] || 0) + amount;
                 if (row[0]) {
-                    const dKey = row[0].substring(5, 10);
-                    dailyMap[dKey] = (dailyMap[dKey] || 0) + amount;
+                    const stdDate = standardizeDate(row[0]);
+                    if (stdDate.length >= 10) {
+                        const dKey = stdDate.substring(5, 10);
+                        dailyMap[dKey] = (dailyMap[dKey] || 0) + amount;
+                    }
                 }
             }
         });
 
-        let latestDate = Object.keys(dailyMap).sort().pop() || '';
+        let latestDateKey = Object.keys(dailyMap).sort().pop() || '';
         let todayRevBySale = {};
         rowsSale.slice(1).forEach(row => {
             if (!isFromTargetMonth(row[0])) return;
             const status = row[9]?.toUpperCase();
-            if ((status === 'DONE' || status === 'DEPOSIT') && row[0].includes(latestDate)) {
-                const saleName = row[3]?.trim() || 'N/A';
-                todayRevBySale[saleName] = (todayRevBySale[saleName] || 0) + parseMoney(row[8]);
+            if (status === 'DONE' || status === 'DEPOSIT') {
+                const stdDate = standardizeDate(row[0]);
+                if (stdDate.length >= 10 && stdDate.substring(5, 10) === latestDateKey) {
+                    const saleName = row[3]?.trim() || 'N/A';
+                    todayRevBySale[saleName] = (todayRevBySale[saleName] || 0) + parseMoney(row[8]);
+                }
             }
         });
         DASHBOARD_DATA.summary.totalRevenue = totalRev;
@@ -191,7 +210,7 @@ function processAllData(data) {
             };
         });
         DASHBOARD_DATA.financial.saleStats = saleStats;
-        DASHBOARD_DATA.financial.latestDate = latestDate;
+        DASHBOARD_DATA.financial.latestDate = latestDateKey;
 
         // Calculate Global Upsell Rate based on target of 65% for BSC
         const totalEligibleUpsellLeads = 53; // Hardcoded from user context ("Tháng 3 chị count ra 53 người dưới 2 triệu")
