@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khảo Sát Chất Lượng Học Tập - Hikorean</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Boxicons (Icons) -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- Confetti JS -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --bg-main: #FCFAF2;
+            --bg-panel: rgba(255, 255, 255, 0.95);
+            --text-main: #2D1B17;
+            --text-muted: #5D4037;
+            --primary: #D4AF37;
+            --primary-glow: rgba(212, 175, 55, 0.3);
+            --primary-dark: #B8962A;
+            --accent: #8D6E63;
+            --success: #2E7D32;
+            --glass-border: rgba(212, 175, 55, 0.3);
+            --glass-shadow: 0 8px 32px rgba(93, 64, 55, 0.1);
+            --card-radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(121, 85, 72, 0.08) 0%, transparent 40%);
+            background-attachment: fixed;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .feedback-container {
+            width: 100%;
+            max-width: 650px;
+            background: var(--bg-panel);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--card-radius);
+            padding: 40px;
+            box-shadow: var(--glass-shadow);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: transform 0.3s ease;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #fff;
+            box-shadow: 0 8px 16px var(--primary-glow);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        label {
+            display: block;
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 12px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        label i {
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        input[type="text"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid rgba(93, 64, 55, 0.15);
+            border-radius: 10px;
+            font-size: 1rem;
+            color: var(--text-main);
+            background: #fff;
+            transition: all 0.2s ease;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        input[type="text"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-glow);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Rating Stars */
+        .rating-container {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .rating-container input {
+            display: none;
+        }
+
+        .rating-container label.star {
+            cursor: pointer;
+            font-size: 2rem;
+            color: #E0E0E0;
+            transition: color 0.2s, transform 0.2s;
+            margin: 0;
+            padding: 0;
+            display: inline-block;
+        }
+
+        .rating-container label.star:hover,
+        .rating-container label.star:hover~label.star,
+        .rating-container input:checked~label.star {
+            color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .rating-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-style: italic;
+            min-height: 20px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.15rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px var(--primary-glow);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px var(--primary-glow);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Success State */
+        .success-state {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .success-icon {
+            font-size: 5rem;
+            color: var(--success);
+            margin-bottom: 20px;
+            animation: bounceIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .success-state h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .success-state p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .feedback-container {
+                padding: 25px 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .rating-container label.star {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="feedback-container" id="feedbackFormContainer">
+        <div class="header-section">
+            <div class="logo-icon">
+                <i class='bx bxs-heart'></i>
+            </div>
+            <h1>Đánh Giá Trải Nghiệm Học Tập</h1>
+            <p class="subtitle">Hikorean luôn lắng nghe để mang đến cho bạn trải nghiệm tuyệt vời nhất. Cảm ơn bạn đã
+                dành thời gian phản hồi!</p>
+        </div>
+
+        <form id="feedbackForm">
+            <!-- Thông tin cá nhân -->
+            <div class="form-group">
+                <label><i class='bx bx-user'></i> Thông tin học viên</label>
+                <input type="text" id="studentName" placeholder="Họ và tên của bạn" required <div
+                    style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 150px;">
+                    <input type="text" id="className" placeholder="VD: GT1K150ON..." required readonly
+                        style="background-color: rgba(0,0,0,0.05); color: var(--text-muted); font-weight: 600;">
+                </div>
+                <div style="flex: 1; min-width: 150px;">
+                    <input type="text" id="teacherName" placeholder="Tên Giáo Viên" required readonly
+                        style="background-color: rgba(0,0,0,0.05); color: var(--text-muted); font-weight: 600;">
+                </div>
+            </div>
+    </div>
+
+    <!-- Đánh giá Tình hình học tập -->
+    <div class="form-group">
+        <label><i class='bx bx-book-reader'></i> 1. Đánh giá tình hình học tập của bản thân</label>
+        <div class="rating-container" data-id="rating1">
+            <input type="radio" id="r1-5" name="rating1" value="5"><label for="r1-5" class="star"
+                title="Rất tốt">★</label>
+            <input type="radio" id="r1-4" name="rating1" value="4"><label for="r1-4" class="star" title="Tốt">★</label>
+            <input type="radio" id="r1-3" name="rating1" value="3"><label for="r1-3" class="star"
+                title="Bình thường">★</label>
+            <input type="radio" id="r1-2" name="rating1" value="2"><label for="r1-2" class="star"
+                title="Cần cải thiện">★</label>
+            <input type="radio" id="r1-1" name="rating1" value="1"><label for="r1-1" class="star"
+                title="Rất kém">★</label>
+        </div>
+        <div class="rating-desc" id="desc-rating1">Vui lòng chọn số sao</div>
+    </div>
+
+    <!-- Đánh giá giảng dạy -->
+    <div class="form-group">
+        <label><i class='bx bxs-graduation'></i> 2. Đánh giá chất lượng chương trình dạy</label>
+        <div class="rating-container" data-id="rating2">
+            <input type="radio" id="r2-5" name="rating2" value="5"><label for="r2-5" class="star"
+                title="Rất tốt">★</label>
+            <input type="radio" id="r2-4" name="rating2" value="4"><label for="r2-4" class="star" title="Tốt">★</label>
+            <input type="radio" id="r2-3" name="rating2" value="3"><label for="r2-3" class="star"
+                title="Bình thường">★</label>
+            <input type="radio" id="r2-2" name="rating2" value="2"><label for="r2-2" class="star"
+                title="Cần cải thiện">★</label>
+            <input type="radio" id="r2-1" name="rating2" value="1"><label for="r2-1" class="star"
+                title="Rất kém">★</label>
+        </div>
+        <div class="rating-desc" id="desc-rating2">Vui lòng chọn số sao</div>
+    </div>
+
+    <!-- Đánh giá giáo viên -->
+    <div class="form-group">
+        <label><i class='bx bx-chalkboard'></i> 3. Đánh giá về giáo viên đứng lớp</label>
+        <div class="rating-container" data-id="rating3">
+            <input type="radio" id="r3-5" name="rating3" value="5"><label for="r3-5" class="star"
+                title="Rất tốt">★</label>
+            <input type="radio" id="r3-4" name="rating3" value="4"><label for="r3-4" class="star" title="Tốt">★</label>
+            <input type="radio" id="r3-3" name="rating3" value="3"><label for="r3-3" class="star"
+                title="Bình thường">★</label>
+            <input type="radio" id="r3-2" name="rating3" value="2"><label for="r3-2" class="star"
+                title="Cần cải thiện">★</label>
+            <input type="radio" id="r3-1" name="rating3" value="1"><label for="r3-1" class="star"
+                title="Rất kém">★</label>
+        </div>
+        <div class="rating-desc" id="desc-rating3">Vui lòng chọn số sao</div>
+    </div>
+
+    <!-- Đánh giá trung tâm -->
+    <div class="form-group">
+        <label><i class='bx bx-buildings'></i> 4. Không gian & Cơ sở vật chất trung tâm</label>
+        <div class="rating-container" data-id="rating4">
+            <input type="radio" id="r4-5" name="rating4" value="5"><label for="r4-5" class="star"
+                title="Rất tốt">★</label>
+            <input type="radio" id="r4-4" name="rating4" value="4"><label for="r4-4" class="star" title="Tốt">★</label>
+            <input type="radio" id="r4-3" name="rating4" value="3"><label for="r4-3" class="star"
+                title="Bình thường">★</label>
+            <input type="radio" id="r4-2" name="rating4" value="2"><label for="r4-2" class="star"
+                title="Cần cải thiện">★</label>
+            <input type="radio" id="r4-1" name="rating4" value="1"><label for="r4-1" class="star"
+                title="Rất kém">★</label>
+        </div>
+        <div class="rating-desc" id="desc-rating4">Vui lòng chọn số sao</div>
+    </div>
+
+    <!-- Đánh giá CSKH -->
+    <div class="form-group">
+        <label><i class='bx bx-support'></i> 5. Đội ngũ chăm sóc học viên</label>
+        <div class="rating-container" data-id="rating5">
+            <input type="radio" id="r5-5" name="rating5" value="5"><label for="r5-5" class="star"
+                title="Rất tốt">★</label>
+            <input type="radio" id="r5-4" name="rating5" value="4"><label for="r5-4" class="star" title="Tốt">★</label>
+            <input type="radio" id="r5-3" name="rating5" value="3"><label for="r5-3" class="star"
+                title="Bình thường">★</label>
+            <input type="radio" id="r5-2" name="rating5" value="2"><label for="r5-2" class="star"
+                title="Cần cẩn thiện">★</label>
+            <input type="radio" id="r5-1" name="rating5" value="1"><label for="r5-1" class="star"
+                title="Rất kém">★</label>
+        </div>
+        <div class="rating-desc" id="desc-rating5">Vui lòng chọn số sao</div>
+    </div>
+
+    <!-- Ý kiến khác -->
+    <div class="form-group">
+        <label><i class='bx bx-message-rounded-dots'></i> Lời nhắn gửi thêm (Tùy chọn)</label>
+        <textarea id="comments"
+            placeholder="Bạn có điều gì muốn chia sẻ thêm hoặc góp ý với Hikorean không?"></textarea>
+    </div>
+
+    <button type="submit" class="submit-btn" id="submitBtn">
+        <i class='bx bx-send'></i> Gửi Đánh Giá Ngay!
+    </button>
+    </form>
+
+    <!-- Success Message -->
+    <div class="success-state" id="successState">
+        <i class='bx bxs-check-circle success-icon'></i>
+        <h2>Cảm ơn bạn!</h2>
+        <p>Phản hồi của bạn đã được gửi thành công. Kết quả này sẽ giúp Hikorean không ngừng cải thiện và mang đến
+            chất lượng tốt nhất.</p>
+        <button class="submit-btn" style="background: var(--text-muted); margin-top: 30px;"
+            onclick="window.location.reload()">Đánh giá khác</button>
+    </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const classParam = params.get('class');
+            const teacherParam = params.get('teacher');
+
+            const classInput = document.getElementById('className');
+            const teacherInput = document.getElementById('teacherName');
+
+            if (classParam) {
+                classInput.value = classParam;
+            } else {
+                classInput.removeAttribute('readonly');
+                classInput.style.backgroundColor = '#fff';
+            }
+
+            if (teacherParam) {
+                teacherInput.value = teacherParam;
+            } else {
+                teacherInput.removeAttribute('readonly');
+                teacherInput.style.backgroundColor = '#fff';
+            }
+        });
+
+        // Rating Descriptions
+        const descriptions = {
+            '5': 'Tuyệt vời 😍',
+            '4': 'Rất tốt 😃',
+            '3': 'Bình thường 🙂',
+            '2': 'Chưa hài lòng 😕',
+            '1': 'Rất tệ 😢'
+        };
+
+        // Attach event listener for rating texts
+        document.querySelectorAll('.rating-container input').forEach(input => {
+            input.addEventListener('change', function () {
+                const groupName = this.name; /* e.g. rating1 */
+                const descMap = document.getElementById('desc-' + groupName);
+                if (descMap) {
+                    descMap.innerText = descriptions[this.value] || 'Bạn đã chọn';
+                    descMap.style.color = 'var(--primary)';
+                    descMap.style.fontWeight = '700';
+                }
+            });
+        });
+
+        // Form Submission Simulation
+        document.getElementById('feedbackForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Check if all ratings are checked
+            let allRated = true;
+            for (let i = 1; i <= 5; i++) {
+                if (!document.querySelector(`input[name="rating${i}"]:checked`)) {
+                    allRated = false;
+                    break;
+                }
+            }
+
+            if (!allRated) {
+                alert("Vui lòng đánh giá số sao đầy đủ ở tất cả các mục nhé!");
+                return;
+            }
+
+            // Button Loading State
+            const btn = document.getElementById('submitBtn');
+            btn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Đang gửi...";
+            btn.style.opacity = '0.8';
+
+            // Simulate Data Sending (e.g. to Google Sheet)
+            setTimeout(() => {
+                const r1 = document.querySelector(`input[name="rating1"]:checked`).value;
+                const r2 = document.querySelector(`input[name="rating2"]:checked`).value;
+                const r3 = document.querySelector(`input[name="rating3"]:checked`).value;
+                const r4 = document.querySelector(`input[name="rating4"]:checked`).value;
+                const r5 = document.querySelector(`input[name="rating5"]:checked`).value;
+                const avg = ((parseInt(r1) + parseInt(r2) + parseInt(r3) + parseInt(r4) + parseInt(r5)) / 5).toFixed(1);
+
+                const formData = new FormData();
+                formData.append('name', document.getElementById('studentName').value);
+                formData.append('classId', document.getElementById('className').value);
+                formData.append('teacher', document.getElementById('teacherName').value);
+                formData.append('r1', r1);
+                formData.append('r2', r2);
+                formData.append('r3', r3);
+                formData.append('r4', r4);
+                formData.append('r5', r5);
+                formData.append('avg', avg);
+                formData.append('comments', document.getElementById('comments').value || "");
+
+                // -- PHẦN NÀY ĐỂ MỞ RỘNG GỬI LÊN GOOGLE SHEETS --
+                const GOOGLE_APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyhzOcbHS9mHIo3w-80WHmYPaoUR6hEBNHZXsRv06t8bb8BYnYxHuu0JUt_DOzrQINV/exec"; // Sẽ điền link Apps Script của Google Sheets vào đây
+
+                if (GOOGLE_APP_SCRIPT_URL) {
+                    fetch(GOOGLE_APP_SCRIPT_URL, {
+                        method: 'POST',
+                        body: formData
+                    }).then(res => console.log('Đã gửi lên Sheet'))
+                        .catch(err => console.error(err));
+                } else {
+                    // Tạm thời lưu tạm vào LocalStorage nếu chưa cấu hình Google Sheet
+                    let mockFeedbacks = JSON.parse(localStorage.getItem('hikorean_feedbacks') || '[]');
+                    mockFeedbacks.push({
+                        name: document.getElementById('studentName').value,
+                        class: document.getElementById('className').value,
+                        teacher: document.getElementById('teacherName').value,
+                        overall: avg,
+                        date: new Date().toLocaleDateString('vi-VN')
+                    });
+                    localStorage.setItem('hikorean_feedbacks', JSON.stringify(mockFeedbacks));
+                }
+
+                // Show Success
+                document.getElementById('feedbackForm').style.display = 'none';
+                document.querySelector('.header-section').style.display = 'none';
+                document.getElementById('successState').style.display = 'block';
+
+
+                // Confetti Explosion
+                var duration = 3 * 1000;
+                var animationEnd = Date.now() + duration;
+                var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+                function randomInRange(min, max) {
+                    return Math.random() * (max - min) + min;
+                }
+
+                var interval = setInterval(function () {
+                    var timeLeft = animationEnd - Date.now();
+
+                    if (timeLeft <= 0) {
+                        return clearInterval(interval);
+                    }
+
+                    var particleCount = 50 * (timeLeft / duration);
+                    confetti(Object.assign({}, defaults, {
+                        particleCount,
+                        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+                        colors: ['#D4AF37', '#B8962A', '#8D6E63', '#ffffff']
+                    }));
+                    confetti(Object.assign({}, defaults, {
+                        particleCount,
+                        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+                        colors: ['#D4AF37', '#B8962A', '#8D6E63', '#ffffff']
+                    }));
+                }, 250);
+
+            }, 1000);
+
+        });
+    </script>
+</body>
+
+</html>

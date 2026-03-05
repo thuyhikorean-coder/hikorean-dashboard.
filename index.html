@@ -52,6 +52,15 @@
             </div>
 
             <div class="header-right" style="display:flex; gap:12px; align-items: stretch;">
+
+                <!-- Link Feedback -->
+                <div style="display: flex; align-items: center;">
+                    <a href="student-feedback.html" target="_blank"
+                        style="background: linear-gradient(135deg, var(--primary), #B8962A); color: #fff; padding: 10px 18px; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 0.8rem; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3); transition: transform 0.2s;">
+                        <i class='bx bx-link-external'></i> Link Feedback
+                    </a>
+                </div>
+
                 <!-- Mục Tiêu -->
                 <div
                     style="background: var(--danger); padding: 10px 18px; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; text-align: right; box-shadow: 0 4px 12px rgba(183, 28, 28, 0.25);">
@@ -278,6 +287,37 @@
                         </div>
                     </div>
                 </section>
+
+                <!-- Feedback Section: Student Feedback Tracker -->
+                <section class="ops-grid-feedback"
+                    style="display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 24px;">
+                    <div class="card-feedback">
+                        <div class="glass-card">
+                            <div
+                                style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                                <h3 class="card-title" style="color:var(--primary); margin:0;"><i
+                                        class='bx bxs-star'></i> Phản Hồi Học Viên Mới Nhất</h3>
+                            </div>
+                            <div class="table-wrapper">
+                                <table class="compact-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã Lớp</th>
+                                            <th>Giáo Viên</th>
+                                            <th><span style="color:#D4AF37;">5 Sao 😍</span></th>
+                                            <th><span style="color:#D4AF37;">4 Sao 😃</span></th>
+                                            <th>CSAT Lớp (TB)</th>
+                                            <th>Số Lượt ĐG</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="student-feedback-list">
+                                        <!-- Default items will be rendered by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </main>
         </div>
 
@@ -318,7 +358,7 @@
 
     <!-- Scripts with Cache Busting -->
     <script src="data.js?v=3.0"></script>
-    <script src="dashboard.js?v=3.0"></script>
+    <script src="dashboard.js?v=3.1"></script>
 
 </body>
 

@@ -399,8 +399,79 @@ function initDashboard() {
     renderEngagementList();
     renderCourseList();
     renderRaceCards();
+    renderStudentFeedback();
     initCharts();
 }
+
+function renderStudentFeedback() {
+    const tbody = document.getElementById('student-feedback-list');
+    if (!tbody) return;
+
+    let mockFeedbacks = JSON.parse(localStorage.getItem('hikorean_feedbacks') || '[]');
+
+    // Aggregate by class
+    let classMap = {};
+    mockFeedbacks.forEach(f => {
+        let cls = f.class || 'Lớp Khác';
+        if (!classMap[cls]) {
+            classMap[cls] = {
+                teacher: f.teacher || '---',
+                count5: 0,
+                count4: 0,
+                countOther: 0,
+                totalScores: 0,
+                reviewCount: 0,
+                recentDate: f.date
+            };
+        }
+
+        let avg = parseFloat(f.overall);
+        if (avg >= 4.5) {
+            classMap[cls].count5++;
+        } else if (avg >= 3.5) {
+            classMap[cls].count4++;
+        } else {
+            classMap[cls].countOther++;
+        }
+
+        classMap[cls].totalScores += avg;
+        classMap[cls].reviewCount++;
+    });
+
+    let classesArr = Object.keys(classMap).map(k => ({ id: k, ...classMap[k] }));
+
+    // Sort by most recently reviewed classes first
+    classesArr.reverse();
+
+    if (classesArr.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align:center; color:var(--text-muted); font-style:italic; padding: 20px;">
+                    Chưa có lớp nào thực hiện khảo sát.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    let html = '';
+    classesArr.slice(0, 5).forEach(c => {
+        let avgScore = (c.totalScores / c.reviewCount).toFixed(1);
+        let color = avgScore >= 4.5 ? 'var(--primary)' : (avgScore >= 3.5 ? 'var(--warning)' : 'var(--danger)');
+        html += `
+            <tr>
+                <td><span class="badge badge-growth">${c.id}</span></td>
+                <td>${c.teacher}</td>
+                <td style="font-weight:bold; color:var(--primary); text-align:center;">${c.count5}</td>
+                <td style="font-weight:bold; color:var(--warning); text-align:center;">${c.count4}</td>
+                <td style="color:${color}; font-weight:bold; text-align:center;">${avgScore} <i class='bx bxs-star'></i></td>
+                <td style="text-align:center;">${c.reviewCount} HV</td>
+            </tr>
+        `;
+    });
+    tbody.innerHTML = html;
+}
+
 
 function renderOKRs() {
     const list = document.getElementById('okr-list');
@@ -486,13 +557,30 @@ function renderFinishedClasses() {
     const classes = DASHBOARD_DATA.process.finishedClasses || [];
     tbody.innerHTML = classes.slice(0, 5).map(c => `
         <tr>
-            <td style="font-weight:700;">${c.id}</td>
+            <td style="font-weight:700;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    ${c.id}
+                    <button onclick="copyFeedbackLink('${c.id}', '${c.teacher}')" title="Copy Link Feedback" style="background:var(--primary-glow); border:none; color:var(--primary); cursor:pointer; padding:4px 6px; border-radius:4px; font-size:1.1rem; display:flex; align-items:center;"><i class='bx bx-copy'></i></button>
+                </div>
+            </td>
             <td style="text-align:center;">${c.students}</td>
             <td style="color:var(--danger); font-weight:700;">${c.passRate}</td>
             <td style="font-weight:700; color:var(--info); text-align:right;">${c.attendance}</td>
         </tr>
     `).join('');
 }
+
+// Global copy logic for Feedback Link
+window.copyFeedbackLink = function (classId, teacher) {
+    const baseUrl = window.location.href.split('?')[0].replace(/index\.html|v5\.html/, '');
+    const url = `${baseUrl}student-feedback.html?class=${encodeURIComponent(classId)}&teacher=${encodeURIComponent(teacher)}`;
+    navigator.clipboard.writeText(url).then(() => {
+        alert(`Đã Copy link Khảo sát dành riêng cho lớp ${classId} để gửi vào Zalo!\\nLink:\\n${url}`);
+    }).catch(err => {
+        console.error('Copy failed', err);
+        prompt("Copy bằng tay link Khảo sát sau:", url);
+    });
+};
 
 function renderSalesList() {
     const tbody = document.getElementById('sales-detail-list');
