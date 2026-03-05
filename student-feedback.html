@@ -291,125 +291,131 @@
             <!-- Thông tin cá nhân -->
             <div class="form-group">
                 <label><i class='bx bx-user'></i> Thông tin học viên</label>
-                <input type="text" id="studentName" placeholder="Họ và tên của bạn" required <div
-                    style="display: flex; gap: 15px; flex-wrap: wrap;">
-                <div style="flex: 1; min-width: 150px;">
-                    <input type="text" id="className" placeholder="VD: GT1K150ON..." required readonly
-                        style="background-color: rgba(0,0,0,0.05); color: var(--text-muted); font-weight: 600;">
-                </div>
-                <div style="flex: 1; min-width: 150px;">
-                    <input type="text" id="teacherName" placeholder="Tên Giáo Viên" required readonly
-                        style="background-color: rgba(0,0,0,0.05); color: var(--text-muted); font-weight: 600;">
+                <input type="text" id="studentName" placeholder="Họ và tên của bạn" required
+                    style="margin-bottom: 15px;">
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 150px;">
+                        <input type="text" id="className" placeholder="VD: GT1K150ON..." required readonly
+                            style="background-color: rgba(0,0,0,0.05); color: var(--text-muted); font-weight: 600;">
+                    </div>
+                    <div style="flex: 1; min-width: 150px;">
+                        <input type="text" id="teacherName" placeholder="Tên Giáo Viên" required readonly
+                            style="background-color: rgba(0,0,0,0.05); color: var(--text-muted); font-weight: 600;">
+                    </div>
                 </div>
             </div>
-    </div>
 
-    <!-- Đánh giá Tình hình học tập -->
-    <div class="form-group">
-        <label><i class='bx bx-book-reader'></i> 1. Đánh giá tình hình học tập của bản thân</label>
-        <div class="rating-container" data-id="rating1">
-            <input type="radio" id="r1-5" name="rating1" value="5"><label for="r1-5" class="star"
-                title="Rất tốt">★</label>
-            <input type="radio" id="r1-4" name="rating1" value="4"><label for="r1-4" class="star" title="Tốt">★</label>
-            <input type="radio" id="r1-3" name="rating1" value="3"><label for="r1-3" class="star"
-                title="Bình thường">★</label>
-            <input type="radio" id="r1-2" name="rating1" value="2"><label for="r1-2" class="star"
-                title="Cần cải thiện">★</label>
-            <input type="radio" id="r1-1" name="rating1" value="1"><label for="r1-1" class="star"
-                title="Rất kém">★</label>
+            <!-- Đánh giá Tình hình học tập -->
+            <div class="form-group">
+                <label><i class='bx bx-book-reader'></i> 1. Đánh giá tình hình học tập của bản thân</label>
+                <div class="rating-container" data-id="rating1">
+                    <input type="radio" id="r1-5" name="rating1" value="5"><label for="r1-5" class="star"
+                        title="Rất tốt">★</label>
+                    <input type="radio" id="r1-4" name="rating1" value="4"><label for="r1-4" class="star"
+                        title="Tốt">★</label>
+                    <input type="radio" id="r1-3" name="rating1" value="3"><label for="r1-3" class="star"
+                        title="Bình thường">★</label>
+                    <input type="radio" id="r1-2" name="rating1" value="2"><label for="r1-2" class="star"
+                        title="Cần cải thiện">★</label>
+                    <input type="radio" id="r1-1" name="rating1" value="1"><label for="r1-1" class="star"
+                        title="Rất kém">★</label>
+                </div>
+                <div class="rating-desc" id="desc-rating1">Vui lòng chọn số sao</div>
+            </div>
+
+            <!-- Đánh giá giảng dạy -->
+            <div class="form-group">
+                <label><i class='bx bxs-graduation'></i> 2. Đánh giá chất lượng chương trình dạy</label>
+                <div class="rating-container" data-id="rating2">
+                    <input type="radio" id="r2-5" name="rating2" value="5"><label for="r2-5" class="star"
+                        title="Rất tốt">★</label>
+                    <input type="radio" id="r2-4" name="rating2" value="4"><label for="r2-4" class="star"
+                        title="Tốt">★</label>
+                    <input type="radio" id="r2-3" name="rating2" value="3"><label for="r2-3" class="star"
+                        title="Bình thường">★</label>
+                    <input type="radio" id="r2-2" name="rating2" value="2"><label for="r2-2" class="star"
+                        title="Cần cải thiện">★</label>
+                    <input type="radio" id="r2-1" name="rating2" value="1"><label for="r2-1" class="star"
+                        title="Rất kém">★</label>
+                </div>
+                <div class="rating-desc" id="desc-rating2">Vui lòng chọn số sao</div>
+            </div>
+
+            <!-- Đánh giá giáo viên -->
+            <div class="form-group">
+                <label><i class='bx bx-chalkboard'></i> 3. Đánh giá về giáo viên đứng lớp</label>
+                <div class="rating-container" data-id="rating3">
+                    <input type="radio" id="r3-5" name="rating3" value="5"><label for="r3-5" class="star"
+                        title="Rất tốt">★</label>
+                    <input type="radio" id="r3-4" name="rating3" value="4"><label for="r3-4" class="star"
+                        title="Tốt">★</label>
+                    <input type="radio" id="r3-3" name="rating3" value="3"><label for="r3-3" class="star"
+                        title="Bình thường">★</label>
+                    <input type="radio" id="r3-2" name="rating3" value="2"><label for="r3-2" class="star"
+                        title="Cần cải thiện">★</label>
+                    <input type="radio" id="r3-1" name="rating3" value="1"><label for="r3-1" class="star"
+                        title="Rất kém">★</label>
+                </div>
+                <div class="rating-desc" id="desc-rating3">Vui lòng chọn số sao</div>
+            </div>
+
+            <!-- Đánh giá trung tâm -->
+            <div class="form-group">
+                <label><i class='bx bx-buildings'></i> 4. Không gian & Cơ sở vật chất trung tâm</label>
+                <div class="rating-container" data-id="rating4">
+                    <input type="radio" id="r4-5" name="rating4" value="5"><label for="r4-5" class="star"
+                        title="Rất tốt">★</label>
+                    <input type="radio" id="r4-4" name="rating4" value="4"><label for="r4-4" class="star"
+                        title="Tốt">★</label>
+                    <input type="radio" id="r4-3" name="rating4" value="3"><label for="r4-3" class="star"
+                        title="Bình thường">★</label>
+                    <input type="radio" id="r4-2" name="rating4" value="2"><label for="r4-2" class="star"
+                        title="Cần cải thiện">★</label>
+                    <input type="radio" id="r4-1" name="rating4" value="1"><label for="r4-1" class="star"
+                        title="Rất kém">★</label>
+                </div>
+                <div class="rating-desc" id="desc-rating4">Vui lòng chọn số sao</div>
+            </div>
+
+            <!-- Đánh giá CSKH -->
+            <div class="form-group">
+                <label><i class='bx bx-support'></i> 5. Đội ngũ chăm sóc học viên</label>
+                <div class="rating-container" data-id="rating5">
+                    <input type="radio" id="r5-5" name="rating5" value="5"><label for="r5-5" class="star"
+                        title="Rất tốt">★</label>
+                    <input type="radio" id="r5-4" name="rating5" value="4"><label for="r5-4" class="star"
+                        title="Tốt">★</label>
+                    <input type="radio" id="r5-3" name="rating5" value="3"><label for="r5-3" class="star"
+                        title="Bình thường">★</label>
+                    <input type="radio" id="r5-2" name="rating5" value="2"><label for="r5-2" class="star"
+                        title="Cần cẩn thiện">★</label>
+                    <input type="radio" id="r5-1" name="rating5" value="1"><label for="r5-1" class="star"
+                        title="Rất kém">★</label>
+                </div>
+                <div class="rating-desc" id="desc-rating5">Vui lòng chọn số sao</div>
+            </div>
+
+            <!-- Ý kiến khác -->
+            <div class="form-group">
+                <label><i class='bx bx-message-rounded-dots'></i> Lời nhắn gửi thêm (Tùy chọn)</label>
+                <textarea id="comments"
+                    placeholder="Bạn có điều gì muốn chia sẻ thêm hoặc góp ý với Hikorean không?"></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <i class='bx bx-send'></i> Gửi Đánh Giá Ngay!
+            </button>
+        </form>
+
+        <!-- Success Message -->
+        <div class="success-state" id="successState">
+            <i class='bx bxs-check-circle success-icon'></i>
+            <h2>Cảm ơn bạn!</h2>
+            <p>Phản hồi của bạn đã được gửi thành công. Kết quả này sẽ giúp Hikorean không ngừng cải thiện và mang đến
+                chất lượng tốt nhất.</p>
+            <button class="submit-btn" style="background: var(--text-muted); margin-top: 30px;"
+                onclick="window.location.reload()">Đánh giá khác</button>
         </div>
-        <div class="rating-desc" id="desc-rating1">Vui lòng chọn số sao</div>
-    </div>
-
-    <!-- Đánh giá giảng dạy -->
-    <div class="form-group">
-        <label><i class='bx bxs-graduation'></i> 2. Đánh giá chất lượng chương trình dạy</label>
-        <div class="rating-container" data-id="rating2">
-            <input type="radio" id="r2-5" name="rating2" value="5"><label for="r2-5" class="star"
-                title="Rất tốt">★</label>
-            <input type="radio" id="r2-4" name="rating2" value="4"><label for="r2-4" class="star" title="Tốt">★</label>
-            <input type="radio" id="r2-3" name="rating2" value="3"><label for="r2-3" class="star"
-                title="Bình thường">★</label>
-            <input type="radio" id="r2-2" name="rating2" value="2"><label for="r2-2" class="star"
-                title="Cần cải thiện">★</label>
-            <input type="radio" id="r2-1" name="rating2" value="1"><label for="r2-1" class="star"
-                title="Rất kém">★</label>
-        </div>
-        <div class="rating-desc" id="desc-rating2">Vui lòng chọn số sao</div>
-    </div>
-
-    <!-- Đánh giá giáo viên -->
-    <div class="form-group">
-        <label><i class='bx bx-chalkboard'></i> 3. Đánh giá về giáo viên đứng lớp</label>
-        <div class="rating-container" data-id="rating3">
-            <input type="radio" id="r3-5" name="rating3" value="5"><label for="r3-5" class="star"
-                title="Rất tốt">★</label>
-            <input type="radio" id="r3-4" name="rating3" value="4"><label for="r3-4" class="star" title="Tốt">★</label>
-            <input type="radio" id="r3-3" name="rating3" value="3"><label for="r3-3" class="star"
-                title="Bình thường">★</label>
-            <input type="radio" id="r3-2" name="rating3" value="2"><label for="r3-2" class="star"
-                title="Cần cải thiện">★</label>
-            <input type="radio" id="r3-1" name="rating3" value="1"><label for="r3-1" class="star"
-                title="Rất kém">★</label>
-        </div>
-        <div class="rating-desc" id="desc-rating3">Vui lòng chọn số sao</div>
-    </div>
-
-    <!-- Đánh giá trung tâm -->
-    <div class="form-group">
-        <label><i class='bx bx-buildings'></i> 4. Không gian & Cơ sở vật chất trung tâm</label>
-        <div class="rating-container" data-id="rating4">
-            <input type="radio" id="r4-5" name="rating4" value="5"><label for="r4-5" class="star"
-                title="Rất tốt">★</label>
-            <input type="radio" id="r4-4" name="rating4" value="4"><label for="r4-4" class="star" title="Tốt">★</label>
-            <input type="radio" id="r4-3" name="rating4" value="3"><label for="r4-3" class="star"
-                title="Bình thường">★</label>
-            <input type="radio" id="r4-2" name="rating4" value="2"><label for="r4-2" class="star"
-                title="Cần cải thiện">★</label>
-            <input type="radio" id="r4-1" name="rating4" value="1"><label for="r4-1" class="star"
-                title="Rất kém">★</label>
-        </div>
-        <div class="rating-desc" id="desc-rating4">Vui lòng chọn số sao</div>
-    </div>
-
-    <!-- Đánh giá CSKH -->
-    <div class="form-group">
-        <label><i class='bx bx-support'></i> 5. Đội ngũ chăm sóc học viên</label>
-        <div class="rating-container" data-id="rating5">
-            <input type="radio" id="r5-5" name="rating5" value="5"><label for="r5-5" class="star"
-                title="Rất tốt">★</label>
-            <input type="radio" id="r5-4" name="rating5" value="4"><label for="r5-4" class="star" title="Tốt">★</label>
-            <input type="radio" id="r5-3" name="rating5" value="3"><label for="r5-3" class="star"
-                title="Bình thường">★</label>
-            <input type="radio" id="r5-2" name="rating5" value="2"><label for="r5-2" class="star"
-                title="Cần cẩn thiện">★</label>
-            <input type="radio" id="r5-1" name="rating5" value="1"><label for="r5-1" class="star"
-                title="Rất kém">★</label>
-        </div>
-        <div class="rating-desc" id="desc-rating5">Vui lòng chọn số sao</div>
-    </div>
-
-    <!-- Ý kiến khác -->
-    <div class="form-group">
-        <label><i class='bx bx-message-rounded-dots'></i> Lời nhắn gửi thêm (Tùy chọn)</label>
-        <textarea id="comments"
-            placeholder="Bạn có điều gì muốn chia sẻ thêm hoặc góp ý với Hikorean không?"></textarea>
-    </div>
-
-    <button type="submit" class="submit-btn" id="submitBtn">
-        <i class='bx bx-send'></i> Gửi Đánh Giá Ngay!
-    </button>
-    </form>
-
-    <!-- Success Message -->
-    <div class="success-state" id="successState">
-        <i class='bx bxs-check-circle success-icon'></i>
-        <h2>Cảm ơn bạn!</h2>
-        <p>Phản hồi của bạn đã được gửi thành công. Kết quả này sẽ giúp Hikorean không ngừng cải thiện và mang đến
-            chất lượng tốt nhất.</p>
-        <button class="submit-btn" style="background: var(--text-muted); margin-top: 30px;"
-            onclick="window.location.reload()">Đánh giá khác</button>
-    </div>
     </div>
 
     <script>
