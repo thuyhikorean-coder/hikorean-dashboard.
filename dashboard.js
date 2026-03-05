@@ -195,7 +195,11 @@ function processAllData(data) {
             }
         });
 
-        let latestDateKey = Object.keys(dailyMap).sort().pop() || '';
+        const todayObj = new Date();
+        const mm = String(todayObj.getMonth() + 1).padStart(2, '0');
+        const dd = String(todayObj.getDate()).padStart(2, '0');
+        let latestDateKey = `${mm}-${dd}`;
+
         let todayRevBySale = {};
         rowsSale.slice(1).forEach(row => {
             if (!isFromTargetMonth(row[0])) return;
