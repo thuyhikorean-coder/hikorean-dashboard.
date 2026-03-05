@@ -5,7 +5,8 @@ const CONFIG = {
     QLCL_OUTCOME_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQY7qRLepn6kX8qNTuJqABTf5Xm7UBm6bPs89gSAZ6_fNbFfE6ULg8Jlxab5TD3oA/pub?gid=531665888&single=true&output=csv',
     SALE_TRACKING_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFwJIH_mrYmSIpD-BcHmrYi_xHkGte5YZIdfVUjh8prRMaxVRmI7HRsUK2Cj3hGQ/pub?gid=11036957&single=true&output=csv',
     UPSALE_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRzh_K2wpZTdnolPCRzYhVQxkq0B39c2zYRB4OLRsybc8LwAMFxsrCP98RRjbI--g/pub?gid=548776730&single=true&output=csv',
-    SOCIAL_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSO-aSIrwtMiGFGMpxSqRhIFo7PMA9Uebo7FBxY1rhm_jbUi2cY4Kz3XTXbwVfi7Q/pub?gid=578202755&single=true&output=csv'
+    SOCIAL_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSO-aSIrwtMiGFGMpxSqRhIFo7PMA9Uebo7FBxY1rhm_jbUi2cY4Kz3XTXbwVfi7Q/pub?gid=578202755&single=true&output=csv',
+    FEEDBACK_URL: '' // CHỊ COPY LINK XUẤT CSV CỦA FILE FEEDBACK DÁN VÀO ĐÂY NHÉ
 };
 
 let CURRENT_RAW_DATA = null;
@@ -123,6 +124,28 @@ function processAllData(data) {
     const rowsTrack = parseCSV(data.SALE_TRACKING_URL);
     const rowsUp = parseCSV(data.UPSALE_URL);
     const rowsSocial = parseCSV(data.SOCIAL_URL);
+    const rowsFeedback = parseCSV(data.FEEDBACK_URL);
+
+    // Xử lý dữ liệu Feedback Thật từ Google Sheet
+    d.feedbacks = [];
+    if (rowsFeedback.length > 1) {
+        rowsFeedback.slice(1).forEach(row => {
+            // Cột A: Thời gian, B: Tên, C: Lớp, D: Giáo viên, J (index 9): Điểm TB
+            if (row.length >= 10 && row[0]) {
+                const dateRaw = row[0];
+                const dateObj = new Date(dateRaw);
+                const dateStr = !isNaN(dateObj) ? dateObj.toLocaleDateString('vi-VN') : dateRaw.split(' ')[0] || dateRaw;
+
+                d.feedbacks.push({
+                    date: dateStr,
+                    name: row[1] || 'Ẩn danh',
+                    class: row[2] || '---',
+                    teacher: row[3] || '---',
+                    overall: parseFloat(row[9] || 0)
+                });
+            }
+        });
+    }
 
     // 1. FINANCIAL (Sale Performance)
     let totalRev = 0;
@@ -407,11 +430,23 @@ function renderStudentFeedback() {
     const tbody = document.getElementById('student-feedback-list');
     if (!tbody) return;
 
+    // Ưu tiên lấy dữ liệu thật từ Google Sheet (đã xử lý trong processAllData), gọi là Real
+    let realFeedbacks = (DASHBOARD_DATA.feedbacks && DASHBOARD_DATA.feedbacks.length > 0) ? DASHBOARD_DATA.feedbacks : [];
+
+    // Nếu không có dữ liệu thật (chưa thêm FEEDBACK_URL), thì tạm lấy từ LocalStorage
     let mockFeedbacks = JSON.parse(localStorage.getItem('hikorean_feedbacks') || '[]');
+
+    // Gộp chung 2 dữ liệu: dữ liệu Real làm gốc + dữ liệu LocalStorage bù vào nếu Sheet chưa cập nhật kịp
+    let allFeedbacks = [...realFeedbacks];
+
+    // Nếu chưa có file Google Sheet, sử dụng mockFeedbacks hoàn toàn
+    if (realFeedbacks.length === 0) {
+        allFeedbacks = [...mockFeedbacks];
+    }
 
     // Aggregate by class
     let classMap = {};
-    mockFeedbacks.forEach(f => {
+    allFeedbacks.forEach(f => {
         let cls = f.class || 'Lớp Khác';
         if (!classMap[cls]) {
             classMap[cls] = {
