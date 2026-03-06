@@ -466,36 +466,25 @@
 
             try {
                 const UPSALE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRzh_K2wpZTdnolPCRzYhVQxkq0B39c2zYRB4OLRsybc8LwAMFxsrCP98RRjbI--g/pub?gid=548776730&single=true&output=csv';
-                const QLCL_OUTCOME_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQY7qRLepn6kX8qNTuJqABTf5Xm7UBm6bPs89gSAZ6_fNbFfE6ULg8Jlxab5TD3oA/pub?gid=531665888&single=true&output=csv';
 
-                const [upRes, qlclRes] = await Promise.all([
-                    fetch(UPSALE_URL),
-                    fetch(QLCL_OUTCOME_URL)
-                ]);
-
+                const upRes = await fetch(UPSALE_URL);
                 const upText = await upRes.text();
-                const qlclText = await qlclRes.text();
-
                 const upRows = parseCSV(upText);
-                const qlclRows = parseCSV(qlclText);
-
-                let teacherMap = {};
-                // Lấy thông tin Lớp Kết Khóa (Cột 0) và Giáo viên (Cột 1) từ QLCL
-                qlclRows.slice(1).forEach(r => {
-                    if (r[0] && r[1]) {
-                        teacherMap[r[0].trim()] = r[1].trim();
-                    }
-                });
 
                 let classSet = new Set();
                 let classList = [];
-                // Lấy thông tin Lớp (Cột 1) từ Upsale cho Tháng 3 (Cột 0)
+                let teacherMap = {};
+
+                // Lấy thông tin Lớp (Cột 1) và Giáo viên (Cột 2) từ Upsale cho Tháng 3 (Cột 0)
                 upRows.slice(1).forEach(r => {
                     if (r[0] && r[1] && r[0].includes('Tháng 3')) {
                         let cls = r[1].trim();
+                        let teacher = r[2] ? r[2].trim() : "Chưa có TT Giáo Viên";
+
                         if (cls && !classSet.has(cls)) {
                             classSet.add(cls);
                             classList.push(cls);
+                            teacherMap[cls] = teacher;
                         }
                     }
                 });

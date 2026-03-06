@@ -357,11 +357,11 @@ function processAllData(data) {
         let pot = 0;
         let upsellList = [];
         rowsUp.slice(1).forEach(r => {
-            if (!isFromTargetMonth(r[2])) return;
-            const val = parseMoney(r[5]);
+            if (!isFromTargetMonth(r[3])) return; // Ngày kết khóa (was r[2])
+            const val = parseMoney(r[7]); // Total Remain Amount (was r[5])
             pot += val;
             if (val > 0 && upsellList.length < 5) {
-                upsellList.push({ name: r[3], class: r[1], amount: val });
+                upsellList.push({ name: r[4], class: r[1], amount: val }); // Tên Học Viên (was r[3])
             }
         });
         DASHBOARD_DATA.summary.upsellPotential = pot;
