@@ -419,7 +419,26 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        // Hàm đọc file CSV an toàn chống lỗi dấu phẩy
+        function parseCSV(csvText) {
+            if (!csvText) return [];
+            const lines = csvText.replace(/\r/g, '').split('\n');
+            return lines.map(line => {
+                const result = [];
+                let cur = '', inQuotes = false;
+                for (let i = 0; i < line.length; i++) {
+                    let char = line[i];
+                    if (char === '"' && line[i + 1] === '"') { cur += '"'; i++; }
+                    else if (char === '"') inQuotes = !inQuotes;
+                    else if (char === ',' && !inQuotes) { result.push(cur.trim()); cur = ''; }
+                    else cur += char;
+                }
+                result.push(cur.trim());
+                return result;
+            }).filter(row => row.length >= 2);
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
             const params = new URLSearchParams(window.location.search);
             const classParam = params.get('class');
             const teacherParam = params.get('teacher');
@@ -427,18 +446,77 @@
             const classInput = document.getElementById('className');
             const teacherInput = document.getElementById('teacherName');
 
+            // --- TRƯỜNG HỢP 1: LINK ÉP BUỘC ĐÃ CÓ MÃ LỚP ---
             if (classParam) {
                 classInput.value = classParam;
-            } else {
-                classInput.removeAttribute('readonly');
-                classInput.style.backgroundColor = '#fff';
+                if (teacherParam) teacherInput.value = teacherParam;
+                return; // Nếu đã là link cứng gửi từ web, không làm Menu Xổ Xuống nữa
             }
 
-            if (teacherParam) {
-                teacherInput.value = teacherParam;
-            } else {
-                teacherInput.removeAttribute('readonly');
-                teacherInput.style.backgroundColor = '#fff';
+            // --- TRƯỜNG HỢP 2: LINK TỰ DO TRỐNG -> DATA DROP DOWN ---
+            // Biến input text thành Select input
+            const selectHTML = `<select id="className" required style="background-color: #fff; color: var(--text-main); padding: 14px 18px; border: 2px solid rgba(93, 64, 55, 0.15); border-radius: 10px; width: 100%; font-size: 1rem; outline: none;">
+                <option value="" disabled selected>Đang tải danh sách Lớp...</option>
+            </select>`;
+            classInput.outerHTML = selectHTML;
+            const classSelect = document.getElementById('className');
+
+            teacherInput.setAttribute('readonly', 'true');
+            teacherInput.style.backgroundColor = 'rgba(0,0,0,0.05)';
+
+            try {
+                const UPSALE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRzh_K2wpZTdnolPCRzYhVQxkq0B39c2zYRB4OLRsybc8LwAMFxsrCP98RRjbI--g/pub?gid=548776730&single=true&output=csv';
+                const QLCL_OUTCOME_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQY7qRLepn6kX8qNTuJqABTf5Xm7UBm6bPs89gSAZ6_fNbFfE6ULg8Jlxab5TD3oA/pub?gid=531665888&single=true&output=csv';
+
+                const [upRes, qlclRes] = await Promise.all([
+                    fetch(UPSALE_URL),
+                    fetch(QLCL_OUTCOME_URL)
+                ]);
+
+                const upText = await upRes.text();
+                const qlclText = await qlclRes.text();
+
+                const upRows = parseCSV(upText);
+                const qlclRows = parseCSV(qlclText);
+
+                let teacherMap = {};
+                // Lấy thông tin Lớp Kết Khóa (Cột 0) và Giáo viên (Cột 1) từ QLCL
+                qlclRows.slice(1).forEach(r => {
+                    if (r[0] && r[1]) {
+                        teacherMap[r[0].trim()] = r[1].trim();
+                    }
+                });
+
+                let classSet = new Set();
+                let classList = [];
+                // Lấy thông tin Lớp (Cột 1) từ Upsale cho Tháng 3 (Cột 0)
+                upRows.slice(1).forEach(r => {
+                    if (r[0] && r[1] && r[0].includes('Tháng 3')) {
+                        let cls = r[1].trim();
+                        if (cls && !classSet.has(cls)) {
+                            classSet.add(cls);
+                            classList.push(cls);
+                        }
+                    }
+                });
+
+                classSelect.innerHTML = `<option value="" disabled selected>-- Vui lòng chọn Lớp --</option>`;
+                classList.sort().forEach(cls => {
+                    const opt = document.createElement('option');
+                    opt.value = cls;
+                    opt.text = cls;
+                    classSelect.appendChild(opt);
+                });
+
+                classSelect.addEventListener('change', (e) => {
+                    const selectedClass = e.target.value;
+                    const teacher = teacherMap[selectedClass] || "Chưa có TT Giáo Viên";
+                    teacherInput.value = teacher;
+                });
+
+            } catch (err) {
+                console.error(err);
+                classSelect.innerHTML = `<option value="" disabled selected>Lỗi tải danh sách lớp</option>`;
             }
         });
 
