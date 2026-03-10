@@ -319,19 +319,19 @@ function processAllData(data) {
         let passCount = 0;
 
         rowsQlclO.slice(1).forEach(row => {
-            if (!isFromTargetMonth(row[2])) return;
+            if (!isFromTargetMonth(row[3])) return; // Ngày Kết khoá
             if (row[0]) {
-                const pass = row[5] || '0%';
-                const csat = row[6] || '0';
+                const pass = row[7] || '0%'; // Tỷ Lệ Đạt Chuẩn
+                const csat = row[8] || '0'; // Điểm CSAT
 
                 finishedClasses.push({
                     id: row[0],
                     teacher: row[1] || '---',
-                    date: row[2] || '---',
-                    students: row[3] || '0',
+                    date: row[3] || '---',
+                    students: row[4] || '0', // Tổng sĩ số
                     passRate: pass,
                     csat: csat,
-                    attendance: row[7] || '0%'
+                    attendance: row[9] || '0%' // Tỉ lệ chuyên cần
                 });
 
                 let valCsat = parseFloat(csat.replace(',', '.'));
