@@ -2,7 +2,7 @@ const CONFIG = {
     SALE_REVENUE_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFwJIH_mrYmSIpD-BcHmrYi_xHkGte5YZIdfVUjh8prRMaxVRmI7HRsUK2Cj3hGQ/pub?gid=1757451089&single=true&output=csv',
     MKT_ADS_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSO-aSIrwtMiGFGMpxSqRhIFo7PMA9Uebo7FBxY1rhm_jbUi2cY4Kz3XTXbwVfi7Q/pub?gid=323525620&single=true&output=csv',
     QLCL_DAILY_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQY7qRLepn6kX8qNTuJqABTf5Xm7UBm6bPs89gSAZ6_fNbFfE6ULg8Jlxab5TD3oA/pub?gid=1405301812&single=true&output=csv',
-    QLCL_OUTCOME_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQY7qRLepn6kX8qNTuJqABTf5Xm7UBm6bPs89gSAZ6_fNbFfE6ULg8Jlxab5TD3oA/pub?gid=531665888&single=true&output=csv',
+    QLCL_OUTCOME_URL: 'https://docs.google.com/spreadsheets/d/1TBDo2dCjKznOlav7FnnebEML7o7VuDq1/export?format=csv&gid=531665888',
     SALE_TRACKING_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFwJIH_mrYmSIpD-BcHmrYi_xHkGte5YZIdfVUjh8prRMaxVRmI7HRsUK2Cj3hGQ/pub?gid=11036957&single=true&output=csv',
     UPSALE_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRzh_K2wpZTdnolPCRzYhVQxkq0B39c2zYRB4OLRsybc8LwAMFxsrCP98RRjbI--g/pub?gid=548776730&single=true&output=csv',
     SOCIAL_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSO-aSIrwtMiGFGMpxSqRhIFo7PMA9Uebo7FBxY1rhm_jbUi2cY4Kz3XTXbwVfi7Q/pub?gid=578202755&single=true&output=csv',
