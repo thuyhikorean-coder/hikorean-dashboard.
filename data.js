@@ -57,8 +57,7 @@ window.DASHBOARD_DATA = {
             id: 'O2',
             objective: 'Chất lượng Đào tạo & Vận hành',
             krs: [
-                { name: 'Chất lượng GV (CSAT > 4.5)', current: 0, target: 4.5, unit: 'đ', progress: 0 },
-                { name: 'Tiến độ báo cáo (> 90%)', current: 0, target: 90, unit: '%', progress: 0 }
+                { name: 'Chất lượng GV (CSAT > 4.5)', current: 0, target: 4.5, unit: 'đ', progress: 0 }
             ]
         }
     ]

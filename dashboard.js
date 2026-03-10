@@ -417,9 +417,6 @@ function processAllData(data) {
     // OKR O2: Quality & Operations
     d.okrs[1].krs[0].current = d.growth.avgSatisfaction;
     d.okrs[1].krs[0].progress = Math.min(100, Math.round((d.growth.avgSatisfaction / 4.5) * 100));
-
-    d.okrs[1].krs[1].current = d.process.avgAttendance;
-    d.okrs[1].krs[1].progress = Math.min(100, d.process.avgAttendance);
 }
 
 function initDashboard() {
@@ -555,15 +552,15 @@ function renderOKRs() {
     const list = document.getElementById('okr-list');
     if (!list) return;
     list.innerHTML = DASHBOARD_DATA.okrs.map(okr => `
-        <div class="okr-item-v2">
-            <div style="font-weight:700; font-size:0.8rem; color:var(--primary); margin-bottom:8px;">${okr.objective}</div>
+        <div class="okr-item-v2" style="margin-bottom:28px;">
+            <div style="font-weight:700; font-size:0.85rem; color:var(--primary); margin-bottom:12px;">${okr.objective}</div>
             ${okr.krs.map(kr => `
-                <div style="margin-bottom:8px;">
-                    <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:4px;">
+                <div style="margin-bottom:12px;">
+                    <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:6px;">
                         <span>${kr.name}</span>
                         <span style="font-weight:700">${kr.current} / ${kr.target} ${kr.unit}</span>
                     </div>
-                    <div class="progress-container"><div class="progress-fill" style="width:${kr.progress}%"></div></div>
+                    <div class="progress-container" style="height:8px;"><div class="progress-fill" style="width:${kr.progress}%"></div></div>
                 </div>
             `).join('')}
         </div>
