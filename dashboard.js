@@ -169,11 +169,13 @@ function processAllData(data) {
                 revBySale[saleName] = (revBySale[saleName] || 0) + amount;
                 orderCount[saleName] = (orderCount[saleName] || 0) + 1;
 
-                if (source === 'MKT-ADS' || source.includes('REMIND') || source.includes('RE-MARKETING')) {
+                const isMktAdsRe = source.includes('MKT-ADS') || source.includes('RE-MARKETING');
+
+                if (isMktAdsRe) {
                     totalMktAdsRev += amount;
                 }
 
-                if (type.includes('MỚI') || type.includes('NEW')) {
+                if ((type.includes('MỚI') || type.includes('NEW')) && isMktAdsRe) {
                     newCount[saleName] = (newCount[saleName] || 0) + 1;
                     totalNewRev += amount;
                 } else if (type.includes('CŨ') || type.includes('UPSELL') || type.includes('UP')) {
@@ -215,6 +217,7 @@ function processAllData(data) {
         DASHBOARD_DATA.summary.totalRevenue = totalRev;
         DASHBOARD_DATA.summary.totalNewRevenue = totalNewRev;
         DASHBOARD_DATA.summary.totalUpRevenue = totalUpRev;
+        DASHBOARD_DATA.summary.totalOtherRevenue = totalRev - totalNewRev - totalUpRev;
         DASHBOARD_DATA.summary.totalMktAdsRevenue = totalMktAdsRev;
         DASHBOARD_DATA.financial.dailyRevenue = Object.entries(dailyMap).map(([date, value]) => ({ date, value })).sort();
         DASHBOARD_DATA.financial.revenueBySale = revBySale;
@@ -257,8 +260,8 @@ function processAllData(data) {
         DASHBOARD_DATA.summary.mktCost = mktCost;
 
         // Fix: MKT Cost Ratio is strictly against MKT-ADS revenue sum, not just any NEW revenue
-        const currentMktAdsRev = DASHBOARD_DATA.summary.totalMktAdsRevenue || 0;
-        DASHBOARD_DATA.summary.mktCostRatio = currentMktAdsRev > 0 ? ((mktCost / currentMktAdsRev) * 100).toFixed(1) : 0;
+        const currentMktNewRev = DASHBOARD_DATA.summary.totalNewRevenue || 0;
+        DASHBOARD_DATA.summary.mktCostRatio = currentMktNewRev > 0 ? ((mktCost / currentMktNewRev) * 100).toFixed(1) : 0;
 
         const doneCount = rowsSale.filter(r => {
             if (!isFromTargetMonth(r[0])) return false;
@@ -310,41 +313,59 @@ function processAllData(data) {
     // 4. QUALITY & OUTCOMES
     if (rowsQlclO.length > 1) {
         let finishedClasses = [];
+        let totalCsat = 0;
+        let csatCount = 0;
+        let totalPass = 0;
+        let passCount = 0;
+
         rowsQlclO.slice(1).forEach(row => {
             if (!isFromTargetMonth(row[2])) return;
             if (row[0]) {
+                const pass = row[5] || '0%';
+                const csat = row[6] || '0';
+
                 finishedClasses.push({
                     id: row[0],
                     teacher: row[1] || '---',
                     date: row[2] || '---',
                     students: row[3] || '0',
-                    passRate: row[5] || '0%',
-                    csat: row[6] || '0',
+                    passRate: pass,
+                    csat: csat,
                     attendance: row[7] || '0%'
                 });
+
+                let valCsat = parseFloat(csat.replace(',', '.'));
+                if (valCsat > 0) { totalCsat += valCsat; csatCount++; }
+
+                let valPass = parseFloat(pass.replace('%', '').replace(',', '.'));
+                if (valPass > 0) { totalPass += valPass; passCount++; }
             }
         });
         DASHBOARD_DATA.process.finishedClasses = finishedClasses;
+        DASHBOARD_DATA.growth.avgSatisfaction = csatCount > 0 ? (totalCsat / csatCount).toFixed(1) : parseFloat(localStorage.getItem('backup_csat') || '0');
+        DASHBOARD_DATA.growth.avgPassRate = passCount > 0 ? (totalPass / passCount).toFixed(1) : 0;
+        if (csatCount > 0) localStorage.setItem('backup_csat', DASHBOARD_DATA.growth.avgSatisfaction);
     }
 
     if (rowsSocial.length > 1) {
-        let f = 0;
         let ytLatest = 0;
         let fbLatest = 0;
         let hitVideos = 0;
 
         rowsSocial.slice(1).forEach(r => {
-            if (!isFromTargetMonth(r[0])) return;
             const platform = r[1]?.toUpperCase() || '';
-            const followers = parseMoney(r[2]) || 0;
+            let rawStr = r[2] ? r[2].toString().replace(/\\./g, '') : '0';
+            const followers = parseFloat(rawStr) || 0;
             const views1k = parseInt(r[3]) || 0;
 
             if (platform.includes('FACEBOOK') || platform.includes('FANPAGE')) {
-                fbLatest = followers; // Keeps the latest reported value (Cumulative)
+                fbLatest += followers;
             } else if (platform.includes('YOUTUBE') || platform.includes('YT')) {
-                ytLatest = followers; // Keeps the latest reported value (Cumulative)
+                ytLatest += followers;
             }
-            hitVideos += views1k; // Sum hits in month
+            if (isFromTargetMonth(r[0])) {
+                hitVideos += views1k; // Only sum hits from target month
+            }
         });
 
         DASHBOARD_DATA.growth.totalFollowers = fbLatest + ytLatest;
@@ -356,16 +377,31 @@ function processAllData(data) {
     if (rowsUp.length > 1) {
         let pot = 0;
         let upsellList = [];
+        let upsellByClass = {};
+
         rowsUp.slice(1).forEach(r => {
-            if (!isFromTargetMonth(r[3])) return; // Ngày kết khóa (was r[2])
-            const val = parseMoney(r[7]); // Total Remain Amount (was r[5])
+            if (!isFromTargetMonth(r[3])) return; // Ngày kết khóa
+            const val = parseMoney(r[7]); // Total Remain Amount
+            const className = r[1]?.trim();
             pot += val;
             if (val > 0 && upsellList.length < 5) {
-                upsellList.push({ name: r[4], class: r[1], amount: val }); // Tên Học Viên (was r[3])
+                upsellList.push({ name: r[4], class: className, amount: val }); 
+            }
+
+            if (className) {
+                if (!upsellByClass[className]) {
+                    upsellByClass[className] = { total: 0, up: 0 };
+                }
+                upsellByClass[className].total++;
+                const result = r[11]?.toUpperCase() || '';
+                if (result.includes('LÊN LỚP') || result.includes('THÀNH CÔNG')) {
+                    upsellByClass[className].up++;
+                }
             }
         });
         DASHBOARD_DATA.summary.upsellPotential = pot;
         DASHBOARD_DATA.customer.upsellList = upsellList;
+        DASHBOARD_DATA.process.upsellByClass = upsellByClass;
     }
 
     // Update OKRs logic
@@ -400,6 +436,9 @@ function initDashboard() {
 
     const upRevEl = document.getElementById('upRevenue');
     if (upRevEl) upRevEl.textContent = formatCurrency(d.summary.totalUpRevenue || 0);
+
+    const otherRevEl = document.getElementById('otherRevenue');
+    if (otherRevEl) otherRevEl.textContent = formatCurrency(d.summary.totalOtherRevenue || 0);
 
     const updateEl = document.getElementById('lastUpdate');
     if (updateEl) updateEl.textContent = `Sync: ${new Date().toLocaleTimeString('vi-VN')}`;
@@ -594,7 +633,15 @@ function renderFinishedClasses() {
     const tbody = document.getElementById('compliance-table');
     if (!tbody) return;
     const classes = DASHBOARD_DATA.process.finishedClasses || [];
-    tbody.innerHTML = classes.slice(0, 5).map(c => `
+    const upsellByClass = DASHBOARD_DATA.process.upsellByClass || {};
+
+    tbody.innerHTML = classes.slice(0, 5).map(c => {
+        let upInfo = upsellByClass[c.id];
+        let upRate = '0%';
+        if (upInfo && upInfo.total > 0) {
+            upRate = Math.round((upInfo.up / upInfo.total) * 100) + '%';
+        }
+        return `
         <tr>
             <td style="font-weight:700;">
                 <div style="display:flex; align-items:center; gap:8px;">
@@ -603,10 +650,11 @@ function renderFinishedClasses() {
                 </div>
             </td>
             <td style="text-align:center;">${c.students}</td>
+            <td style="text-align:center; font-weight:700; color:var(--warning);">${upRate}</td>
             <td style="color:var(--danger); font-weight:700;">${c.passRate}</td>
             <td style="font-weight:700; color:var(--info); text-align:right;">${c.attendance}</td>
         </tr>
-    `).join('');
+    `}).join('');
 }
 
 // Global copy logic for Feedback Link
