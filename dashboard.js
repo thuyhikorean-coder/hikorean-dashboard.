@@ -353,6 +353,8 @@ function processAllData(data) {
         let hitVideos = 0;
 
         rowsSocial.slice(1).forEach(r => {
+            if (!isFromTargetMonth(r[0])) return; // CHỈ LẤY THÁNG ĐƯỢC CHỌN
+
             const platform = r[1]?.toUpperCase() || '';
             let rawStr = r[2] ? r[2].toString().replace(/\\./g, '') : '0';
             const followers = parseFloat(rawStr) || 0;
@@ -363,9 +365,7 @@ function processAllData(data) {
             } else if (platform.includes('YOUTUBE') || platform.includes('YT')) {
                 ytLatest += followers;
             }
-            if (isFromTargetMonth(r[0])) {
-                hitVideos += views1k; // Only sum hits from target month
-            }
+            hitVideos += views1k;
         });
 
         DASHBOARD_DATA.growth.totalFollowers = fbLatest + ytLatest;
