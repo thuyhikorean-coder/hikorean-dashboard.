@@ -150,6 +150,12 @@ body {
 }
 
 /* Table Design */
+.table-wrapper {
+    max-height: 250px;
+    overflow-y: auto;
+    padding-right: 4px;
+}  
+
 .compact-table {
     width: 100%;
     border-collapse: separate;

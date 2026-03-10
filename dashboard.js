@@ -417,6 +417,12 @@ function processAllData(data) {
     // OKR O2: Quality & Operations
     d.okrs[1].krs[0].current = d.growth.avgSatisfaction;
     d.okrs[1].krs[0].progress = Math.min(100, Math.round((d.growth.avgSatisfaction / 4.5) * 100));
+
+    d.okrs[1].krs[1].current = d.growth.avgPassRate;
+    d.okrs[1].krs[1].progress = Math.min(100, Math.round((d.growth.avgPassRate / 90) * 100));
+
+    d.okrs[1].krs[2].current = d.process.avgAttendance;
+    d.okrs[1].krs[2].progress = Math.min(100, Math.round((d.process.avgAttendance / 90) * 100));
 }
 
 function initDashboard() {
@@ -632,7 +638,7 @@ function renderFinishedClasses() {
     const classes = DASHBOARD_DATA.process.finishedClasses || [];
     const upsellByClass = DASHBOARD_DATA.process.upsellByClass || {};
 
-    tbody.innerHTML = classes.slice(0, 5).map(c => {
+    tbody.innerHTML = classes.map(c => {
         let upInfo = upsellByClass[c.id];
         let upRate = '0%';
         if (upInfo && upInfo.total > 0) {
