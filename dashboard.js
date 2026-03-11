@@ -317,12 +317,15 @@ function processAllData(data) {
         let csatCount = 0;
         let totalPass = 0;
         let passCount = 0;
+        let totalAttendance = 0;
+        let attendanceCount = 0;
 
         rowsQlclO.slice(1).forEach(row => {
             if (!isFromTargetMonth(row[3])) return; // Ngày Kết khoá
             if (row[0]) {
                 const pass = row[7] || '0%'; // Tỷ Lệ Đạt Chuẩn
                 const csat = row[8] || '0'; // Điểm CSAT
+                const attn = row[9] || '0%'; // Tỉ lệ chuyên cần
 
                 finishedClasses.push({
                     id: row[0],
@@ -331,7 +334,7 @@ function processAllData(data) {
                     students: row[4] || '0', // Tổng sĩ số
                     passRate: pass,
                     csat: csat,
-                    attendance: row[9] || '0%' // Tỉ lệ chuyên cần
+                    attendance: attn 
                 });
 
                 let valCsat = parseFloat(csat.replace(',', '.'));
@@ -339,11 +342,15 @@ function processAllData(data) {
 
                 let valPass = parseFloat(pass.replace('%', '').replace(',', '.'));
                 if (valPass > 0) { totalPass += valPass; passCount++; }
+
+                let valAttn = parseFloat(attn.replace('%', '').replace(',', '.'));
+                if (valAttn > 0) { totalAttendance += valAttn; attendanceCount++; }
             }
         });
         DASHBOARD_DATA.process.finishedClasses = finishedClasses;
         DASHBOARD_DATA.growth.avgSatisfaction = csatCount > 0 ? (totalCsat / csatCount).toFixed(1) : parseFloat(localStorage.getItem('backup_csat') || '0');
         DASHBOARD_DATA.growth.avgPassRate = passCount > 0 ? (totalPass / passCount).toFixed(1) : 0;
+        DASHBOARD_DATA.process.avgAttendance = attendanceCount > 0 ? (totalAttendance / attendanceCount).toFixed(1) : 0;
         if (csatCount > 0) localStorage.setItem('backup_csat', DASHBOARD_DATA.growth.avgSatisfaction);
     }
 
@@ -581,8 +588,6 @@ function renderBSCTable() {
         { kpi: 'Doanh thu thuần', actual: formatCurrency(d.summary.totalRevenue), target: formatCurrency(d.summary.revenueGoal), status: d.summary.totalRevenue >= d.summary.revenueGoal ? 'process' : 'finance' },
         { kpi: 'Tỉ suất MKT/DT (Ads)', actual: `${d.summary.mktCostRatio}%`, target: `< ${d.summary.mktTarget}%`, status: d.summary.mktCostRatio <= d.summary.mktTarget ? 'process' : 'finance' },
         { kpi: 'Tỉ suất GV/DT', actual: `${d.summary.teacherCostRatio}%`, target: '20-25%', status: 'process' },
-        { kpi: 'HV Đạt chuẩn (>7đ)', actual: `${d.growth.avgPassRate}%`, target: '> 90%', status: d.growth.avgPassRate >= 90 ? 'process' : 'finance' },
-        { kpi: 'Chuyên cần (Đi học)', actual: `${d.process.avgAttendance}%`, target: '> 90%', status: d.process.avgAttendance >= 90 ? 'process' : 'process' },
         { kpi: 'Điểm CSAT', actual: d.growth.avgSatisfaction, target: '> 4.5', status: 'growth' },
         { kpi: 'Chốt đơn (Lead)', actual: `${d.customer.funnel.conversionRate}%`, target: '> 10%', status: 'process' }
     ];
@@ -877,7 +882,7 @@ function initCharts() {
     create('revenueTrendChart', 'line', d.financial.dailyRevenue.map(v => v.date), d.financial.dailyRevenue.map(v => v.value), '#C62828');
 
     create('courseRevenueChart', 'doughnut', Object.keys(d.financial.revenueByCourse), Object.values(d.financial.revenueByCourse),
-        ['#1565C0', '#C62828', '#1976D2', '#D32F2F']);
+        ['#1565C0', '#C62828', '#1976D2', '#D32F2F', '#F2C94C', '#4FCC5C', '#9C27B0', '#FF9800', '#795548', '#607D8B']);
 
     create('salesRevenueChart', 'bar', Object.keys(d.financial.revenueBySale), Object.values(d.financial.revenueBySale), '#1565C0');
 }
