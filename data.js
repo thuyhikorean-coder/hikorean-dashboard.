@@ -59,7 +59,7 @@ window.DASHBOARD_DATA = {
             krs: [
                 { name: 'Chất lượng GV (CSAT > 4.5)', current: 0, target: 4.5, unit: 'đ', progress: 0 },
                 { name: 'HV Đạt chuẩn (> 90%)', current: 0, target: 90, unit: '%', progress: 0 },
-                { name: 'Tỉ lệ chuyên cần (> 90%)', current: 0, target: 90, unit: '%', progress: 0 }
+                { name: 'Tỉ lệ chuyên cần (> 80%)', current: 0, target: 80, unit: '%', progress: 0 }
             ]
         }
     ]

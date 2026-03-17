@@ -429,7 +429,7 @@ function processAllData(data) {
     d.okrs[1].krs[1].progress = Math.min(100, Math.round((d.growth.avgPassRate / 90) * 100));
 
     d.okrs[1].krs[2].current = d.process.avgAttendance;
-    d.okrs[1].krs[2].progress = Math.min(100, Math.round((d.process.avgAttendance / 90) * 100));
+    d.okrs[1].krs[2].progress = Math.min(100, Math.round((d.process.avgAttendance / 80) * 100));
 }
 
 function initDashboard() {
