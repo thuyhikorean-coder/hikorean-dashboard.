@@ -6,7 +6,8 @@ const CONFIG = {
     SALE_TRACKING_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTFwJIH_mrYmSIpD-BcHmrYi_xHkGte5YZIdfVUjh8prRMaxVRmI7HRsUK2Cj3hGQ/pub?gid=11036957&single=true&output=csv',
     UPSALE_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRzh_K2wpZTdnolPCRzYhVQxkq0B39c2zYRB4OLRsybc8LwAMFxsrCP98RRjbI--g/pub?gid=548776730&single=true&output=csv',
     SOCIAL_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSO-aSIrwtMiGFGMpxSqRhIFo7PMA9Uebo7FBxY1rhm_jbUi2cY4Kz3XTXbwVfi7Q/pub?gid=578202755&single=true&output=csv',
-    FEEDBACK_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTsv4tsHlXao_Awr8Xe1RI3tzGkL11KMJga_vlXv7_y8Nz6jwbfzoaoBUTbTk63TiUYz2shPpG0cEof/pub?gid=0&single=true&output=csv'
+    FEEDBACK_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTsv4tsHlXao_Awr8Xe1RI3tzGkL11KMJga_vlXv7_y8Nz6jwbfzoaoBUTbTk63TiUYz2shPpG0cEof/pub?gid=0&single=true&output=csv',
+    TEACHER_COST_URL: 'https://docs.google.com/spreadsheets/d/1B95z7EC1sc7PVhxakfvebClDSu2yCGRyHwHtHw7xW-g/export?format=csv&gid=0'
 };
 
 let CURRENT_RAW_DATA = null;
@@ -125,6 +126,7 @@ function processAllData(data) {
     const rowsUp = parseCSV(data.UPSALE_URL);
     const rowsSocial = parseCSV(data.SOCIAL_URL);
     const rowsFeedback = parseCSV(data.FEEDBACK_URL);
+    const rowsTeacherCost = parseCSV(data.TEACHER_COST_URL);
 
     // Xử lý dữ liệu Feedback Thật từ Google Sheet
     d.feedbacks = [];
@@ -306,8 +308,39 @@ function processAllData(data) {
         });
         DASHBOARD_DATA.summary.teacherCost = teacherFee;
         const currentRev = DASHBOARD_DATA.summary.totalRevenue;
-        DASHBOARD_DATA.summary.teacherCostRatio = currentRev > 0 ? ((teacherFee / currentRev) * 100).toFixed(1) : 0;
+        DASHBOARD_DATA.summary.teacherCostRatio = "0.0"; // Fallback value
         DASHBOARD_DATA.process.avgAttendance = classCount > 0 ? (totalAtt / classCount).toFixed(1) : 0;
+    }
+
+    if (rowsTeacherCost && rowsTeacherCost.length > 1) {
+        let totalCpRatio = 0;
+        let validCpClasses = 0;
+        
+        let startIdx = 1;
+        for (let i = 0; i < Math.min(10, rowsTeacherCost.length); i++) {
+            if (rowsTeacherCost[i][0] === 'STT') {
+                startIdx = i + 1;
+                break;
+            }
+        }
+
+        rowsTeacherCost.slice(startIdx).forEach(row => {
+            if (row.length < 9) return;
+            if (!isFromTargetMonth(row[1])) return; 
+            
+            let cpRatioStr = row[8] ? row[8].toString().trim() : '';
+            if (cpRatioStr && cpRatioStr.includes('%')) {
+                let cpVal = parseFloat(cpRatioStr.replace('%', '').replace(',', '.'));
+                if (!isNaN(cpVal)) {
+                    totalCpRatio += cpVal;
+                    validCpClasses++;
+                }
+            }
+        });
+        
+        if (validCpClasses > 0) {
+            DASHBOARD_DATA.summary.teacherCostRatio = (totalCpRatio / validCpClasses).toFixed(1);
+        }
     }
 
     // 4. QUALITY & OUTCOMES
