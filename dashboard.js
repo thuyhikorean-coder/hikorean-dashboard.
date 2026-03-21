@@ -205,27 +205,51 @@ function processAllData(data) {
         let latestDateKey = `${mm}-${dd}`;
 
         let todayRevBySale = {};
+        let dailyRevMap = {};
         rowsSale.slice(1).forEach(row => {
             if (!isFromTargetMonth(row[0])) return;
             const status = row[9]?.toUpperCase();
             if (status === 'DONE' || status === 'DEPOSIT') {
                 const stdDate = standardizeDate(row[0]);
-                if (stdDate.length >= 10 && stdDate.substring(5, 10) === latestDateKey) {
-                    const saleName = row[3]?.trim() || 'N/A';
-                    todayRevBySale[saleName] = (todayRevBySale[saleName] || 0) + parseMoney(row[8]);
+                const amount = parseMoney(row[8]);
+                const saleName = row[3]?.trim() || 'N/A';
+                
+                if (stdDate.length >= 10) {
+                    const dKey = stdDate.substring(5, 10);
+                    if (!dailyRevMap[saleName]) dailyRevMap[saleName] = {};
+                    dailyRevMap[saleName][dKey] = (dailyRevMap[saleName][dKey] || 0) + amount;
+                    
+                    if (dKey === latestDateKey) {
+                        todayRevBySale[saleName] = (todayRevBySale[saleName] || 0) + amount;
+                    }
                 }
             }
         });
+        const selector = document.getElementById('monthSelector');
+        const selectedValue = selector ? selector.value : "03-2026";
+        const [selM, selY] = selectedValue.split('-');
+        const isCurrentMonth = (todayObj.getFullYear() == selY && (todayObj.getMonth() + 1) == selM);
+        
+        let maxDay = isCurrentMonth ? todayObj.getDate() : new Date(selY, selM, 0).getDate();
+        for (let d = 1; d <= maxDay; d++) {
+            const tempKey = `${selM.padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            if (dailyMap[tempKey] === undefined) {
+                dailyMap[tempKey] = 0;
+            }
+        }
+
         DASHBOARD_DATA.summary.totalRevenue = totalRev;
         DASHBOARD_DATA.summary.totalNewRevenue = totalNewRev;
         DASHBOARD_DATA.summary.totalUpRevenue = totalUpRev;
         DASHBOARD_DATA.summary.totalOtherRevenue = totalRev - totalNewRev - totalUpRev;
         DASHBOARD_DATA.summary.totalMktAdsRevenue = totalMktAdsRev;
-        DASHBOARD_DATA.financial.dailyRevenue = Object.entries(dailyMap).map(([date, value]) => ({ date, value })).sort();
+        DASHBOARD_DATA.financial.dailyRevenue = Object.entries(dailyMap)
+            .map(([date, value]) => ({ date, value }))
+            .sort((a, b) => a.date.localeCompare(b.date));
         DASHBOARD_DATA.financial.revenueBySale = revBySale;
         DASHBOARD_DATA.financial.revenueByCourse = revByCourse;
 
-        // Calculate Combo Rates & Sprint Progress
+        // Calculate Combo Rates & Sprint Progress & Bonus
         let saleStats = {};
         let totalNewCount = 0;
         let totalUpCount = 0;
@@ -233,12 +257,26 @@ function processAllData(data) {
         Object.keys(revBySale).forEach(name => {
             totalNewCount += newCount[name] || 0;
             totalUpCount += upCount[name] || 0;
+            
+            let bonusAmount = 0;
+            let daysHit = 0;
+            if (dailyRevMap[name]) {
+                Object.keys(dailyRevMap[name]).forEach(dateKey => {
+                    if (dailyRevMap[name][dateKey] >= 9800000) {
+                        bonusAmount += 100000;
+                        daysHit++;
+                    }
+                });
+            }
+
             saleStats[name] = {
                 rev: revBySale[name],
                 comboRate: orderCount[name] > 0 ? ((comboCount[name] || 0) / orderCount[name] * 100).toFixed(0) : 0,
                 newCount: newCount[name] || 0,
                 upCount: upCount[name] || 0,
-                todayRev: todayRevBySale[name] || 0
+                todayRev: todayRevBySale[name] || 0,
+                bonus: bonusAmount,
+                daysHit: daysHit
             };
         });
         DASHBOARD_DATA.financial.saleStats = saleStats;
@@ -816,12 +854,24 @@ function renderRaceCards() {
             }, 800 + (Math.random() * 500)); // slight random delay if both hit it
         }
 
+        let bonusHtml = '';
+        if (s.bonus > 0) {
+            bonusHtml = `
+                <div style="background: linear-gradient(90deg, rgba(212,175,55,0.15) 0%, rgba(212,175,55,0.02) 100%); border-left: 3px solid var(--accent); padding: 8px 12px; margin-bottom: 12px; border-radius: 0 6px 6px 0; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size: 0.75rem; color: #D4AF37; font-weight: 700; display:flex; align-items:center; gap:5px;"><i class='bx bx-gift bx-tada' style="font-size:1.1rem;"></i> Tiền thưởng điểm danh (${s.daysHit} ngày đạt)</span>
+                    <span style="font-size: 1rem; font-weight: 900; color: #D4AF37; text-shadow: 0 0 8px rgba(212,175,55,0.5);">${s.bonus.toLocaleString('vi-VN')} đ</span>
+                </div>
+            `;
+        }
+
         html += `
             <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); ${isWinner ? 'box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); border-color: rgba(255, 215, 0, 0.4);' : ''}">
                 <div style="display:flex; justify-content:space-between; margin-bottom: 6px;">
                     <span style="font-weight: 800; color: var(--text-main); font-size: 0.9rem; display: flex; align-items: center;"><i class='bx bxs-user-rectangle' style="margin-right: 5px;"></i> ${name} ${badgeHTML}</span>
                     <span style="font-weight: 700; color: var(--accent); font-size: 0.85rem;">${(s.rev / 1000000).toFixed(1)} / 197M</span>
                 </div>
+
+                ${bonusHtml}
                 
                 <!-- Daily Mini Tracker -->
                 <div style="margin-bottom: 8px;">
