@@ -524,19 +524,7 @@ function initDashboard() {
     const updateEl = document.getElementById('lastUpdate');
     if (updateEl) updateEl.textContent = `Sync: ${new Date().toLocaleTimeString('vi-VN')}`;
 
-    // Sprint Banner countdown
-    const sprintDate = new Date("2026-03-21T00:00:00+07:00");
-    const today = new Date();
-    const daysLeft = Math.max(0, Math.floor((sprintDate - today) / (1000 * 60 * 60 * 24)));
-    const dlEl = document.getElementById('daysLeft');
-    const bannerEl = document.getElementById('sprintBanner');
     const selector = document.getElementById('monthSelector');
-    if (selector && selector.value === '03-2026') {
-        if (bannerEl) bannerEl.style.display = 'flex';
-        if (dlEl) dlEl.textContent = daysLeft;
-    } else {
-        if (bannerEl) bannerEl.style.display = 'none';
-    }
 
     renderOKRs();
     renderBSCTable();
@@ -887,7 +875,7 @@ function renderRaceCards() {
                 <!-- Sprint Goal Tracker -->
                 <div>
                     <div style="display:flex; justify-content:space-between; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 3px;">
-                        <span>Tổng kết 20 ngày: </span>
+                        <span>Tổng kết Tháng: </span>
                         <span style="font-weight: 700; color: ${sprintColor}">${sprintProgress}%</span>
                     </div>
                     <div class="progress-container" style="height: 6px; margin: 0; background: rgba(0,0,0,0.1);">
