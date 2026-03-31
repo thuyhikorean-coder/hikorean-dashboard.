@@ -151,7 +151,7 @@ body {
 
 /* Table Design */
 .table-wrapper {
-    max-height: 300px !important;
+    max-height: 200px !important;
     overflow-y: auto !important;
     padding-right: 4px;
     scrollbar-width: thin;
