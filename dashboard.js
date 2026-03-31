@@ -64,32 +64,69 @@ function parseMoney(val) {
     return parseFloat(clean.replace(/[.,]/g, (m, i, s) => (i === s.lastIndexOf(m) && s.length - i <= 3) ? '.' : '')) || 0;
 }
 
-function parseCSV(csvText) {
-    if (!csvText) return [];
-    const lines = csvText.replace(/\r/g, '').split('\n');
-    return lines.map(line => {
-        const result = [];
-        let cur = '', inQuotes = false;
-        for (let i = 0; i < line.length; i++) {
-            let char = line[i];
-            if (char === '"' && line[i + 1] === '"') { cur += '"'; i++; }
-            else if (char === '"') inQuotes = !inQuotes;
-            else if (char === ',' && !inQuotes) { result.push(cur.trim()); cur = ''; }
-            else cur += char;
+function parseCSV(text) {
+    if (!text) return [];
+    const rows = [];
+    let row = [];
+    let col = "";
+    let inQuote = false;
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const nextChar = text[i+1];
+        if (inQuote) {
+            if (char === '"' && nextChar === '"') { col += '"'; i++; }
+            else if (char === '"') { inQuote = false; }
+            else { col += char; }
+        } else {
+            if (char === '"') { inQuote = true; }
+            else if (char === ',') { row.push(col.trim()); col = ""; }
+            else if (char === '\n' || char === '\r') {
+                row.push(col.trim()); col = "";
+                if (row.length > 1) rows.push(row);
+                row = [];
+                if (char === '\r' && nextChar === '\n') i++;
+            }
+            else { col += char; }
         }
-        result.push(cur.trim());
-        return result;
-    }).filter(row => row.length >= 2);
+    }
+    if (col || row.length > 0) { row.push(col.trim()); if (row.length > 1) rows.push(row); }
+    return rows;
 }
+
 
 function isFromTargetMonth(dateStr) {
     if (!dateStr) return false;
     const selector = document.getElementById('monthSelector');
-    const selectedValue = selector ? selector.value : "03-2026"; // Default
-    const [m, y] = selectedValue.split('-');
+    const selectedValue = selector ? selector.value : "03-2026";
+    const [selM, selY] = selectedValue.split('-');
 
-    // Checks for YYYY-MM, DD-MM-YYYY, or DD/MM/YYYY
-    return dateStr.includes(`${y}-${m}`) || dateStr.includes(`${m}-${y}`) || dateStr.includes(`${m}/${y}`);
+    // Robust parsing
+    let m = "", y = "";
+    if (dateStr.includes('/')) {
+        const parts = dateStr.split(' ')[0].split('/');
+        if (parts.length >= 3) {
+            m = parts[1].padStart(2, '0');
+            y = parts[2];
+        }
+    } else if (dateStr.includes('-')) {
+        const parts = dateStr.split(' ')[0].split('-');
+        if (parts.length >= 3) {
+            if (parts[0].length === 4) { // YYYY-MM-DD
+                y = parts[0];
+                m = parts[1].padStart(2, '0');
+            } else { // DD-MM-YYYY
+                y = parts[2];
+                m = parts[1].padStart(2, '0');
+            }
+        }
+    }
+
+    if (m && y) {
+        return m === selM && y === selY;
+    }
+
+    // Fallback to substring matching if format is unusual
+    return dateStr.includes(`${selY}-${selM}`) || dateStr.includes(`${selM}-${selY}`) || dateStr.includes(`${selM}/${selY}`);
 }
 
 function standardizeDate(dateStr) {
@@ -131,15 +168,16 @@ function processAllData(data) {
     // Xử lý dữ liệu Feedback Thật từ Google Sheet
     d.feedbacks = [];
     if (rowsFeedback.length > 1) {
+        console.log("Feedback data found: " + rowsFeedback.length + " rows.");
+        // alert("Đã tải " + rowsFeedback.length + " dòng phản hồi!");
         rowsFeedback.slice(1).forEach(row => {
+            if (!isFromTargetMonth(row[0])) return;
             // Cột A: Thời gian, B: Tên, C: Lớp, D: Giáo viên, J (index 9): Điểm TB
             if (row.length >= 10 && row[0]) {
-                const dateRaw = row[0];
-                const dateObj = new Date(dateRaw);
-                const dateStr = !isNaN(dateObj) ? dateObj.toLocaleDateString('vi-VN') : dateRaw.split(' ')[0] || dateRaw;
+                const dateRaw = row[0].split(' ')[0]; // Chỉ lấy phần ngày DD/MM/YYYY
 
                 d.feedbacks.push({
-                    date: dateStr,
+                    date: dateRaw,
                     name: row[1] || 'Ẩn danh',
                     class: row[2] || '---',
                     teacher: row[3] || '---',
@@ -542,19 +580,22 @@ function renderStudentFeedback() {
     const tbody = document.getElementById('student-feedback-list');
     if (!tbody) return;
 
-    // Ưu tiên lấy dữ liệu thật từ Google Sheet (đã xử lý trong processAllData), gọi là Real
-    let realFeedbacks = (DASHBOARD_DATA.feedbacks && DASHBOARD_DATA.feedbacks.length > 0) ? DASHBOARD_DATA.feedbacks : [];
-
-    // Nếu không có dữ liệu thật (chưa thêm FEEDBACK_URL), thì tạm lấy từ LocalStorage
+    // Lấy dữ liệu thật từ Google Sheet
+    let realFeedbacks = DASHBOARD_DATA.feedbacks || [];
+    // Gộp thêm dữ liệu từ LocalStorage (cho các feedback vừa mới gửi xong)
     let mockFeedbacks = JSON.parse(localStorage.getItem('hikorean_feedbacks') || '[]');
-
-    // Gộp chung 2 dữ liệu: dữ liệu Real làm gốc + dữ liệu LocalStorage bù vào nếu Sheet chưa cập nhật kịp
+    
+    // Ở đây ta cộng dồn cả 2 nguồn để đảm bảo "đủ các lớp"
     let allFeedbacks = [...realFeedbacks];
-
-    // Nếu chưa có file Google Sheet, sử dụng mockFeedbacks hoàn toàn
-    if (realFeedbacks.length === 0) {
-        allFeedbacks = [...mockFeedbacks];
-    }
+    
+    // Thêm các feedback từ mock mà chưa có trong real (hoặc cứ thêm hết rồi group)
+    mockFeedbacks.forEach(m => {
+        // Chỉ thêm nếu feedback này thuộc tháng đang chọn
+        // Lưu ý: mock shortcut save date as DD/MM/YYYY
+        if (isFromTargetMonth(m.date)) {
+            allFeedbacks.push(m);
+        }
+    });
 
     // Aggregate by class
     let classMap = {};
@@ -565,47 +606,54 @@ function renderStudentFeedback() {
                 teacher: f.teacher || '---',
                 count5: 0,
                 count4: 0,
-                countOther: 0,
                 totalScores: 0,
                 reviewCount: 0,
-                recentDate: f.date
+                latestTimestamp: 0
             };
         }
 
         let avg = parseFloat(f.overall);
-        if (avg >= 4.5) {
-            classMap[cls].count5++;
-        } else if (avg >= 3.5) {
-            classMap[cls].count4++;
-        } else {
-            classMap[cls].countOther++;
-        }
+        if (avg >= 4.5) classMap[cls].count5++;
+        else if (avg >= 3.5) classMap[cls].count4++;
 
         classMap[cls].totalScores += avg;
         classMap[cls].reviewCount++;
+        
+        // Cập nhật ngày gần nhất để sort (dùng logic parse tay để tránh lỗi trình duyệt)
+        const dateParts = f.date.split('/');
+        if (dateParts.length >= 3) {
+            const ts = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]).getTime();
+            if (!isNaN(ts) && ts > classMap[cls].latestTimestamp) {
+                classMap[cls].latestTimestamp = ts;
+            }
+        }
     });
 
+    // Chuyển sang array và sort theo thời gian mới nhất
     let classesArr = Object.keys(classMap).map(k => ({ id: k, ...classMap[k] }));
-
-    // Sort by most recently reviewed classes first
-    classesArr.reverse();
+    classesArr.sort((a, b) => b.latestTimestamp - a.latestTimestamp);
 
     if (classesArr.length === 0) {
         tbody.innerHTML = `
             <tr>
                 <td colspan="6" style="text-align:center; color:var(--text-muted); font-style:italic; padding: 20px;">
-                    Chưa có lớp nào thực hiện khảo sát.
+                    Chưa có lớp nào thực hiện khảo sát trong tháng này.
                 </td>
             </tr>
         `;
         return;
     }
 
-    let html = '';
-    classesArr.slice(0, 5).forEach(c => {
+    // Cập nhật tiêu đề với tổng số lớp
+    const titleEl = document.getElementById('feedback-title');
+    if (titleEl) {
+        titleEl.innerHTML = `<i class='bx bxs-star' style="color: #F2C94C;"></i> PHẢN HỒI (${classesArr.length} Lớp)`;
+    }
+
+    tbody.innerHTML = classesArr.map(c => {
         let avgScore = (c.totalScores / c.reviewCount).toFixed(1);
         let color = avgScore >= 4.5 ? 'var(--primary)' : (avgScore >= 3.5 ? 'var(--warning)' : 'var(--danger)');
-        html += `
+        return `
             <tr>
                 <td><span class="badge badge-growth">${c.id}</span></td>
                 <td>${c.teacher}</td>
@@ -615,8 +663,7 @@ function renderStudentFeedback() {
                 <td style="text-align:center;">${c.reviewCount} HV</td>
             </tr>
         `;
-    });
-    tbody.innerHTML = html;
+    }).join('');
 }
 
 
