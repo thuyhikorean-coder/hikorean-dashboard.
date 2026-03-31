@@ -151,11 +151,11 @@ body {
 
 /* Table Design */
 .table-wrapper {
-    max-height: 400px;
-    overflow-y: auto;
+    max-height: 300px !important;
+    overflow-y: auto !important;
     padding-right: 4px;
     scrollbar-width: thin;
-    scrollbar-color: var(--primary) transparent;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.1);
 }  
 
 .table-wrapper::-webkit-scrollbar {
