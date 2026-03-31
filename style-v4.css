@@ -151,15 +151,36 @@ body {
 
 /* Table Design */
 .table-wrapper {
-    max-height: 600px;
+    max-height: 400px;
     overflow-y: auto;
     padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
 }  
+
+.table-wrapper::-webkit-scrollbar {
+    width: 6px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    border-radius: 10px;
+}
 
 .compact-table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
+}
+
+.compact-table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #FFF !important;
+    color: var(--primary);
+    font-weight: 700;
+    z-index: 20;
+    box-shadow: inset 0 -2px 0 var(--primary-glow);
 }
 
 .compact-table th {
