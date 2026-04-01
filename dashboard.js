@@ -97,7 +97,7 @@ function parseCSV(text) {
 function isFromTargetMonth(dateStr) {
     if (!dateStr) return false;
     const selector = document.getElementById('monthSelector');
-    const selectedValue = selector ? selector.value : "03-2026";
+    const selectedValue = selector ? selector.value : "04-2026";
     const [selM, selY] = selectedValue.split('-');
 
     // Robust parsing
@@ -712,7 +712,7 @@ function renderFunnel() {
     const container = document.getElementById('funnel-container');
     if (!container) return;
     const steps = [
-        { label: 'SĐT (Leads) / Mục tiêu 265', val: `${f.totalLeads} / 265`, color: 'rgba(242,201,76,0.2)' },
+        { label: 'SĐT (Leads) / Mục tiêu 480', val: `${f.totalLeads} / 480`, color: 'rgba(242,201,76,0.2)' },
         { label: 'Đơn đã chốt', val: f.totalOrders, color: 'rgba(242,201,76,0.5)' }
     ];
     container.innerHTML = steps.map(s => `

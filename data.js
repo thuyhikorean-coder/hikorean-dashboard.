@@ -1,10 +1,10 @@
 window.DASHBOARD_DATA = {
     updateDate: "Đang cập nhật...",
-    month: "Tháng 3, 2026",
+    month: "Tháng 4, 2026",
 
     summary: {
         totalRevenue: 0,
-        revenueGoal: 394000000,
+        revenueGoal: 480000000,
         mktCost: 0,
         mktTarget: 12,
         mktCostRatio: 0,
@@ -49,7 +49,7 @@ window.DASHBOARD_DATA = {
             id: 'O1',
             objective: 'Tăng trưởng Doanh thu & Tối ưu Chi phí',
             krs: [
-                { name: 'Doanh thu tháng (Mục tiêu: 394tr)', current: 0, target: 394, unit: 'Tr', progress: 0 },
+                { name: 'Doanh thu tháng (Mục tiêu: 480tr)', current: 0, target: 480, unit: 'Tr', progress: 0 },
                 { name: 'Tối ưu MKT/DT (Mục tiêu: 12%)', current: 0, target: 12, unit: '%', progress: 0 }
             ]
         },
@@ -64,3 +64,5 @@ window.DASHBOARD_DATA = {
         }
     ]
 };
+
+
