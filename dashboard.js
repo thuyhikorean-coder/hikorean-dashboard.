@@ -131,15 +131,20 @@ function isFromTargetMonth(dateStr) {
 
 function standardizeDate(dateStr) {
     if (!dateStr) return '';
-    if (dateStr.includes('/')) {
-        const parts = dateStr.split('/');
-        if (parts.length >= 3) return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-    } else if (dateStr.includes('-')) {
-        const parts = dateStr.split('-');
+    const cleanDate = dateStr.toString().split(' ')[0];
+    if (cleanDate.includes('/')) {
+        const parts = cleanDate.split('/');
+        if (parts.length >= 3) {
+            let y = parts[2];
+            if (y.length > 4) y = y.substring(0, 4); // Handle attached timestamps if split failed
+            return `${y}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+        }
+    } else if (cleanDate.includes('-')) {
+        const parts = cleanDate.split('-');
         if (parts[0].length === 4) return `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
         if (parts[2].length === 4) return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
     }
-    return dateStr;
+    return cleanDate;
 }
 
 function processAllData(data) {
@@ -240,7 +245,7 @@ function processAllData(data) {
         const todayObj = new Date();
         const mm = String(todayObj.getMonth() + 1).padStart(2, '0');
         const dd = String(todayObj.getDate()).padStart(2, '0');
-        let latestDateKey = `${mm}-${dd}`;
+        let latestDateKey = Object.keys(dailyMap).sort().pop() || `${mm}-${dd}`;
 
         let todayRevBySale = {};
         let dailyRevMap = {};
@@ -867,6 +872,11 @@ function renderRaceCards() {
     let html = '';
     targets.forEach(name => {
         let s = stats[name] || { rev: 0, todayRev: 0 };
+        // Fuzzy match for names like "Thơm" vs "Hồng Thơm"
+        if (!stats[name]) {
+            const fuzzyKey = Object.keys(stats).find(k => k.includes(name) || name.includes(k));
+            if (fuzzyKey) s = stats[fuzzyKey];
+        }
 
         let sprintProgress = Math.min(100, Math.round((s.rev / goalPerSale) * 100));
         let dailyProgress = Math.min(100, Math.round((s.todayRev / dailyTarget) * 100));
