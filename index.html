@@ -124,34 +124,13 @@
         <div class="dashboard-viewport">
             <!-- Command Center Layout -->
             <main class="command-center">
-                <!-- Strategic Overview Section -->
-                <section class="ops-grid-top">
-                    <div class="card-okr">
+                <!-- Strategic OKRs Section -->
+                <section class="strategic-okrs">
+                    <div class="card-okr wide-card">
                         <div class="glass-card">
-                            <h3 class="card-title"><i class='bx bx-target-lock'></i> Mục tiêu OKR Hikorean</h3>
-                            <div id="okr-list">
+                            <h3 class="card-title"><i class='bx bx-target-lock'></i> MỤC TIÊU CHIẾN LƯỢC OKR (HIKOREAN CENTER)</h3>
+                            <div id="okr-list" class="okr-grid-container">
                                 <!-- Filled by JS -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-bsc">
-                        <div class="glass-card">
-                            <h3 class="card-title"><i class='bx bx-grid-alt'></i> BSC Scorecard</h3>
-                            <div class="table-wrapper">
-                                <table class="compact-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Khía cạnh / KPI</th>
-                                            <th>Thực đạt</th>
-                                            <th>Mục tiêu</th>
-                                            <th>Trạng thái</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="summary-metrics">
-                                        <!-- Filled by JS -->
-                                    </tbody>
-                                </table>
                             </div>
                         </div>
                     </div>
@@ -174,6 +153,15 @@
                                 Đua Tháng 4/2026</h3>
                             <div id="race-container">
                                 <!-- Filled by JS -->
+                            </div>
+                            <!-- Sales Split Bar Chart -->
+                            <div style="margin-top: 25px; border-top: 1px dashed rgba(0,0,0,0.1); padding-top: 15px;">
+                                <h4 style="font-size: 0.75rem; font-weight: 800; color:var(--text-muted); margin-bottom:10px; display:flex; align-items:center; gap:5px;">
+                                    <i class='bx bx-bar-chart-alt-2'></i> SO SÁNH DOANH THU 2 SALE
+                                </h4>
+                                <div class="chart-container-mini" style="height: 140px;">
+                                    <canvas id="salesRevenueChart"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
