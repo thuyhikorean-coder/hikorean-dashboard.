@@ -301,10 +301,15 @@ function processAllData(data) {
             totalNewCount += newCount[name] || 0;
             totalUpCount += upCount[name] || 0;
             
+            // Tính DOANH THU TUẦN 1 (01/04 - 07/04)
+            let weeklyRev = 0;
             let bonusAmount = 0;
             let daysHit = 0;
             if (dailyRevMap[name]) {
                 Object.keys(dailyRevMap[name]).forEach(dateKey => {
+                    if (dateKey >= '04-01' && dateKey <= '04-07') {
+                        weeklyRev += dailyRevMap[name][dateKey];
+                    }
                     if (dailyRevMap[name][dateKey] >= 9800000) {
                         bonusAmount += 100000;
                         daysHit++;
@@ -314,6 +319,9 @@ function processAllData(data) {
 
             saleStats[name] = {
                 rev: revBySale[name],
+                weeklyRev: weeklyRev,
+                bonus: bonusAmount,
+                daysHit: daysHit,
                 comboRate: orderCount[name] > 0 ? ((comboCount[name] || 0) / orderCount[name] * 100).toFixed(0) : 0,
                 newCount: newCount[name] || 0,
                 upCount: upCount[name] || 0,
@@ -869,23 +877,35 @@ function renderRaceCards() {
         }
     }
 
-    let html = '';
+    // Global Weekly Sprint Banner
+    const globalWeeklyHtml = `
+        <div style="background: linear-gradient(135deg, #c62828, #e53935); color:white; padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align:center; box-shadow: 0 10px 20px rgba(198,40,40,0.2); position:relative; overflow:hidden;">
+            <div style="position:absolute; top:-10px; right:-10px; font-size:4rem; opacity:0.1;"><i class='bx bxs-flame'></i></div>
+            <h3 style="margin:0; font-size: 1.1rem; font-weight:900; letter-spacing:1px; display:flex; align-items:center; justify-content:center; gap:10px;">
+                <i class='bx bxs-zap bx-tada'></i> MỤC TIÊU TUẦN 1: 60M / SALE <i class='bx bxs-zap bx-tada'></i>
+            </h3>
+            <p style="margin:5px 0 0; font-size:0.75rem; font-weight:600; opacity:0.9;">Hành trình 60 triệu hỏa tốc - Cố gắng hoàn thành trước 07/04!</p>
+        </div>
+    `;
+
+    let html = globalWeeklyHtml;
     targets.forEach(name => {
-        let s = stats[name] || { rev: 0, todayRev: 0 };
+        let s = stats[name] || { rev: 0, todayRev: 0, weeklyRev: 0 };
         // Fuzzy match for names like "Thơm" vs "Hồng Thơm"
         if (!stats[name]) {
             const fuzzyKey = Object.keys(stats).find(k => k.includes(name) || name.includes(k));
             if (fuzzyKey) s = stats[fuzzyKey];
         }
 
-        let sprintProgress = Math.min(100, Math.round((s.rev / goalPerSale) * 100));
+        let monthProgress = Math.min(100, Math.round((s.rev / goalPerSale) * 100));
+        let weeklyProgress = Math.min(100, Math.round((s.weeklyRev / weeklyTarget) * 100));
         let dailyProgress = Math.min(100, Math.round((s.todayRev / dailyTarget) * 100));
 
         let dailyColor = dailyProgress >= 100 ? 'var(--process)' : (dailyProgress >= 50 ? 'var(--warning)' : 'var(--danger)');
-        let sprintColor = sprintProgress >= 100 ? 'var(--process)' : 'var(--primary)';
+        let weeklyColor = weeklyProgress >= 100 ? '#FFD700' : '#FF5252';
 
         let isWinner = dailyProgress >= 100;
-        let badgeHTML = isWinner ? `<span style="color: #FFD700; margin-left:5px; font-size:1rem; text-shadow: 0 0 5px rgba(255,215,0,0.5);" class="bx-tada">🏆 HOÀN THÀNH</span>` : '';
+        let badgeHTML = isWinner ? `<span style="color: #FFD700; margin-left:5px; font-size:1rem; text-shadow: 0 0 5px rgba(255,215,0,0.5);" class="bx-tada">🏆</span>` : '';
 
         // Fire confetti!
         if (isWinner && window.confetti) {
@@ -897,60 +917,54 @@ function renderRaceCards() {
                     colors: ['#FFD700', '#FFA500', '#00FF7F', '#00BFFF', '#FF1493'],
                     zIndex: 9999
                 });
-            }, 800 + (Math.random() * 500)); // slight random delay if both hit it
+            }, 800 + (Math.random() * 500));
         }
 
         let bonusHtml = '';
         if (s.bonus > 0) {
             bonusHtml = `
-                <div style="background: linear-gradient(90deg, rgba(212,175,55,0.15) 0%, rgba(212,175,55,0.02) 100%); border-left: 3px solid var(--accent); padding: 8px 12px; margin-bottom: 12px; border-radius: 0 6px 6px 0; display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size: 0.75rem; color: #D4AF37; font-weight: 700; display:flex; align-items:center; gap:5px;"><i class='bx bx-gift bx-tada' style="font-size:1.1rem;"></i> Tiền thưởng điểm danh (${s.daysHit} ngày đạt)</span>
-                    <span style="font-size: 1rem; font-weight: 900; color: #D4AF37; text-shadow: 0 0 8px rgba(212,175,55,0.5);">${s.bonus.toLocaleString('vi-VN')} đ</span>
+                <div style="background: rgba(212,175,55,0.1); border-left: 3px solid var(--accent); padding: 6px 10px; margin-bottom: 10px; border-radius: 0 6px 6px 0; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size: 0.7rem; color: #D4AF37; font-weight: 700;"><i class='bx bx-gift bx-tada'></i> Thưởng:</span>
+                    <span style="font-size: 0.85rem; font-weight: 900; color: #D4AF37;">${s.bonus.toLocaleString()}đ</span>
                 </div>
             `;
         }
 
-        const weeklyHtml = `
-            <div style="background:rgba(198,40,40,0.08); border-radius:10px; padding:10px; margin:10px 0; border:1px dashed rgba(198,40,40,0.3);">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:0.7rem; font-weight:800; color:var(--danger); display:flex; align-items:center; gap:4px;">
-                        <i class='bx bxs-flame bx-tada' style='font-size:1.1rem;'></i> MỤC TIÊU TUẦN / 1 SALE
-                    </span>
-                    <span style="font-size:0.85rem; font-weight:800; color:var(--text-main);">${(weeklyTarget/1000000).toLocaleString()} TRIỆU</span>
-                </div>
-            </div>
-        `;
-
         html += `
-            <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); ${isWinner ? 'box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); border-color: rgba(255, 215, 0, 0.4);' : ''}">
-                <div style="display:flex; justify-content:space-between; margin-bottom: 6px;">
-                    <span style="font-weight: 800; color: var(--text-main); font-size: 0.9rem; display: flex; align-items: center;"><i class='bx bxs-user-rectangle' style="margin-right: 5px;"></i> ${name} ${badgeHTML}</span>
-                    <span style="font-weight: 700; color: var(--accent); font-size: 0.85rem;">${(s.rev / 1000000).toFixed(1)} / ${(goalPerSale/1000000).toFixed(0)}M</span>
+            <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); ${isWinner ? 'box-shadow: 0 0 15px rgba(255, 215, 0, 0.15); border-color: rgba(255, 215, 0, 0.3);' : ''}">
+                <div style="display:flex; justify-content:space-between; margin-bottom: 8px; align-items:center;">
+                    <span style="font-weight: 800; color: var(--text-main); font-size: 0.95rem;">${name} ${badgeHTML}</span>
+                    <span style="font-weight: 700; color: var(--accent); font-size: 0.85rem;">Tháng: ${(s.rev / 1000000).toFixed(1)}M</span>
                 </div>
 
                 ${bonusHtml}
-                ${weeklyHtml}
                 
-                <!-- Daily Mini Tracker -->
-                <div style="margin-bottom: 8px;">
-                    <div style="display:flex; justify-content:space-between; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 3px;">
-                        <span>Doanh thu ngày ${dateText}: <strong style="color:${dailyColor}">${(s.todayRev / 1000000).toFixed(1)}M</strong> / ${(dailyTarget/1000000).toFixed(1)}M</span>
-                        <span>${dailyProgress}%</span>
+                <!-- Weekly Sprint Tracker -->
+                <div style="margin-bottom: 12px; background: rgba(0,0,0,0.05); padding: 8px; border-radius: 6px; border: 1px solid rgba(198,40,40,0.1);">
+                    <div style="display:flex; justify-content:space-between; font-size: 0.7rem; font-weight:800; color: #c62828; margin-bottom: 4px;">
+                        <span><i class='bx bxs-flame bx-tada'></i> TUẦN 1 (60M): ${(s.weeklyRev / 1000000).toFixed(1)}M</span>
+                        <span>${weeklyProgress}%</span>
                     </div>
-                    <div class="progress-container" style="height: 6px; margin: 0; background: rgba(0,0,0,0.1);">
-                        <div class="progress-fill" style="width: ${dailyProgress}%; background: ${dailyColor}; box-shadow: 0 0 5px ${dailyColor};"></div>
+                    <div class="progress-container" style="height: 10px; margin: 0; background: rgba(0,0,0,0.1);">
+                        <div class="progress-fill" style="width: ${weeklyProgress}%; background: linear-gradient(90deg, #b71c1c, #e53935); box-shadow: 0 0 8px #e53935;"></div>
                     </div>
                 </div>
 
-                <!-- Sprint Goal Tracker -->
-                <div>
+                <!-- Daily Mini Tracker -->
+                <div style="margin-bottom: 8px;">
                     <div style="display:flex; justify-content:space-between; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 3px;">
-                        <span>Tổng kết Tháng: </span>
-                        <span style="font-weight: 700; color: ${sprintColor}">${sprintProgress}%</span>
+                        <span>Ngày ${dateText}: <strong style="color:${dailyColor}">${(s.todayRev / 1000000).toFixed(1)}M</strong> / 9M</span>
+                        <span>${dailyProgress}%</span>
                     </div>
-                    <div class="progress-container" style="height: 6px; margin: 0; background: rgba(0,0,0,0.1);">
-                        <div class="progress-fill" style="width: ${sprintProgress}%; background: ${sprintColor}; box-shadow: 0 0 5px ${sprintColor};"></div>
+                    <div class="progress-container" style="height: 5px; margin: 0; background: rgba(0,0,0,0.1);">
+                        <div class="progress-fill" style="width: ${dailyProgress}%; background: ${dailyColor};"></div>
                     </div>
+                </div>
+
+                <!-- Month Progress bar -->
+                <div style="display:flex; justify-content:space-between; font-size: 0.65rem; color: var(--text-muted); padding-top:4px;">
+                    <span>Tiến độ Tháng: ${monthProgress}%</span>
+                    <span>Hết năm: 240M</span>
                 </div>
             </div>
         `;
