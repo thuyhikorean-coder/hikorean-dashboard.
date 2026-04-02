@@ -807,7 +807,7 @@ function renderSalesList() {
             <td style="font-weight:600;">${name}</td>
             <td style="font-weight:700; color:var(--danger);">${(s.rev / 1000000).toFixed(1)}M</td>
             <td style="text-align:right;"><span class="badge ${s.newCount >= 26 ? 'badge-process' : 'badge-danger'}">${s.newCount}/26</span></td>
-            <td style="text-align:right;"><span class="badge ${s.upCount >= 17 ? 'badge-process' : 'badge-danger'}">${s.upCount}/17</span></td>
+            <td style="text-align:right;"><span class="badge ${s.upCount >= 5 ? 'badge-process' : 'badge-danger'}">${s.upCount}/5</span></td>
         </tr>
     `).join('');
 }
