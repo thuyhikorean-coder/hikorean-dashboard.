@@ -898,6 +898,7 @@ function renderRaceCards() {
     }
 
     let html = '';
+    const targets = ['Khánh Linh', 'Hồng Thơm'];
     targets.forEach(name => {
         let s = stats[name] || { rev: 0, todayRev: 0 };
 
