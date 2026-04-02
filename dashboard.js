@@ -964,7 +964,7 @@ function renderRaceCards() {
                 <!-- Month Progress bar -->
                 <div style="display:flex; justify-content:space-between; font-size: 0.65rem; color: var(--text-muted); padding-top:4px;">
                     <span>Tiến độ Tháng: ${monthProgress}%</span>
-                    <span>Hết năm: 240M</span>
+                    <span>Hết tháng: 240M</span>
                 </div>
             </div>
         `;
