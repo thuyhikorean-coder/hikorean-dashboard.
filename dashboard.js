@@ -310,7 +310,7 @@ function processAllData(data) {
                     if (dateKey >= '04-01' && dateKey <= '04-07') {
                         weeklyRev += dailyRevMap[name][dateKey];
                     }
-                    if (dailyRevMap[name][dateKey] >= 9800000) {
+                    if (dailyRevMap[name][dateKey] >= 10000000) {
                         bonusAmount += 100000;
                         daysHit++;
                     }
@@ -953,7 +953,7 @@ function renderRaceCards() {
                 <!-- Daily Mini Tracker -->
                 <div style="margin-bottom: 8px;">
                     <div style="display:flex; justify-content:space-between; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 3px;">
-                        <span>Ngày ${dateText}: <strong style="color:${dailyColor}">${(s.todayRev / 1000000).toFixed(1)}M</strong> / 9M</span>
+                        <span>Ngày ${dateText}: <strong style="color:${dailyColor}">${(s.todayRev / 1000000).toFixed(1)}M</strong> / 10M</span>
                         <span>${dailyProgress}%</span>
                     </div>
                     <div class="progress-container" style="height: 5px; margin: 0; background: rgba(0,0,0,0.1);">
