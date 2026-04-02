@@ -110,93 +110,15 @@ body {
     gap: 24px;
 }
 
-.strategic-okrs {
-    margin-bottom: 24px;
-}
-
-.okr-grid-container {
+.ops-grid-top {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    padding: 10px 0;
-}
-
-.okr-perspective-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
-    padding: 16px;
-    transition: transform 0.3s ease;
-}
-
-.okr-perspective-card:hover {
-    transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.05);
-}
-
-.perspective-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 18px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 10px;
-}
-
-.p-id {
-    background: var(--primary);
-    color: white;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    font-weight: 800;
-    font-size: 0.7rem;
-}
-
-.p-title {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--primary);
-}
-
-.kr-entry {
-    margin-bottom: 15px;
-}
-
-.kr-top-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.75rem;
-    margin-bottom: 6px;
-}
-
-.kr-label {
-    color: var(--text-muted);
-}
-
-.kr-value {
-    font-weight: 700;
-}
-
-.kr-progress-track {
-    height: 6px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.kr-progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--primary), #56CCF2);
-    border-radius: 10px;
+    grid-template-columns: 1fr 1.8fr;
+    gap: 24px;
 }
 
 .ops-grid-mid {
     display: grid;
-    grid-template-columns: 1.2fr 1fr 1fr;
+    grid-template-columns: 1.2fr 1fr 0.9fr;
     gap: 24px;
 }
 
@@ -229,8 +151,8 @@ body {
 
 /* Table Design */
 .table-wrapper {
-    /* max-height: 200px removed - show full table */
-    overflow-y: visible !important;
+    max-height: 200px !important;
+    overflow-y: auto !important;
     padding-right: 4px;
     scrollbar-width: thin;
     border-bottom: 1px solid rgba(212, 175, 55, 0.1);

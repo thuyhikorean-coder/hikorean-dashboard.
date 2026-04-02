@@ -46,35 +46,20 @@ window.DASHBOARD_DATA = {
 
     okrs: [
         {
-            id: 'F',
-            objective: 'Tài chính (Finance)',
+            id: 'O1',
+            objective: 'Tăng trưởng Doanh thu & Tối ưu Chi phí',
             krs: [
-                { name: 'Doanh thu thuần', current: 0, target: 480, unit: 'Tr', progress: 0 },
-                { name: 'Tỉ suất MKT/DT', current: 0, target: 12, unit: '%', progress: 0 }
+                { name: 'Doanh thu tháng (Mục tiêu: 480tr)', current: 0, target: 480, unit: 'Tr', progress: 0 },
+                { name: 'Tối ưu MKT/DT (Mục tiêu: 12%)', current: 0, target: 12, unit: '%', progress: 0 }
             ]
         },
         {
-            id: 'C',
-            objective: 'Khách hàng (Customer)',
+            id: 'O2',
+            objective: 'Chất lượng Đào tạo & Vận hành',
             krs: [
-                { name: 'Tỉ lệ chốt đơn', current: 0, target: 10, unit: '%', progress: 0 },
-                { name: 'Tỉ lệ Upsell/Ref', current: 0, target: 65, unit: '%', progress: 0 }
-            ]
-        },
-        {
-            id: 'P',
-            objective: 'Vận hành (Internal Process)',
-            krs: [
-                { name: 'Tỉ suất GV/DT', current: 0, target: 25, unit: '%', progress: 0 },
-                { name: 'Tỉ lệ chuyên cần', current: 0, target: 80, unit: '%', progress: 0 }
-            ]
-        },
-        {
-            id: 'G',
-            objective: 'Học tập & Phát triển',
-            krs: [
-                { name: 'Điểm CSAT (HV)', current: 0, target: 4.5, unit: 'đ', progress: 0 },
-                { name: 'Tỉ lệ Đạt chuẩn', current: 0, target: 90, unit: '%', progress: 0 }
+                { name: 'Chất lượng GV (CSAT > 4.5)', current: 0, target: 4.5, unit: 'đ', progress: 0 },
+                { name: 'HV Đạt chuẩn (> 90%)', current: 0, target: 90, unit: '%', progress: 0 },
+                { name: 'Tỉ lệ chuyên cần (> 80%)', current: 0, target: 80, unit: '%', progress: 0 }
             ]
         }
     ]

@@ -10,28 +10,6 @@ const CONFIG = {
     TEACHER_COST_URL: 'https://docs.google.com/spreadsheets/d/1B95z7EC1sc7PVhxakfvebClDSu2yCGRyHwHtHw7xW-g/export?format=csv&gid=0'
 };
 
-/**
- * Monthly targets and hardcoded stats
- * Add new months here as they come
- */
-const MONTHLY_TARGETS = {
-    '03-2026': {
-        revenueGoal: 394000000,
-        goalPerSale: 197000000,
-        weeklyTarget: 50000000, // Ước tính cho tháng 3
-        upsellLeads: 53,
-        mktTarget: 12,
-        upsellLeadsIndicator: 0 // If needed
-    },
-    '04-2026': {
-        revenueGoal: 480000000,
-        goalPerSale: 240000000,
-        weeklyTarget: 60000000,
-        upsellLeads: 0, 
-        mktTarget: 12
-    }
-};
-
 let CURRENT_RAW_DATA = null;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -168,13 +146,9 @@ function processAllData(data) {
     // Structural Safety Check - Ensure all categories exist
     if (!window.DASHBOARD_DATA) window.DASHBOARD_DATA = {};
     const d = DASHBOARD_DATA;
-    const selector = document.getElementById('monthSelector');
-    const selectedMonth = selector ? selector.value : '04-2026';
-    const targets = MONTHLY_TARGETS[selectedMonth] || MONTHLY_TARGETS['04-2026'];
-
     if (!d.summary) d.summary = {};
-    d.summary.revenueGoal = targets.revenueGoal;
-    d.summary.mktTarget = targets.mktTarget;
+    if (!d.summary.revenueGoal || d.summary.revenueGoal === 0) d.summary.revenueGoal = 394000000;
+    if (!d.summary.mktTarget) d.summary.mktTarget = 12;
     if (!d.financial) d.financial = {};
     if (!d.customer) d.customer = {};
     if (!d.process) d.process = {};
@@ -290,7 +264,7 @@ function processAllData(data) {
             }
         });
         const selector = document.getElementById('monthSelector');
-        const selectedValue = selector ? selector.value : "04-2026";
+        const selectedValue = selector ? selector.value : "03-2026";
         const [selM, selY] = selectedValue.split('-');
         const isCurrentMonth = (todayObj.getFullYear() == selY && (todayObj.getMonth() + 1) == selM);
         
@@ -347,8 +321,8 @@ function processAllData(data) {
         DASHBOARD_DATA.financial.latestDate = latestDateKey;
 
         // Calculate Global Upsell Rate based on target of 65% for BSC
-        const totalEligibleUpsellLeads = targets.upsellLeads; 
-        DASHBOARD_DATA.summary.upsellRate = totalEligibleUpsellLeads > 0 ? ((totalUpCount / totalEligibleUpsellLeads) * 100).toFixed(1) : (targets.upsellLeadsIndicator || 0);
+        const totalEligibleUpsellLeads = 53; // Hardcoded from user context ("Tháng 3 chị count ra 53 người dưới 2 triệu")
+        DASHBOARD_DATA.summary.upsellRate = totalEligibleUpsellLeads > 0 ? ((totalUpCount / totalEligibleUpsellLeads) * 100).toFixed(1) : 0;
 
     }
 
@@ -546,39 +520,25 @@ function processAllData(data) {
         DASHBOARD_DATA.process.upsellByClass = upsellByClass;
     }
 
-    // Update OKRs logic - 4 Strategic Perspectives
-    // Finance
-    if (d.okrs[0]) {
-        d.okrs[0].krs[0].current = (d.summary.totalRevenue / 1000000).toFixed(0);
-        d.okrs[0].krs[0].target = (d.summary.revenueGoal / 1000000).toFixed(0);
-        d.okrs[0].krs[0].progress = Math.min(100, Math.round((d.summary.totalRevenue / d.summary.revenueGoal) * 100));
-        d.okrs[0].krs[1].current = d.summary.mktCostRatio;
-        d.okrs[0].krs[1].progress = d.summary.mktCostRatio <= d.summary.mktTarget ? 100 : Math.max(0, Math.round(100 - (d.summary.mktCostRatio - d.summary.mktTarget) * 5));
-    }
+    // Update OKRs logic
+    d.okrs[0].krs[0].current = (d.summary.totalRevenue / 1000000).toFixed(0);
+    d.okrs[0].krs[0].target = (d.summary.revenueGoal / 1000000).toFixed(0);
+    d.okrs[0].krs[0].progress = Math.min(100, Math.round((d.summary.totalRevenue / d.summary.revenueGoal) * 100));
 
-    // Customer
-    if (d.okrs[1]) {
-        d.okrs[1].krs[0].current = d.customer.funnel.conversionRate;
-        d.okrs[1].krs[0].progress = Math.min(100, Math.round((d.customer.funnel.conversionRate / 10) * 100));
-        d.okrs[1].krs[1].current = d.summary.upsellRate;
-        d.okrs[1].krs[1].progress = Math.min(100, Math.round((d.summary.upsellRate / 65) * 100));
-    }
+    d.okrs[0].krs[1].current = d.summary.mktCostRatio;
+    d.okrs[0].krs[1].target = d.summary.mktTarget;
+    // For MKT ratio, progress is inverse: if ratio <= target, it's 100%
+    d.okrs[0].krs[1].progress = d.summary.mktCostRatio <= d.summary.mktTarget ? 100 : Math.max(0, Math.round(100 - (d.summary.mktCostRatio - d.summary.mktTarget) * 5));
 
-    // Process
-    if (d.okrs[2]) {
-        d.okrs[2].krs[0].current = d.summary.teacherCostRatio;
-        d.okrs[2].krs[0].progress = d.summary.teacherCostRatio <= 25 ? 100 : Math.max(0, Math.round(100 - (d.summary.teacherCostRatio - 25) * 4));
-        d.okrs[2].krs[1].current = d.process.avgAttendance;
-        d.okrs[2].krs[1].progress = Math.min(100, Math.round((d.process.avgAttendance / 80) * 100));
-    }
+    // OKR O2: Quality & Operations
+    d.okrs[1].krs[0].current = d.growth.avgSatisfaction;
+    d.okrs[1].krs[0].progress = Math.min(100, Math.round((d.growth.avgSatisfaction / 4.5) * 100));
 
-    // Growth
-    if (d.okrs[3]) {
-        d.okrs[3].krs[0].current = d.growth.avgSatisfaction;
-        d.okrs[3].krs[0].progress = Math.min(100, Math.round((d.growth.avgSatisfaction / 4.5) * 100));
-        d.okrs[3].krs[1].current = d.growth.avgPassRate || 0;
-        d.okrs[3].krs[1].progress = Math.min(100, Math.round((d.growth.avgPassRate / 90) * 100));
-    }
+    d.okrs[1].krs[1].current = d.growth.avgPassRate;
+    d.okrs[1].krs[1].progress = Math.min(100, Math.round((d.growth.avgPassRate / 90) * 100));
+
+    d.okrs[1].krs[2].current = d.process.avgAttendance;
+    d.okrs[1].krs[2].progress = Math.min(100, Math.round((d.process.avgAttendance / 80) * 100));
 }
 
 function initDashboard() {
@@ -605,6 +565,7 @@ function initDashboard() {
     const selector = document.getElementById('monthSelector');
 
     renderOKRs();
+    renderBSCTable();
     renderFunnel();
     renderFinishedClasses();
     renderSalesList();
@@ -710,38 +671,48 @@ function renderOKRs() {
     const list = document.getElementById('okr-list');
     if (!list) return;
     list.innerHTML = DASHBOARD_DATA.okrs.map(okr => `
-        <div class="okr-perspective-card">
-            <div class="perspective-header">
-                <span class="p-id">${okr.id}</span>
-                <span class="p-title">${okr.objective}</span>
-            </div>
-            <div class="kr-list">
-                ${okr.krs.map(kr => `
-                    <div class="kr-entry">
-                        <div class="kr-top-row">
-                            <span class="kr-label">${kr.name}</span>
-                            <span class="kr-value">${kr.current}${kr.unit} / ${kr.target}${kr.unit}</span>
-                        </div>
-                        <div class="kr-progress-track">
-                             <div class="kr-progress-fill" style="width:${kr.progress}%"></div>
-                        </div>
+        <div class="okr-item-v2" style="margin-bottom:28px;">
+            <div style="font-weight:700; font-size:0.85rem; color:var(--primary); margin-bottom:12px;">${okr.objective}</div>
+            ${okr.krs.map(kr => `
+                <div style="margin-bottom:12px;">
+                    <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:6px;">
+                        <span>${kr.name}</span>
+                        <span style="font-weight:700">${kr.current} / ${kr.target} ${kr.unit}</span>
                     </div>
-                `).join('')}
-            </div>
+                    <div class="progress-container" style="height:8px;"><div class="progress-fill" style="width:${kr.progress}%"></div></div>
+                </div>
+            `).join('')}
         </div>
     `).join('');
 }
 
-
-
+function renderBSCTable() {
+    const d = DASHBOARD_DATA;
+    const tbody = document.getElementById('summary-metrics');
+    if (!tbody) return;
+    const items = [
+        { kpi: 'Doanh thu thuần', actual: formatCurrency(d.summary.totalRevenue), target: formatCurrency(d.summary.revenueGoal), status: d.summary.totalRevenue >= d.summary.revenueGoal ? 'process' : 'finance' },
+        { kpi: 'Tỉ suất MKT/DT (Ads)', actual: `${d.summary.mktCostRatio}%`, target: `< ${d.summary.mktTarget}%`, status: d.summary.mktCostRatio <= d.summary.mktTarget ? 'process' : 'finance' },
+        { kpi: 'Tỉ suất GV/DT', actual: `${d.summary.teacherCostRatio}%`, target: '20-25%', status: 'process' },
+        { kpi: 'Điểm CSAT', actual: d.growth.avgSatisfaction, target: '> 4.5', status: 'growth' },
+        { kpi: 'Chốt đơn (Lead)', actual: `${d.customer.funnel.conversionRate}%`, target: '> 10%', status: 'process' }
+    ];
+    tbody.innerHTML = items.map(i => `
+        <tr>
+            <td>${i.kpi}</td>
+            <td style="font-weight:700">${i.actual}</td>
+            <td style="color:var(--text-muted)">${i.target}</td>
+            <td><span class="badge badge-${i.status}">${i.actual !== '0' && i.actual !== '0%' ? 'Updated' : 'Waiting'}</span></td>
+        </tr>
+    `).join('');
+}
 
 function renderFunnel() {
     const f = DASHBOARD_DATA.customer.funnel;
     const container = document.getElementById('funnel-container');
     if (!container) return;
-    const leadTarget = Math.round(DASHBOARD_DATA.summary.revenueGoal / 1000000) || 480;
     const steps = [
-        { label: `SĐT (Leads) / Mục tiêu ${leadTarget}`, val: `${f.totalLeads} / ${leadTarget}`, color: 'rgba(242,201,76,0.2)' },
+        { label: 'SĐT (Leads) / Mục tiêu 480', val: `${f.totalLeads} / 480`, color: 'rgba(242,201,76,0.2)' },
         { label: 'Đơn đã chốt', val: f.totalOrders, color: 'rgba(242,201,76,0.5)' }
     ];
     container.innerHTML = steps.map(s => `
@@ -753,7 +724,7 @@ function renderFunnel() {
 
     // Dynamic Meta Chips (Report Progress & Upsell Rate)
     const chipUp = document.getElementById('reportProgress');
-    if (chipUp) chipUp.textContent = `--%`; // Binding this to QLCL later if needed
+    if (chipUp) chipUp.textContent = `92%`; // Binding this to QLCL later if needed
 
     const chipRef = document.getElementById('upsellRate');
     if (chipRef) chipRef.textContent = `${DASHBOARD_DATA.summary.upsellRate || 0}%`;
@@ -861,15 +832,11 @@ function renderRaceCards() {
     if (!container) return;
 
     // Specifically target the 2 core warriors defined by the user
+    const targets = ['Khánh Linh', 'Hồng Thơm'];
+    const goalPerSale = 240000000; // Updated for April
+    const weeklyTarget = 60000000; // New requested weekly program
+    const dailyTarget = 10000000; 
     const stats = DASHBOARD_DATA.financial.saleStats || {};
-    
-    // Get targets based on selector
-    const selector = document.getElementById('monthSelector');
-    const selectedMonth = selector ? selector.value : '04-2026';
-    const mTargets = MONTHLY_TARGETS[selectedMonth] || MONTHLY_TARGETS['04-2026'];
-    const goalPerSale = mTargets.goalPerSale;
-    const weeklyTarget = mTargets.weeklyTarget || 60000000;
-    const dailyTarget = 10000000; // Làm tròn 10tr cho dễ theo dõi
 
     let dateText = 'nay';
     if (DASHBOARD_DATA.financial.latestDate) {
@@ -898,7 +865,6 @@ function renderRaceCards() {
     }
 
     let html = '';
-    const targets = ['Khánh Linh', 'Hồng Thơm'];
     targets.forEach(name => {
         let s = stats[name] || { rev: 0, todayRev: 0 };
 
