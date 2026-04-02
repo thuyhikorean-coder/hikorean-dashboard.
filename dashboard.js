@@ -106,7 +106,7 @@ function isFromTargetMonth(dateStr) {
         const parts = dateStr.split(' ')[0].split('/');
         if (parts.length >= 3) {
             m = parts[1].padStart(2, '0');
-            y = parts[2];
+            y = parts[2].trim().split(' ')[0];
         }
     } else if (dateStr.includes('-')) {
         const parts = dateStr.split(' ')[0].split('-');
