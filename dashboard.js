@@ -374,17 +374,36 @@ function processAllData(data) {
     // 3. PROCESS (Ongoing & Sale Tracking)
     if (rowsTrack.length > 1) {
         let engagement = {};
+        
+        // Find latest date in tracked rows within selected month
+        let trackDates = rowsTrack.slice(1)
+            .filter(r => isFromTargetMonth(r[0]))
+            .map(r => standardizeDate(r[0]))
+            .filter(d => d);
+        let latestDateInTrack = trackDates.length > 0 ? trackDates.sort().pop() : null;
+
         rowsTrack.slice(1).forEach(row => {
             if (!isFromTargetMonth(row[0])) return;
             const name = row[1]?.trim();
             if (!name) return;
             const interaction = parseInt(row[3]) || 0;
             const deepLeads = parseInt(row[4]) || 0;
-            if (!engagement[name]) engagement[name] = { interaction: 0, deepLeads: 0 };
+            const stdDate = standardizeDate(row[0]);
+            
+            if (!engagement[name]) engagement[name] = { interaction: 0, deepLeads: 0, dailyPC: 0, dailyDeep: 0 };
+            
+            // Monthly accumulation for reference
             engagement[name].interaction += interaction;
             engagement[name].deepLeads += deepLeads;
+            
+            // Daily values for the requested dashboard view
+            if (latestDateInTrack && stdDate === latestDateInTrack) {
+                engagement[name].dailyPC += interaction;
+                engagement[name].dailyDeep += deepLeads;
+            }
         });
         DASHBOARD_DATA.process.saleEngagement = engagement;
+        DASHBOARD_DATA.process.latestTrackDate = latestDateInTrack;
     }
 
     if (rowsQlclD.length > 1) {
@@ -820,8 +839,8 @@ function renderEngagementList() {
     tbody.innerHTML = Object.entries(engagement).map(([name, e]) => `
         <tr>
             <td style="font-weight:600;">${name}</td>
-            <td style="text-align:center; font-weight:700;">${e.interaction}</td>
-            <td style="text-align:right; font-weight:700; color:var(--warning);">${e.deepLeads}</td>
+            <td style="text-align:center; font-weight:800; color:var(--info);">${e.dailyPC || 0}</td>
+            <td style="text-align:right; font-weight:800; color:var(--warning);">${e.dailyDeep || 0}</td>
         </tr>
     `).join('');
 }
