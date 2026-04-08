@@ -41,6 +41,10 @@ window.DASHBOARD_DATA = {
     growth: {
         avgSatisfaction: 0,
         totalFollowers: 0,
+        fbFollowers: 0,
+        ytFollowers: 0,
+        zaloFollowers: 0,
+        congDongMembers: 0,
         teacherStats: []
     },
 

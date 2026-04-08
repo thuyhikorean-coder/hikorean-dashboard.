@@ -386,8 +386,8 @@ function processAllData(data) {
             if (!isFromTargetMonth(row[0])) return;
             const name = row[1]?.trim();
             if (!name) return;
-            const interaction = parseInt(row[3]) || 0;
-            const deepLeads = parseInt(row[4]) || 0;
+            const interaction = parseInt(row[2]) || 0;
+            const deepLeads = parseInt(row[5]) || 0;
             const stdDate = standardizeDate(row[0]);
             
             if (!engagement[name]) engagement[name] = { interaction: 0, deepLeads: 0, dailyPC: 0, dailyDeep: 0 };
@@ -498,6 +498,8 @@ function processAllData(data) {
     if (rowsSocial.length > 1) {
         let ytLatest = 0;
         let fbLatest = 0;
+        let zaloLatest = 0;
+        let congDongLatest = 0;
         let hitVideos = 0;
 
         rowsSocial.slice(1).forEach(r => {
@@ -512,13 +514,19 @@ function processAllData(data) {
                 fbLatest += followers;
             } else if (platform.includes('YOUTUBE') || platform.includes('YT')) {
                 ytLatest += followers;
+            } else if (platform.includes('ZALO') || platform.includes('OA')) {
+                zaloLatest += followers;
+            } else if (platform.includes('CỘNG ĐỒNG') || platform.includes('GROUP') || platform.includes('CĐ')) {
+                congDongLatest += followers;
             }
             hitVideos += views1k;
         });
 
-        DASHBOARD_DATA.growth.totalFollowers = fbLatest + ytLatest;
+        DASHBOARD_DATA.growth.totalFollowers = fbLatest + ytLatest + zaloLatest + congDongLatest;
         DASHBOARD_DATA.growth.fbFollowers = fbLatest;
         DASHBOARD_DATA.growth.ytFollowers = ytLatest;
+        DASHBOARD_DATA.growth.zaloFollowers = zaloLatest;
+        DASHBOARD_DATA.growth.congDongMembers = congDongLatest;
         DASHBOARD_DATA.growth.hitVideos = hitVideos;
     }
 
@@ -770,6 +778,12 @@ function renderFunnel() {
 
     const mktViews = document.getElementById('mktViews');
     if (mktViews) mktViews.textContent = `${DASHBOARD_DATA.growth.hitVideos || 0}`;
+
+    const mktZalo = document.getElementById('mktZalo');
+    if (mktZalo) mktZalo.textContent = `${DASHBOARD_DATA.growth.zaloFollowers || 0} / 300`;
+
+    const mktGroup = document.getElementById('mktGroup');
+    if (mktGroup) mktGroup.textContent = `${DASHBOARD_DATA.growth.congDongMembers || 0} / 500`;
 
     const mktCostNew = document.getElementById('mktCostRatioNew');
     if (mktCostNew) mktCostNew.textContent = `${DASHBOARD_DATA.summary.mktCostRatio}%`;
