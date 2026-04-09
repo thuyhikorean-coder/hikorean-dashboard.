@@ -910,18 +910,9 @@ function renderRaceCards() {
         }
     }
 
-    // Global Weekly Sprint Banner
-    const globalWeeklyHtml = `
-        <div style="background: linear-gradient(135deg, #c62828, #e53935); color:white; padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align:center; box-shadow: 0 10px 20px rgba(198,40,40,0.2); position:relative; overflow:hidden;">
-            <div style="position:absolute; top:-10px; right:-10px; font-size:4rem; opacity:0.1;"><i class='bx bxs-flame'></i></div>
-            <h3 style="margin:0; font-size: 1.1rem; font-weight:900; letter-spacing:1px; display:flex; align-items:center; justify-content:center; gap:10px;">
-                <i class='bx bxs-zap bx-tada'></i> MỤC TIÊU TUẦN 1: 60M / SALE <i class='bx bxs-zap bx-tada'></i>
-            </h3>
-            <p style="margin:5px 0 0; font-size:0.75rem; font-weight:600; opacity:0.9;">Hành trình 60 triệu hỏa tốc - Cố gắng hoàn thành trước 07/04!</p>
-        </div>
-    `;
+    // Global Weekly Sprint Banner removed
 
-    let html = globalWeeklyHtml;
+    let html = '';
     targets.forEach(name => {
         let s = stats[name] || { rev: 0, todayRev: 0, weeklyRev: 0 };
         // Fuzzy match for names like "Thơm" vs "Hồng Thơm"
