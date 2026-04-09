@@ -311,8 +311,8 @@
                             style="background-color: rgba(0,0,0,0.05); color: var(--text-muted); font-weight: 600;">
                     </div>
                     <div style="flex: 1; min-width: 150px;">
-                        <input type="text" id="teacherName" placeholder="Tên Giáo Viên" required readonly
-                            style="background-color: rgba(0,0,0,0.05); color: var(--text-muted); font-weight: 600;">
+                        <input type="text" id="teacherName" placeholder="Tên Giáo Viên" required
+                            style="font-weight: 600;">
                     </div>
                 </div>
             </div>
@@ -473,36 +473,18 @@
             classInput.outerHTML = selectHTML;
             const classSelect = document.getElementById('className');
 
-            teacherInput.setAttribute('readonly', 'true');
-            teacherInput.style.backgroundColor = 'rgba(0,0,0,0.05)';
-
+            // teacherInput.setAttribute('readonly', 'true');
+            // teacherInput.style.backgroundColor = 'rgba(0,0,0,0.05)';
             try {
-                const UPSALE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRzh_K2wpZTdnolPCRzYhVQxkq0B39c2zYRB4OLRsybc8LwAMFxsrCP98RRjbI--g/pub?gid=548776730&single=true&output=csv';
-
-                const upRes = await fetch(UPSALE_URL);
-                const upText = await upRes.text();
-                const upRows = parseCSV(upText);
-
-                let classSet = new Set();
-                let classList = [];
-                let teacherMap = {};
-
-                // Lấy thông tin Lớp (Cột 1) và Giáo viên (Cột 2) từ Upsale cho Tháng 3 (Cột 0)
-                upRows.slice(1).forEach(r => {
-                    if (r[0] && r[1] && r[0].includes('Tháng 3')) {
-                        let cls = r[1].trim();
-                        let teacher = r[2] ? r[2].trim() : "Chưa có TT Giáo Viên";
-
-                        if (cls && !classSet.has(cls)) {
-                            classSet.add(cls);
-                            classList.push(cls);
-                            teacherMap[cls] = teacher;
-                        }
-                    }
-                });
+                let classList = [
+                    "GT4K113ON",
+                    "GT1K185ON",
+                    "GT1K165OFF",
+                    "TOPIK34K110ON 1:1"
+                ];
 
                 classSelect.innerHTML = `<option value="" disabled selected>-- Vui lòng chọn Lớp --</option>`;
-                classList.sort().forEach(cls => {
+                classList.forEach(cls => {
                     const opt = document.createElement('option');
                     opt.value = cls;
                     opt.text = cls;
@@ -511,8 +493,8 @@
 
                 classSelect.addEventListener('change', (e) => {
                     const selectedClass = e.target.value;
-                    const teacher = teacherMap[selectedClass] || "Chưa có TT Giáo Viên";
-                    teacherInput.value = teacher;
+                    teacherInput.value = "";
+                    teacherInput.placeholder = "Nhập tên Giáo viên";
                 });
 
             } catch (err) {
