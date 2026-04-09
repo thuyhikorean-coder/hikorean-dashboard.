@@ -200,6 +200,7 @@ function processAllData(data) {
 
     if (rowsSale.length > 1) {
         let revBySale = {}, revByCourse = {}, comboCount = {}, orderCount = {}, dailyMap = {}, newCount = {}, upCount = {};
+        let bonusMap = {};
         rowsSale.slice(1).forEach(row => {
             if (!isFromTargetMonth(row[0])) return;
             const status = row[9]?.toUpperCase();
@@ -209,10 +210,40 @@ function processAllData(data) {
                 const source = row[4]?.trim().toUpperCase() || '';
                 const type = row[5]?.toUpperCase() || '';
                 const isCombo = row[7]?.toUpperCase() === 'YES';
+                const noteStr = (row[10] || '').toUpperCase() + ' ' + (row[11] || '').toUpperCase();
 
                 totalRev += amount;
                 revBySale[saleName] = (revBySale[saleName] || 0) + amount;
                 orderCount[saleName] = (orderCount[saleName] || 0) + 1;
+
+                // Thưởng nóng rules
+                let currentBonus = 0;
+                // a. Tệp Data Lạnh (Tải tài liệu)
+                if (source.includes('LẠNH') || source.includes('TÀI LIỆU')) {
+                    currentBonus += 200000;
+                }
+                // b. Học viên cũ giới thiệu
+                if (source.includes('CŨ GIỚI THIỆU') || source.includes('CŨ GT') || source.includes('HV CŨ')) {
+                    currentBonus += 100000;
+                }
+                // c. Đơn về trong ngày
+                if (noteStr.includes('TRONG NGÀY')) {
+                    currentBonus += 100000;
+                }
+                // d. Combo Topik 3, 4
+                const cName = row[6]?.toUpperCase().trim() || '';
+                if (isCombo && cName.includes('TOPIK 3')) {
+                    currentBonus += 200000;
+                }
+                if (isCombo && cName.includes('TOPIK 4')) {
+                    currentBonus += 300000;
+                }
+                // e. Bình dân mới
+                if (cName.includes('BÌNH DÂN') && (type.includes('MỚI') || type.includes('NEW'))) {
+                    currentBonus += 50000;
+                }
+                
+                bonusMap[saleName] = (bonusMap[saleName] || 0) + currentBonus;
 
                 const isMktAdsRe = source.includes('MKT-ADS') || source.includes('RE-MARKETING');
 
@@ -230,8 +261,8 @@ function processAllData(data) {
 
                 if (isCombo) comboCount[saleName] = (comboCount[saleName] || 0) + 1;
 
-                const cName = row[6]?.split('-')[0]?.trim() || 'Khác';
-                revByCourse[cName] = (revByCourse[cName] || 0) + amount;
+                const simpleCName = row[6]?.split('-')[0]?.trim() || 'Khác';
+                revByCourse[simpleCName] = (revByCourse[simpleCName] || 0) + amount;
                 if (row[0]) {
                     const stdDate = standardizeDate(row[0]);
                     if (stdDate.length >= 10) {
@@ -301,27 +332,37 @@ function processAllData(data) {
             totalNewCount += newCount[name] || 0;
             totalUpCount += upCount[name] || 0;
             
-            // Tính DOANH THU TUẦN 1 (01/04 - 07/04)
             let weeklyRev = 0;
-            let bonusAmount = 0;
+            let bonusAmount = bonusMap[name] || 0;
             let daysHit = 0;
+            let revBefore15 = 0;
+
             if (dailyRevMap[name]) {
                 Object.keys(dailyRevMap[name]).forEach(dateKey => {
                     if (dateKey >= '04-01' && dateKey <= '04-07') {
                         weeklyRev += dailyRevMap[name][dateKey];
                     }
-                    if (dailyRevMap[name][dateKey] >= 10000000) {
-                        bonusAmount += 100000;
-                        daysHit++;
+                    if (dateKey <= '04-15') {
+                        revBefore15 += dailyRevMap[name][dateKey];
                     }
                 });
+            }
+
+            // Milestone f: 40% (96M) before 15/04
+            if (revBefore15 >= 96000000) {
+                bonusAmount += 1000000;
+            }
+
+            // Milestone g & h: 80% (192M) and 100% (240M)
+            if (revBySale[name] >= 240000000) {
+                bonusAmount += 5000000; // 2M for 80% + 3M for 100%
+            } else if (revBySale[name] >= 192000000) {
+                bonusAmount += 2000000; // 2M for 80%
             }
 
             saleStats[name] = {
                 rev: revBySale[name],
                 weeklyRev: weeklyRev,
-                bonus: bonusAmount,
-                daysHit: daysHit,
                 comboRate: orderCount[name] > 0 ? ((comboCount[name] || 0) / orderCount[name] * 100).toFixed(0) : 0,
                 newCount: newCount[name] || 0,
                 upCount: upCount[name] || 0,
