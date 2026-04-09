@@ -963,16 +963,7 @@ function renderRaceCards() {
 
                 ${bonusHtml}
                 
-                <!-- Weekly Sprint Tracker -->
-                <div style="margin-bottom: 12px; background: rgba(0,0,0,0.05); padding: 8px; border-radius: 6px; border: 1px solid rgba(198,40,40,0.1);">
-                    <div style="display:flex; justify-content:space-between; font-size: 0.7rem; font-weight:800; color: #c62828; margin-bottom: 4px;">
-                        <span><i class='bx bxs-flame bx-tada'></i> TUẦN 1 (60M): ${(s.weeklyRev / 1000000).toFixed(1)}M</span>
-                        <span>${weeklyProgress}%</span>
-                    </div>
-                    <div class="progress-container" style="height: 10px; margin: 0; background: rgba(0,0,0,0.1);">
-                        <div class="progress-fill" style="width: ${weeklyProgress}%; background: linear-gradient(90deg, #b71c1c, #e53935); box-shadow: 0 0 8px #e53935;"></div>
-                    </div>
-                </div>
+
 
                 <!-- Daily Mini Tracker -->
                 <div style="margin-bottom: 8px;">
