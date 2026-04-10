@@ -353,10 +353,10 @@ function processAllData(data) {
                 bonusAmount += 1000000;
             }
 
-            // Milestone g & h: 80% (192M) and 100% (240M)
-            if (revBySale[name] >= 240000000) {
+            // Milestone g & h: 80% (120M) and 100% (150M)
+            if (revBySale[name] >= 150000000) {
                 bonusAmount += 5000000; // 2M for 80% + 3M for 100%
-            } else if (revBySale[name] >= 192000000) {
+            } else if (revBySale[name] >= 120000000) {
                 bonusAmount += 2000000; // 2M for 80%
             }
 
@@ -920,7 +920,7 @@ function renderRaceCards() {
 
     // Specifically target the 2 core warriors defined by the user
     const targets = ['Khánh Linh', 'Hồng Thơm'];
-    const goalPerSale = 240000000; // Updated for April
+    const goalPerSale = 150000000; // Updated for April
     const weeklyTarget = 60000000; // New requested weekly program
     const dailyTarget = 10000000; 
     const stats = DASHBOARD_DATA.financial.saleStats || {};
