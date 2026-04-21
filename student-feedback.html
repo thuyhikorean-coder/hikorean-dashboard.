@@ -477,23 +477,33 @@
             // teacherInput.style.backgroundColor = 'rgba(0,0,0,0.05)';
             try {
                 let classList = [
-                    "GT4K113ON",
-                    "GT1K185ON",
-                    "GT1K165OFF",
-                    "TOPIK34K110ON 1:1"
+                    { id: "GT4K113ON", teacher: "" },
+                    { id: "GT1K185ON", teacher: "" },
+                    { id: "GT1K165OFF", teacher: "" },
+                    { id: "TOPIK34K110ON 1:1", teacher: "" },
+                    { id: "GT1K186ON", teacher: "Lê Ngọc Ánh" },
+                    { id: "GT2K134ON", teacher: "Dương Thị Trang" },
+                    { id: "GT2K135ON", teacher: "Nguyễn Thị Thu Lan" },
+                    { id: "GT2K46OFF", teacher: "Lê Ngọc Ánh" },
+                    { id: "GT3K46OFF", teacher: "Bùi Ngọc Anh" }
                 ];
 
                 classSelect.innerHTML = `<option value="" disabled selected>-- Vui lòng chọn Lớp --</option>`;
                 classList.forEach(cls => {
                     const opt = document.createElement('option');
-                    opt.value = cls;
-                    opt.text = cls;
+                    opt.value = cls.id;
+                    opt.text = cls.id;
+                    if (cls.teacher) opt.dataset.teacher = cls.teacher;
                     classSelect.appendChild(opt);
                 });
 
                 classSelect.addEventListener('change', (e) => {
-                    const selectedClass = e.target.value;
-                    teacherInput.value = "";
+                    const selectedOpt = classSelect.options[classSelect.selectedIndex];
+                    if (selectedOpt.dataset.teacher) {
+                        teacherInput.value = selectedOpt.dataset.teacher;
+                    } else {
+                        teacherInput.value = "";
+                    }
                     teacherInput.placeholder = "Nhập tên Giáo viên";
                 });
 
