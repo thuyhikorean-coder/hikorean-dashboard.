@@ -97,7 +97,7 @@ function parseCSV(text) {
 function isFromTargetMonth(dateStr) {
     if (!dateStr) return false;
     const selector = document.getElementById('monthSelector');
-    const selectedValue = selector ? selector.value : "04-2026";
+    const selectedValue = selector ? selector.value : "05-2026";
     const [selM, selY] = selectedValue.split('-');
 
     // Robust parsing
@@ -300,7 +300,7 @@ function processAllData(data) {
             }
         });
         const selector = document.getElementById('monthSelector');
-        const selectedValue = selector ? selector.value : "03-2026";
+        const selectedValue = selector ? selector.value : "05-2026";
         const [selM, selY] = selectedValue.split('-');
         const isCurrentMonth = (todayObj.getFullYear() == selY && (todayObj.getMonth() + 1) == selM);
         
@@ -339,17 +339,17 @@ function processAllData(data) {
 
             if (dailyRevMap[name]) {
                 Object.keys(dailyRevMap[name]).forEach(dateKey => {
-                    if (dateKey >= '04-01' && dateKey <= '04-07') {
+                    if (dateKey >= '05-01' && dateKey <= '05-07') {
                         weeklyRev += dailyRevMap[name][dateKey];
                     }
-                    if (dateKey <= '04-15') {
+                    if (dateKey <= '05-15') {
                         revBefore15 += dailyRevMap[name][dateKey];
                     }
                 });
             }
 
-            // Milestone f: 40% (96M) before 15/04
-            if (revBefore15 >= 96000000) {
+            // Milestone f: 40% (60M) before 15/05
+            if (revBefore15 >= 60000000) {
                 bonusAmount += 1000000;
             }
 
@@ -920,7 +920,7 @@ function renderRaceCards() {
 
     // Specifically target the 2 core warriors defined by the user
     const targets = ['Khánh Linh', 'Hồng Thơm'];
-    const goalPerSale = 150000000; // Updated for April
+    const goalPerSale = 150000000; // Updated for May
     const weeklyTarget = 60000000; // New requested weekly program
     const dailyTarget = 10000000; 
     const stats = DASHBOARD_DATA.financial.saleStats || {};
@@ -1020,7 +1020,7 @@ function renderRaceCards() {
                 <!-- Month Progress bar -->
                 <div style="display:flex; justify-content:space-between; font-size: 0.65rem; color: var(--text-muted); padding-top:4px;">
                     <span>Tiến độ Tháng: ${monthProgress}%</span>
-                    <span>Hết tháng: 240M</span>
+                    <span>Hết tháng: 150M</span>
                 </div>
             </div>
         `;
