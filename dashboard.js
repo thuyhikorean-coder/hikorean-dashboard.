@@ -5,7 +5,7 @@ const CONFIG = {
     QLCL_OUTCOME_URL: 'https://docs.google.com/spreadsheets/d/1TBDo2dCjKznOlav7FnnebEML7o7VuDq1/export?format=csv&gid=531665888',
     SALE_TRACKING_URL: 'https://docs.google.com/spreadsheets/d/19XKkxjrQjs7zoeGMQFPyRhAORW5tD14FhvQP-Oj8Scw/export?format=csv&gid=11036957',
     UPSALE_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRzh_K2wpZTdnolPCRzYhVQxkq0B39c2zYRB4OLRsybc8LwAMFxsrCP98RRjbI--g/pub?gid=548776730&single=true&output=csv',
-    SOCIAL_URL: 'https://docs.google.com/spreadsheets/d/1VpBHpfY7foI6gLCCm62ABkXOYEMFlo_-/export?format=csv&gid=578202755',
+    SOCIAL_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSO-aSIrwtMiGFGMpxSqRhIFo7PMA9Uebo7FBxY1rhm_jbUi2cY4Kz3XTXbwVfi7Q/pub?gid=578202755&single=true&output=csv',
     FEEDBACK_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTsv4tsHlXao_Awr8Xe1RI3tzGkL11KMJga_vlXv7_y8Nz6jwbfzoaoBUTbTk63TiUYz2shPpG0cEof/pub?gid=0&single=true&output=csv',
     TEACHER_COST_URL: 'https://docs.google.com/spreadsheets/d/1B95z7EC1sc7PVhxakfvebClDSu2yCGRyHwHtHw7xW-g/export?format=csv&gid=0'
 };
