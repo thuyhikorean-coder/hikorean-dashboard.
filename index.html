@@ -17,7 +17,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Custom Style -->
-    <link rel="stylesheet" href="style-v4.css?v=1.11">
+    <link rel="stylesheet" href="style-v4.css?v=1.12">
 </head>
 
 <body>
@@ -168,12 +168,37 @@
                         </div>
                     </div>
 
-                    <div class="card-race">
+                    <div class="card-race" style="display: flex; flex-direction: column; gap: 24px;">
                         <div class="glass-card">
-                            <h3 class="card-title" style="color:var(--danger);"><i class='bx bxs-hot bx-tada'></i> Cuộc
-                                Đua Tháng 5/2026</h3>
+                            <h3 class="card-title" style="color:var(--danger);"><i class='bx bxs-hot bx-tada'></i> Cuộc Đua Tháng 5/2026</h3>
                             <div id="race-container">
                                 <!-- Filled by JS -->
+                            </div>
+                        </div>
+
+                        <div class="glass-card">
+                            <h3 class="card-title"><i class='bx bx-broadcast'></i> Chỉ số Marketing</h3>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <div style="display:flex; justify-content:space-between; font-size: 0.8rem; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 6px;">
+                                    <span style="color:var(--text-muted);"><i class='bx bxl-facebook-square'></i> Fanpage (Tích Luỹ):</span>
+                                    <span id="mktFB" style="color:var(--info); font-weight:700;">-- / 1000</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; font-size: 0.8rem; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 6px;">
+                                    <span style="color:var(--text-muted);"><i class='bx bxl-youtube'></i> YouTube (Tích Luỹ):</span>
+                                    <span id="mktYT" style="color:var(--danger); font-weight:700;">-- / 500</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; font-size: 0.8rem; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 6px;">
+                                    <span style="color:var(--text-muted);"><i class='bx bx-play-circle'></i> Video > 1k Views (Tổng):</span>
+                                    <span id="mktViews" style="color:var(--process); font-weight:700;">--</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; font-size: 0.8rem; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 6px;">
+                                    <span style="color:var(--text-muted);"><i class='bx bx-group'></i> Cộng đồng Đăng ký:</span>
+                                    <span id="mktGroup" style="color:var(--warning); font-weight:700;">-- / 500</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; font-size: 0.8rem; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 6px;">
+                                    <span style="color:var(--text-muted);"><i class='bx bx-chat'></i> Zalo OA Đăng ký:</span>
+                                    <span id="mktZalo" style="color:#0088FF; font-weight:700;">-- / 300</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -191,40 +216,7 @@
                                         style="color:var(--process);">0%</span></div>
                             </div>
 
-                            <!-- MKT KPIs -->
-                            <div
-                                style="margin-top: 15px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px;">
-                                <div style="display: flex; flex-direction: column; gap: 8px;">
-                                    <div
-                                        style="display:flex; justify-content:space-between; font-size: 0.8rem; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 6px;">
-                                        <span style="color:var(--text-muted);"><i class='bx bxl-facebook-square'></i>
-                                            Fanpage (Tích Luỹ):</span>
-                                        <span id="mktFB" style="color:var(--info); font-weight:700;">-- / 1000</span>
-                                    </div>
-                                    <div
-                                        style="display:flex; justify-content:space-between; font-size: 0.8rem; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 6px;">
-                                        <span style="color:var(--text-muted);"><i class='bx bxl-youtube'></i> YouTube
-                                            (Tích Luỹ):</span>
-                                        <span id="mktYT" style="color:var(--danger); font-weight:700;">-- / 500</span>
-                                    </div>
-                                    <div
-                                        style="display:flex; justify-content:space-between; font-size: 0.8rem; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 6px;">
-                                        <span style="color:var(--text-muted);"><i class='bx bx-play-circle'></i> Video >
-                                            1k Views (Tổng):</span>
-                                        <span id="mktViews" style="color:var(--process); font-weight:700;">--</span>
-                                    </div>
-                                    <div
-                                        style="display:flex; justify-content:space-between; font-size: 0.8rem; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 6px;">
-                                        <span style="color:var(--text-muted);"><i class='bx bx-group'></i> Cộng đồng Đăng ký:</span>
-                                        <span id="mktGroup" style="color:var(--warning); font-weight:700;">-- / 500</span>
-                                    </div>
-                                    <div
-                                        style="display:flex; justify-content:space-between; font-size: 0.8rem; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 6px;">
-                                        <span style="color:var(--text-muted);"><i class='bx bx-chat'></i> Zalo OA Đăng ký:</span>
-                                        <span id="mktZalo" style="color:#0088FF; font-weight:700;">-- / 300</span>
-                                    </div>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                 </section>
