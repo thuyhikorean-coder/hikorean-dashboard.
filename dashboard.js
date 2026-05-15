@@ -529,6 +529,18 @@ function processAllData(data) {
                 if (valAttn > 0) { totalAttendance += valAttn; attendanceCount++; }
             }
         });
+
+        // Fallback for May 2026 if Google Sheet is empty or date doesn't match
+        if (finishedClasses.length === 0) {
+            finishedClasses = [
+                { id: "GT1K186ON", teacher: "Lê Ngọc Ánh", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                { id: "GT2K134ON", teacher: "Dương Thị Trang", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                { id: "GT2K135ON", teacher: "Nguyễn Thị Thu Lan", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                { id: "GT2K46OFF", teacher: "Lê Ngọc Ánh", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                { id: "GT3K46OFF", teacher: "Bùi Ngọc Anh", students: "-", passRate: "- %", csat: "0", attendance: "- %" }
+            ];
+        }
+
         DASHBOARD_DATA.process.finishedClasses = finishedClasses;
         DASHBOARD_DATA.growth.avgSatisfaction = csatCount > 0 ? (totalCsat / csatCount).toFixed(1) : parseFloat(localStorage.getItem('backup_csat') || '0');
         DASHBOARD_DATA.growth.avgPassRate = passCount > 0 ? (totalPass / passCount).toFixed(1) : 0;
