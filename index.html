@@ -17,7 +17,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Custom Style -->
-    <link rel="stylesheet" href="style-v4.css?v=1.12">
+    <link rel="stylesheet" href="style-v4.css?v=1.13">
 </head>
 
 <body>
@@ -160,9 +160,9 @@
                 <!-- Middle Section: Performance Visualization -->
                 <section class="ops-grid-mid">
                     <div class="card-chart-large">
-                        <div class="glass-card">
+                        <div class="glass-card" style="height: 100%; display: flex; flex-direction: column;">
                             <h3 class="card-title"><i class='bx bx-line-chart'></i> Timeline Doanh thu</h3>
-                            <div class="chart-container-ops" style="height: 230px;">
+                            <div class="chart-container-ops" style="flex: 1; min-height: 280px;">
                                 <canvas id="revenueTrendChart"></canvas>
                             </div>
                         </div>
@@ -173,6 +173,38 @@
                             <h3 class="card-title" style="color:var(--danger);"><i class='bx bxs-hot bx-tada'></i> Cuộc Đua Tháng 5/2026</h3>
                             <div id="race-container">
                                 <!-- Filled by JS -->
+                            </div>
+                        </div>
+
+                        <div class="glass-card">
+                            <h3 class="card-title"><i class='bx bxs-user-check'></i> Hiệu suất Sale</h3>
+                            <div class="table-wrapper">
+                                <table class="compact-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Sale</th>
+                                            <th>D.Thu</th>
+                                            <th>New</th>
+                                            <th>Up</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="sales-detail-list"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-funnel" style="display: flex; flex-direction: column; gap: 24px;">
+                        <div class="glass-card">
+                            <h3 class="card-title"><i class='bx bx-filter-alt'></i> Phễu Data & Leads</h3>
+                            <div id="funnel-container" class="funnel-modern">
+                                <!-- Filled by JS -->
+                            </div>
+                            <div class="mini-meta" style="margin-top: 15px; display: flex; gap: 10px;">
+                                <div class="mini-chip">Tiến Độ Báo Cáo: <span id="reportProgress"
+                                        style="color:var(--info);">0%</span></div>
+                                <div class="mini-chip">Tỉ lệ Upsale: <span id="upsellRate"
+                                        style="color:var(--process);">0%</span></div>
                             </div>
                         </div>
 
@@ -202,48 +234,11 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="card-funnel">
-                        <div class="glass-card">
-                            <h3 class="card-title"><i class='bx bx-filter-alt'></i> Phễu Data & Leads</h3>
-                            <div id="funnel-container" class="funnel-modern">
-                                <!-- Filled by JS -->
-                            </div>
-                            <div class="mini-meta" style="margin-top: 15px; display: flex; gap: 10px;">
-                                <div class="mini-chip">Tiến Độ Báo Cáo: <span id="reportProgress"
-                                        style="color:var(--info);">0%</span></div>
-                                <div class="mini-chip">Tỉ lệ Upsale: <span id="upsellRate"
-                                        style="color:var(--process);">0%</span></div>
-                            </div>
-
-
-                        </div>
-                    </div>
                 </section>
 
                 <!-- Bottom Section: Operational Tracking -->
                 <section class="ops-grid-bottom">
-                    <!-- Column 1: Sale Performance Detail -->
-                    <div class="card-sub">
-                        <div class="glass-card">
-                            <h3 class="card-title"><i class='bx bxs-user-check'></i> Hiệu suất Sale</h3>
-                            <div class="table-wrapper">
-                                <table class="compact-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Sale</th>
-                                            <th>D.Thu</th>
-                                            <th>New</th>
-                                            <th>Up</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="sales-detail-list"></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Column 2: Sale Engagement -->
+                    <!-- Column 1: Sale Engagement -->
                     <div class="card-sub">
                         <div class="glass-card">
                             <h3 class="card-title"><i class='bx bx-message-dots'></i> Update Data PC & Lead Sâu Nhiệt</h3>
