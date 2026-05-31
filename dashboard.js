@@ -338,11 +338,12 @@ function processAllData(data) {
             let revBefore15 = 0;
 
             if (dailyRevMap[name]) {
+                const monthPrefix = selM.padStart(2, '0');
                 Object.keys(dailyRevMap[name]).forEach(dateKey => {
-                    if (dateKey >= '05-01' && dateKey <= '05-07') {
+                    if (dateKey >= `${monthPrefix}-01` && dateKey <= `${monthPrefix}-07`) {
                         weeklyRev += dailyRevMap[name][dateKey];
                     }
-                    if (dateKey <= '05-15') {
+                    if (dateKey <= `${monthPrefix}-15`) {
                         revBefore15 += dailyRevMap[name][dateKey];
                     }
                 });
@@ -530,15 +531,29 @@ function processAllData(data) {
             }
         });
 
-        // Fallback for May 2026 if Google Sheet is empty or date doesn't match
+        // Fallback if Google Sheet is empty or date doesn't match
         if (finishedClasses.length === 0) {
-            finishedClasses = [
-                { id: "GT1K186ON", teacher: "Lê Ngọc Ánh", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
-                { id: "GT2K134ON", teacher: "Dương Thị Trang", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
-                { id: "GT2K135ON", teacher: "Nguyễn Thị Thu Lan", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
-                { id: "GT2K46OFF", teacher: "Lê Ngọc Ánh", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
-                { id: "GT3K46OFF", teacher: "Bùi Ngọc Anh", students: "-", passRate: "- %", csat: "0", attendance: "- %" }
-            ];
+            const selector = document.getElementById('monthSelector');
+            const selectedMonth = selector ? selector.value : "05-2026";
+            if (selectedMonth === "06-2026") {
+                finishedClasses = [
+                    { id: "GT1SK171OFF", teacher: "Dương Thị Trang", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "GT2K136ON", teacher: "Giáp Thị Thu Hà", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "GT2K137ON", teacher: "Đặng Thị Thúy", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "GT4K104OFF", teacher: "Lê Ngọc Ánh", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "GT4K114ON", teacher: "Trịnh Thị Hồng Nhung", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "NT-MATCHUM3K116ON", teacher: "Trần Thị Cẩm Tú", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "TOPIK34K109ON", teacher: "Trần Thị Hoàng Vinh", students: "-", passRate: "- %", csat: "0", attendance: "- %" }
+                ];
+            } else {
+                finishedClasses = [
+                    { id: "GT1K186ON", teacher: "Lê Ngọc Ánh", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "GT2K134ON", teacher: "Dương Thị Trang", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "GT2K135ON", teacher: "Nguyễn Thị Thu Lan", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "GT2K46OFF", teacher: "Lê Ngọc Ánh", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "GT3K46OFF", teacher: "Bùi Ngọc Anh", students: "-", passRate: "- %", csat: "0", attendance: "- %" }
+                ];
+            }
         }
 
         DASHBOARD_DATA.process.finishedClasses = finishedClasses;
@@ -656,6 +671,12 @@ function initDashboard() {
     if (updateEl) updateEl.textContent = `Sync: ${new Date().toLocaleTimeString('vi-VN')}`;
 
     const selector = document.getElementById('monthSelector');
+    const raceTitleEl = document.getElementById('raceCardTitle');
+    if (raceTitleEl) {
+        const selectedValue = selector ? selector.value : "05-2026";
+        const [selM, selY] = selectedValue.split('-');
+        raceTitleEl.innerHTML = `<i class='bx bxs-hot bx-tada'></i> Cuộc Đua Tháng ${parseInt(selM)}/${selY}`;
+    }
 
     renderOKRs();
     renderBSCTable();
