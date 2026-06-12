@@ -1205,12 +1205,16 @@ function renderSalesKPI() {
 
         let bonusText = "Chưa đạt thưởng";
         let bonusClass = "no-bonus";
+        let earnedBonus = 0;
+        
         if (percent >= 120) {
             bonusText = person.type === 'full-time' ? "Thưởng 1.000.000đ" : "Thưởng 500.000đ";
             bonusClass = "bonus-120";
+            earnedBonus = person.type === 'full-time' ? 1000000 : 500000;
         } else if (percent >= 100) {
             bonusText = person.type === 'full-time' ? "Thưởng 500.000đ" : "Thưởng 200.000đ";
             bonusClass = "bonus-100";
+            earnedBonus = person.type === 'full-time' ? 500000 : 200000;
         }
 
         individualsHTML += `
@@ -1245,6 +1249,10 @@ function renderSalesKPI() {
                         <span class="label">Thiếu 120%:</span>
                         <span class="value badge-finance">${formatCurrency(missing120)}</span>
                     </div>` : ''}
+                    <div class="stat-item" style="margin-top: 8px; border-top: 1px dashed rgba(0,0,0,0.1); padding-top: 8px;">
+                        <span class="label" style="color: var(--primary); font-weight: 700;">Tiền thưởng Cá nhân:</span>
+                        <span class="value" style="color: var(--primary); font-size: 1.05rem;">${formatCurrency(earnedBonus)}</span>
+                    </div>
                 </div>
             </div>
         `;
@@ -1298,6 +1306,10 @@ function renderSalesKPI() {
                 <div class="stat-item">
                     <span class="label">Trạng thái:</span>
                     <span class="value ${teamPercent >= 100 && allMet80Percent ? 'badge-process' : 'badge-finance'}">${teamBonusStatus}</span>
+                </div>
+                <div class="stat-item" style="margin-top: 8px; border-top: 1px dashed rgba(0,0,0,0.1); padding-top: 8px;">
+                    <span class="label" style="color: var(--primary); font-weight: 700;">Tiền thưởng Team:</span>
+                    <span class="value" style="color: var(--primary); font-size: 1.05rem;">${teamPercent >= 100 && allMet80Percent ? 'Đã đạt thưởng' : '0 đ'}</span>
                 </div>
             </div>
             <div class="kpi-condition">
