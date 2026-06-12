@@ -1250,8 +1250,12 @@ function renderSalesKPI() {
                         <span class="value badge-finance">${formatCurrency(missing120)}</span>
                     </div>` : ''}
                     <div class="stat-item" style="margin-top: 8px; border-top: 1px dashed rgba(0,0,0,0.1); padding-top: 8px;">
-                        <span class="label" style="color: var(--primary); font-weight: 700;">Tiền thưởng Cá nhân:</span>
-                        <span class="value" style="color: var(--primary); font-size: 1.05rem;">${formatCurrency(earnedBonus)}</span>
+                        <span class="label" style="color: var(--warning); font-weight: 700;">🎁 Đạt 100% thưởng:</span>
+                        <span class="value" style="color: var(--warning); font-size: 1.05rem;">+${formatCurrency(person.type === 'full-time' ? 500000 : 200000)}</span>
+                    </div>
+                    <div class="stat-item" style="margin-top: 4px;">
+                        <span class="label" style="color: var(--warning); font-weight: 700;">🔥 Đạt 120% thưởng:</span>
+                        <span class="value" style="color: var(--warning); font-size: 1.05rem;">+${formatCurrency(person.type === 'full-time' ? 1000000 : 500000)}</span>
                     </div>
                 </div>
             </div>
