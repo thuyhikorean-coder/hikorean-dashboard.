@@ -67,7 +67,16 @@ window.DASHBOARD_DATA = {
                 { name: 'Tỉ lệ chuyên cần (> 80%)', current: 0, target: 80, unit: '%', progress: 0 }
             ]
         }
-    ]
+    ],
+
+    salesKPI: {
+        individuals: [
+            { name: 'Thơm', current: 35000000, type: 'full-time' },
+            { name: 'Khánh Linh', current: 40000000, type: 'full-time' }
+        ],
+        teamCurrent: 75000000,
+        teamTarget: 75000000
+    }
 };
 
 

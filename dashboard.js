@@ -379,6 +379,50 @@ function processAllData(data) {
         const totalEligibleUpsellLeads = 53; // Hardcoded from user context ("Tháng 3 chị count ra 53 người dưới 2 triệu")
         DASHBOARD_DATA.summary.upsellRate = totalEligibleUpsellLeads > 0 ? ((totalUpCount / totalEligibleUpsellLeads) * 100).toFixed(1) : 0;
 
+        // Dynamic KPI calculation for week 10-16
+        let thomRev = 0;
+        let khanhLinhRev = 0;
+        let thuyRev = 0;
+        const monthPrefix = selM.padStart(2, '0');
+        
+        if (dailyRevMap['Hồng Thơm']) {
+            Object.keys(dailyRevMap['Hồng Thơm']).forEach(dateKey => {
+                if (dateKey >= `${monthPrefix}-10` && dateKey <= `${monthPrefix}-16`) {
+                    thomRev += dailyRevMap['Hồng Thơm'][dateKey];
+                }
+            });
+        }
+        if (dailyRevMap['Khánh Linh']) {
+            Object.keys(dailyRevMap['Khánh Linh']).forEach(dateKey => {
+                if (dateKey >= `${monthPrefix}-10` && dateKey <= `${monthPrefix}-16`) {
+                    khanhLinhRev += dailyRevMap['Khánh Linh'][dateKey];
+                }
+            });
+        }
+        if (dailyRevMap['Thu Thủy']) {
+            Object.keys(dailyRevMap['Thu Thủy']).forEach(dateKey => {
+                if (dateKey >= `${monthPrefix}-10` && dateKey <= `${monthPrefix}-16`) {
+                    thuyRev += dailyRevMap['Thu Thủy'][dateKey];
+                }
+            });
+        }
+
+        let individuals = [
+            { name: 'Thơm', current: thomRev, type: 'full-time' },
+            { name: 'Khánh Linh', current: khanhLinhRev, type: 'full-time' },
+            { name: 'Thu Thủy', current: thuyRev, type: 'part-time' } // Adjust type if needed
+        ];
+
+        let teamTarget = 0;
+        individuals.forEach(p => {
+            teamTarget += (p.type === 'full-time' ? 37500000 : 11250000);
+        });
+
+        DASHBOARD_DATA.salesKPI = {
+            individuals: individuals,
+            teamCurrent: thomRev + khanhLinhRev + thuyRev,
+            teamTarget: teamTarget
+        };
     }
 
     // 2. CUSTOMER
@@ -687,6 +731,7 @@ function initDashboard() {
     renderCourseList();
     renderRaceCards();
     renderStudentFeedback();
+    renderSalesKPI();
     initCharts();
 }
 
@@ -1133,4 +1178,134 @@ function initCharts() {
 
 function formatCurrency(n) {
     return (parseFloat(n) || 0).toLocaleString('vi-VN') + ' đ';
+}
+
+function renderSalesKPI() {
+    const container = document.getElementById('sales-kpi-container');
+    if (!container) return;
+    
+    if(!DASHBOARD_DATA.salesKPI) return;
+
+    let individualsHTML = '';
+    let allMet80Percent = true;
+
+    DASHBOARD_DATA.salesKPI.individuals.forEach(person => {
+        let target = 0;
+        if (person.type === 'full-time') {
+            target = 37500000;
+        } else {
+            target = 11250000; // 30% full-time
+        }
+        
+        let percent = (person.current / target) * 100;
+        let missing100 = target - person.current;
+        let missing120 = (target * 1.2) - person.current;
+        
+        if (percent < 80) allMet80Percent = false;
+
+        let bonusText = "Chưa đạt thưởng";
+        let bonusClass = "no-bonus";
+        if (percent >= 120) {
+            bonusText = person.type === 'full-time' ? "Thưởng 1.000.000đ" : "Thưởng 500.000đ";
+            bonusClass = "bonus-120";
+        } else if (percent >= 100) {
+            bonusText = person.type === 'full-time' ? "Thưởng 500.000đ" : "Thưởng 200.000đ";
+            bonusClass = "bonus-100";
+        }
+
+        individualsHTML += `
+            <div class="kpi-person-card">
+                <div class="kpi-person-header">
+                    <h4>${person.name} <span class="kpi-type">(${person.type})</span></h4>
+                    <span class="bonus-badge ${bonusClass}">${bonusText}</span>
+                </div>
+                <div class="kpi-progress-wrapper">
+                    <div class="kpi-progress-bar">
+                        <div class="kpi-progress-fill" style="width: ${Math.min(percent, 100)}%;"></div>
+                        ${percent >= 100 ? `<div class="kpi-progress-extra" style="width: ${Math.min(percent - 100, 20)}%; left: 100%;"></div>` : ''}
+                    </div>
+                    <div class="kpi-progress-labels">
+                        <span>0</span>
+                        <span>100% (${formatCurrency(target)})</span>
+                        <span>120% (${formatCurrency(target * 1.2)})</span>
+                    </div>
+                </div>
+                <div class="kpi-person-stats">
+                    <div class="stat-item">
+                        <span class="label">Đã đạt:</span>
+                        <span class="value badge-process">${formatCurrency(person.current)} (${percent.toFixed(1)}%)</span>
+                    </div>
+                    ${percent < 100 ? `
+                    <div class="stat-item">
+                        <span class="label">Thiếu 100%:</span>
+                        <span class="value badge-finance">${formatCurrency(missing100)}</span>
+                    </div>` : ''}
+                    ${percent < 120 ? `
+                    <div class="stat-item">
+                        <span class="label">Thiếu 120%:</span>
+                        <span class="value badge-finance">${formatCurrency(missing120)}</span>
+                    </div>` : ''}
+                </div>
+            </div>
+        `;
+    });
+
+    const teamTarget = DASHBOARD_DATA.salesKPI.teamTarget;
+    const teamCurrent = DASHBOARD_DATA.salesKPI.teamCurrent;
+    const teamPercent = (teamCurrent / teamTarget) * 100;
+    const teamMissing = teamTarget - teamCurrent;
+    
+    let teamBonusText = "Chưa đạt thưởng";
+    let teamBonusClass = "no-bonus";
+    let teamBonusStatus = "";
+    
+    if (teamPercent >= 100) {
+        if (allMet80Percent) {
+            teamBonusText = "Thưởng Team (300k/FT, 150k/PT)";
+            teamBonusClass = "bonus-team";
+            teamBonusStatus = "Đã đạt đủ điều kiện";
+        } else {
+            teamBonusStatus = "Đạt số nhưng chưa đủ đk cá nhân (>80%)";
+            teamBonusClass = "bonus-warning";
+        }
+    } else {
+        teamBonusStatus = `Còn thiếu ${formatCurrency(teamMissing)}`;
+    }
+
+    const teamHTML = `
+        <div class="kpi-team-card">
+            <div class="kpi-team-header">
+                <div class="kpi-team-title">
+                    <i class='bx bxs-group'></i>
+                    <h3>Thưởng Team</h3>
+                </div>
+                <span class="bonus-badge ${teamBonusClass}">${teamBonusText}</span>
+            </div>
+            <div class="kpi-progress-wrapper">
+                <div class="kpi-progress-bar team-bar">
+                    <div class="kpi-progress-fill" style="width: ${Math.min(teamPercent, 100)}%;"></div>
+                </div>
+                <div class="kpi-progress-labels">
+                    <span>0</span>
+                    <span>100% (${formatCurrency(teamTarget)})</span>
+                </div>
+            </div>
+             <div class="kpi-team-stats">
+                <div class="stat-item">
+                    <span class="label">Team đạt:</span>
+                    <span class="value badge-process">${formatCurrency(teamCurrent)} (${teamPercent.toFixed(1)}%)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">Trạng thái:</span>
+                    <span class="value ${teamPercent >= 100 && allMet80Percent ? 'badge-process' : 'badge-finance'}">${teamBonusStatus}</span>
+                </div>
+            </div>
+            <div class="kpi-condition">
+                <i class='bx bxs-star'></i>
+                <p>Điều kiện: Cả team đạt 100% KPI Tuần và Cá nhân đạt tối thiểu 80% KPI Tuần</p>
+            </div>
+        </div>
+    `;
+
+    container.innerHTML = individualsHTML + teamHTML;
 }
