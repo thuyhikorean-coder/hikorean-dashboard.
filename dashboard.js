@@ -787,7 +787,8 @@ function renderWeeklySprint() {
         <div style="grid-column: 1 / -1; background: linear-gradient(135deg, rgba(212,175,55,0.1) 0%, rgba(255,255,255,1) 100%); border: 1px solid var(--primary); padding: 10px 16px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.1);">
             <div style="display: flex; flex-direction: column;">
                 <h3 style="margin:0; color:var(--primary); font-size:0.95rem; text-transform:uppercase; font-weight: 800;"><i class='bx bxs-flag-checkered'></i> MỤC TIÊU TEAM TUẦN CUỐI</h3>
-                <div style="font-size:0.75rem; color:var(--text-main); margin-top:2px;">Tổng DS: <strong style="color:var(--primary)">${(teamTotalRev/1000000).toFixed(1)}M</strong> | Tổng HV Mới: <strong style="color:var(--warning)">${teamTotalNew}</strong></div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px; margin-bottom:4px;"><i class='bx bx-calendar'></i> Thời gian áp dụng: Từ <b>22/06/2026</b> đến <b>28/06/2026</b></div>
+                <div style="font-size:0.75rem; color:var(--text-main);">Tổng DS: <strong style="color:var(--primary)">${(teamTotalRev/1000000).toFixed(1)}M</strong> | Tổng HV Mới: <strong style="color:var(--warning)">${teamTotalNew}</strong></div>
             </div>
             <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
                 <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; margin-bottom: 4px;">TIẾN ĐỘ ĐIỀU KIỆN TEAM (>80% KPI):</div>
