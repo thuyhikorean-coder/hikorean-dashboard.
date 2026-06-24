@@ -779,7 +779,7 @@ function renderWeeklySprint() {
             teamTargetMet = false;
         }
 
-        teamStatusHtml.push(`<b>${t.name.split(' ').pop()}</b>: <span style="color:${s.rev >= p80 ? 'var(--success)' : 'var(--danger)'}">${(s.rev/1000000).toFixed(1)}/${(p80/1000000).toFixed(1)}</span>`);
+        teamStatusHtml.push(`<b>${t.name.split(' ').pop()}</b>: <span style="color:${s.rev >= p80 ? 'var(--success)' : 'var(--danger)'}">${(s.rev/1000000).toFixed(1)}/${(kpiTarget/1000000).toFixed(1)}</span>`);
     });
 
     // Team Banner
