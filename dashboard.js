@@ -816,53 +816,53 @@ function renderWeeklySprint() {
         let missingRevHtml = revNext > 0 ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Còn thiếu <b style="color:var(--danger)">${((revNext - s.rev)/1000000).toFixed(1)}M</b> để đạt mốc ${revNextAmount/1000}k</div>` : `<div style="font-size: 0.75rem; color: var(--success); margin-top: 4px;"><i class='bx bxs-star'></i> Đã đạt mốc tối đa!</div>`;
         let missingNewHtml = newNext > 0 ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Còn thiếu <b style="color:var(--danger)">${newNext - s.newCount}</b> HV để đạt mốc ${newNextAmount/1000}k</div>` : `<div style="font-size: 0.75rem; color: var(--success); margin-top: 4px;"><i class='bx bxs-star'></i> Đã đạt mốc tối đa!</div>`;
 
-        html += \`
+        html += `
             <div class="glass-card" style="border: 2px solid var(--primary); position: relative; overflow: hidden; background: linear-gradient(145deg, rgba(30,30,30,0.9), rgba(20,20,20,0.95)); box-shadow: 0 8px 32px rgba(212, 175, 55, 0.15);">
                 <div style="position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--primary), #FFD700);"></div>
                 
                 <div style="text-align: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; color: #FFD700; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase;"><i class='bx bxs-hot bx-tada'></i> \${t.title}</h3>
-                    <h2 style="margin: 4px 0 0 0; color: #fff; font-size: 1.5rem; font-weight: 900;">\${t.name}</h2>
+                    <h3 style="margin: 0; color: #FFD700; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase;"><i class='bx bxs-hot bx-tada'></i> ${t.title}</h3>
+                    <h2 style="margin: 4px 0 0 0; color: #fff; font-size: 1.5rem; font-weight: 900;">${t.name}</h2>
                 </div>
 
                 <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                         <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">1. DOANH SỐ (22-28/6)</span>
-                        <span style="font-size: 1.1rem; font-weight: 900; color: var(--primary);">\${(s.rev/1000000).toFixed(1)}M</span>
+                        <span style="font-size: 1.1rem; font-weight: 900; color: var(--primary);">${(s.rev/1000000).toFixed(1)}M</span>
                     </div>
                     <div class="progress-container" style="height: 6px; margin-bottom: 6px; background: rgba(255,255,255,0.1);">
-                        <div class="progress-fill" style="width: \${Math.min(100, (s.rev / revNext)*100)}%; background: var(--primary);"></div>
+                        <div class="progress-fill" style="width: ${Math.min(100, (s.rev / revNext)*100)}%; background: var(--primary);"></div>
                     </div>
-                    \${missingRevHtml}
+                    ${missingRevHtml}
                 </div>
 
                 <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.05);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                         <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">2. HV MỚI (22-28/6)</span>
-                        <span style="font-size: 1.1rem; font-weight: 900; color: var(--warning);">\${s.newCount} HV</span>
+                        <span style="font-size: 1.1rem; font-weight: 900; color: var(--warning);">${s.newCount} HV</span>
                     </div>
                     <div class="progress-container" style="height: 6px; margin-bottom: 6px; background: rgba(255,255,255,0.1);">
-                        <div class="progress-fill" style="width: \${Math.min(100, (s.newCount / newNext)*100)}%; background: var(--warning);"></div>
+                        <div class="progress-fill" style="width: ${Math.min(100, (s.newCount / newNext)*100)}%; background: var(--warning);"></div>
                     </div>
-                    \${missingNewHtml}
+                    ${missingNewHtml}
                 </div>
 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 0.8rem;">
                     <span style="color: var(--text-muted);">Điều kiện Team (>80%):</span>
-                    \${isP80 ? '<span style="color:var(--success); font-weight:700;"><i class="bx bx-check-circle"></i> Đạt (' + (p80/1000000).toFixed(1) + 'M)</span>' : '<span style="color:var(--danger); font-weight:700;"><i class="bx bx-x-circle"></i> Thiếu ' + ((p80 - s.rev)/1000000).toFixed(1) + 'M</span>'}
+                    ${isP80 ? '<span style="color:var(--success); font-weight:700;"><i class="bx bx-check-circle"></i> Đạt (' + (p80/1000000).toFixed(1) + 'M)</span>' : '<span style="color:var(--danger); font-weight:700;"><i class="bx bx-x-circle"></i> Thiếu ' + ((p80 - s.rev)/1000000).toFixed(1) + 'M</span>'}
                 </div>
 
                 <div style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(184, 150, 42, 0.1)); border: 1px solid var(--primary); padding: 16px; border-radius: 12px; text-align: center;">
                     <div style="font-size: 0.8rem; color: #FFD700; font-weight: 700; margin-bottom: 4px; text-transform: uppercase;">TỔNG THƯỞNG DỰ KIẾN</div>
                     <div style="font-size: 2rem; font-weight: 900; color: #fff; text-shadow: 0 2px 10px rgba(212, 175, 55, 0.4);">
-                        \${formatCurrency(totalBonus)}
+                        ${formatCurrency(totalBonus)}
                     </div>
                     <div style="font-size: 0.7rem; color: rgba(255,255,255,0.6); margin-top: 8px;">
-                        DS: \${revBonus/1000}k | HV: \${newBonus/1000}k | Team: \${teamBonus/1000}k
+                        DS: ${revBonus/1000}k | HV: ${newBonus/1000}k | Team: ${teamBonus/1000}k
                     </div>
                 </div>
             </div>
-        \`;
+        `;
     });
 
     container.innerHTML = html;
