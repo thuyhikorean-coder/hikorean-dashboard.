@@ -761,29 +761,38 @@ function renderWeeklySprint() {
 
     let html = '';
 
-    // Calculate Team Goal
+    // Calculate Team Goal & Stats
     let teamTargetMet = true;
+    let teamTotalRev = 0;
+    let teamTotalNew = 0;
+    let teamStatusHtml = [];
+
     targets.forEach(t => {
         let nameKey = Object.keys(stats).find(k => k.includes(t.name) || t.name.includes(k));
         let s = nameKey ? stats[nameKey] : { rev: 0, newCount: 0 };
+        teamTotalRev += s.rev;
+        teamTotalNew += s.newCount;
+        
         let kpiTarget = t.type === 'FT' ? 37500000 : 12500000;
         let p80 = kpiTarget * 0.8;
         if (s.rev < p80) {
             teamTargetMet = false;
         }
+
+        teamStatusHtml.push(`<b>${t.name.split(' ').pop()}</b>: <span style="color:${s.rev >= p80 ? 'var(--success)' : 'var(--danger)'}">${(s.rev/1000000).toFixed(1)}/${(p80/1000000).toFixed(1)}</span>`);
     });
 
     // Team Banner
     html += `
-        <div style="grid-column: 1 / -1; background: var(--bg-panel); border: 2px solid var(--primary); padding: 12px 20px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.1);">
-            <div>
-                <h3 style="margin:0; color:var(--primary); font-size:1.1rem; text-transform:uppercase;"><i class='bx bxs-flag-checkered'></i> MỤC TIÊU TEAM TUẦN CUỐI (22-28/6)</h3>
-                <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Điều kiện: 100% cá nhân đạt > 80% KPIs Tuần</div>
+        <div style="grid-column: 1 / -1; background: linear-gradient(135deg, rgba(212,175,55,0.1) 0%, rgba(255,255,255,1) 100%); border: 1px solid var(--primary); padding: 10px 16px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.1);">
+            <div style="display: flex; flex-direction: column;">
+                <h3 style="margin:0; color:var(--primary); font-size:0.95rem; text-transform:uppercase; font-weight: 800;"><i class='bx bxs-flag-checkered'></i> MỤC TIÊU TEAM TUẦN CUỐI</h3>
+                <div style="font-size:0.75rem; color:var(--text-main); margin-top:2px;">Tổng DS: <strong style="color:var(--primary)">${(teamTotalRev/1000000).toFixed(1)}M</strong> | Tổng HV Mới: <strong style="color:var(--warning)">${teamTotalNew}</strong></div>
             </div>
-            <div style="text-align: right;">
-                <div style="font-size:0.8rem; color:var(--text-main); font-weight:700;">TRẠNG THÁI</div>
-                <div style="font-size:1.3rem; font-weight:900; color: ${teamTargetMet ? 'var(--success)' : 'var(--danger)'};">
-                    ${teamTargetMet ? '<i class="bx bx-check-circle"></i> ĐÃ ĐẠT' : '<i class="bx bx-x-circle"></i> CHƯA ĐẠT'}
+            <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+                <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; margin-bottom: 4px;">TIẾN ĐỘ ĐIỀU KIỆN TEAM (>80% KPI):</div>
+                <div style="font-size:0.8rem; font-weight:600; color:var(--text-main);">
+                    ${teamStatusHtml.join(' <span style="color:#ddd; margin:0 4px;">|</span> ')}
                 </div>
             </div>
         </div>
@@ -829,49 +838,50 @@ function renderWeeklySprint() {
         let p80 = kpiTarget * 0.8;
         let isP80 = s.rev >= p80;
 
-        let missingRevHtml = revNext > 0 ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Còn thiếu <b style="color:var(--danger)">${((revNext - s.rev)/1000000).toFixed(1)}M</b> để đạt mốc ${revNextAmount/1000}k</div>` : `<div style="font-size: 0.75rem; color: var(--success); margin-top: 4px;"><i class='bx bxs-star'></i> Đã đạt mốc tối đa!</div>`;
-        let missingNewHtml = newNext > 0 ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Còn thiếu <b style="color:var(--danger)">${newNext - s.newCount}</b> HV để đạt mốc ${newNextAmount/1000}k</div>` : `<div style="font-size: 0.75rem; color: var(--success); margin-top: 4px;"><i class='bx bxs-star'></i> Đã đạt mốc tối đa!</div>`;
+        let missingRevHtml = revNext > 0 ? `<div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 2px;">Thiếu <b style="color:var(--danger)">${((revNext - s.rev)/1000000).toFixed(1)}M</b> -> mốc ${revNextAmount/1000}k</div>` : `<div style="font-size: 0.65rem; color: var(--success); margin-top: 2px;"><i class='bx bxs-star'></i> Đã đạt mốc tối đa!</div>`;
+        let missingNewHtml = newNext > 0 ? `<div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 2px;">Thiếu <b style="color:var(--danger)">${newNext - s.newCount}</b> HV -> mốc ${newNextAmount/1000}k</div>` : `<div style="font-size: 0.65rem; color: var(--success); margin-top: 2px;"><i class='bx bxs-star'></i> Đã đạt mốc tối đa!</div>`;
 
         html += `
-            <div class="glass-card" style="border: 2px solid var(--primary); position: relative; overflow: hidden; padding: 14px;">
-                <div style="text-align: center; margin-bottom: 12px;">
-                    <h3 style="margin: 0; color: var(--primary); font-size: 1.25rem; font-weight: 800; text-transform: uppercase;">${t.name}</h3>
-                    <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-top: 4px;">${t.title}</div>
+            <div class="glass-card" style="border: 2px solid var(--primary); position: relative; overflow: hidden; padding: 10px; background: #fff; box-shadow: 0 4px 12px rgba(212,175,55,0.15);">
+                <!-- Highlight Header -->
+                <div style="background: linear-gradient(90deg, var(--primary), #FFD700); margin: -10px -10px 10px -10px; padding: 6px; text-align: center;">
+                    <h3 style="margin: 0; color: #fff; font-size: 1.05rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;">${t.name}</h3>
+                    <div style="font-size: 0.65rem; color: rgba(255,255,255,0.9); font-weight: 700; text-transform: uppercase;">${t.title}</div>
                 </div>
 
-                <div style="background: rgba(0,0,0,0.03); border-radius: 8px; padding: 10px; margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.05);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                        <span style="font-size: 0.75rem; color: var(--text-main); font-weight: 700;">1. DOANH SỐ (22-28/6)</span>
-                        <span style="font-size: 1rem; font-weight: 900; color: var(--primary);">${(s.rev/1000000).toFixed(1)}M</span>
+                <div style="background: #F9F9F9; border-radius: 6px; padding: 8px; margin-bottom: 8px; border: 1px solid #E0E0E0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                        <span style="font-size: 0.7rem; color: var(--text-main); font-weight: 800;">1. DOANH SỐ</span>
+                        <span style="font-size: 0.95rem; font-weight: 900; color: var(--primary);">${(s.rev/1000000).toFixed(1)}M</span>
                     </div>
-                    <div class="progress-container" style="height: 6px; margin-bottom: 4px;">
+                    <div class="progress-container" style="height: 5px; margin-bottom: 2px; background: #E0E0E0;">
                         <div class="progress-fill" style="width: ${Math.min(100, (s.rev / revNext)*100)}%; background: var(--primary);"></div>
                     </div>
                     ${missingRevHtml}
                 </div>
 
-                <div style="background: rgba(0,0,0,0.03); border-radius: 8px; padding: 10px; margin-bottom: 12px; border: 1px solid rgba(0,0,0,0.05);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                        <span style="font-size: 0.75rem; color: var(--text-main); font-weight: 700;">2. HV MỚI (22-28/6)</span>
-                        <span style="font-size: 1rem; font-weight: 900; color: var(--warning);">${s.newCount} HV</span>
+                <div style="background: #F9F9F9; border-radius: 6px; padding: 8px; margin-bottom: 8px; border: 1px solid #E0E0E0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                        <span style="font-size: 0.7rem; color: var(--text-main); font-weight: 800;">2. HV MỚI</span>
+                        <span style="font-size: 0.95rem; font-weight: 900; color: var(--warning);">${s.newCount} HV</span>
                     </div>
-                    <div class="progress-container" style="height: 6px; margin-bottom: 4px;">
+                    <div class="progress-container" style="height: 5px; margin-bottom: 2px; background: #E0E0E0;">
                         <div class="progress-fill" style="width: ${Math.min(100, (s.newCount / newNext)*100)}%; background: var(--warning);"></div>
                     </div>
                     ${missingNewHtml}
                 </div>
 
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 0.75rem; padding: 0 4px;">
-                    <span style="color: var(--text-main); font-weight: 600;">Team (>80% KPI):</span>
-                    ${isP80 ? '<span style="color:var(--success); font-weight:700;"><i class="bx bx-check-circle"></i> Đạt (' + (p80/1000000).toFixed(1) + 'M)</span>' : '<span style="color:var(--danger); font-weight:700;"><i class="bx bx-x-circle"></i> Thiếu ' + ((p80 - s.rev)/1000000).toFixed(1) + 'M</span>'}
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.7rem; padding: 0 2px;">
+                    <span style="color: var(--text-main); font-weight: 700;">Team (>80% KPI):</span>
+                    ${isP80 ? '<span style="color:var(--success); font-weight:800;"><i class="bx bx-check-circle"></i> Đạt (' + (p80/1000000).toFixed(1) + 'M)</span>' : '<span style="color:var(--danger); font-weight:800;"><i class="bx bx-x-circle"></i> Thiếu ' + ((p80 - s.rev)/1000000).toFixed(1) + 'M</span>'}
                 </div>
 
-                <div style="background: var(--bg-panel); border: 1px dashed var(--primary); padding: 10px; border-radius: 8px; text-align: center;">
-                    <div style="font-size: 0.75rem; color: var(--text-main); font-weight: 700; margin-bottom: 2px;">TỔNG THƯỞNG DỰ KIẾN</div>
-                    <div style="font-size: 1.6rem; font-weight: 900; color: var(--primary);">
+                <div style="background: rgba(212, 175, 55, 0.08); border: 1px dashed var(--primary); padding: 8px; border-radius: 6px; text-align: center;">
+                    <div style="font-size: 0.65rem; color: var(--primary); font-weight: 800; margin-bottom: 2px;">TỔNG THƯỞNG DỰ KIẾN</div>
+                    <div style="font-size: 1.3rem; font-weight: 900; color: var(--primary); text-shadow: 0 1px 2px rgba(212,175,55,0.2);">
                         ${formatCurrency(totalBonus)}
                     </div>
-                    <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">
+                    <div style="font-size: 0.6rem; color: var(--text-muted); margin-top: 2px; font-weight: 600;">
                         DS: ${revBonus/1000}k | HV: ${newBonus/1000}k | Team: ${teamBonus/1000}k
                     </div>
                 </div>
