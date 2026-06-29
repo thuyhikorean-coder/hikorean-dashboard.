@@ -1,13 +1,13 @@
 const CONFIG = {
-    SALE_REVENUE_URL: 'https://docs.google.com/spreadsheets/d/19XKkxjrQjs7zoeGMQFPyRhAORW5tD14FhvQP-Oj8Scw/export?format=csv&gid=1757451089',
+    SALE_REVENUE_URL: 'https://docs.google.com/spreadsheets/d/19XKkxjrQjs7zoeGMQFPyRhAORW5tD14FhvQP-Oj8Scw/gviz/tq?tqx=out:csv&gid=1757451089',
     MKT_ADS_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSO-aSIrwtMiGFGMpxSqRhIFo7PMA9Uebo7FBxY1rhm_jbUi2cY4Kz3XTXbwVfi7Q/pub?gid=323525620&single=true&output=csv',
     QLCL_DAILY_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQY7qRLepn6kX8qNTuJqABTf5Xm7UBm6bPs89gSAZ6_fNbFfE6ULg8Jlxab5TD3oA/pub?gid=1405301812&single=true&output=csv',
     QLCL_OUTCOME_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQY7qRLepn6kX8qNTuJqABTf5Xm7UBm6bPs89gSAZ6_fNbFfE6ULg8Jlxab5TD3oA/pub?gid=531665888&single=true&output=csv',
-    SALE_TRACKING_URL: 'https://docs.google.com/spreadsheets/d/19XKkxjrQjs7zoeGMQFPyRhAORW5tD14FhvQP-Oj8Scw/export?format=csv&gid=11036957',
+    SALE_TRACKING_URL: 'https://docs.google.com/spreadsheets/d/19XKkxjrQjs7zoeGMQFPyRhAORW5tD14FhvQP-Oj8Scw/gviz/tq?tqx=out:csv&gid=11036957',
     UPSALE_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRzh_K2wpZTdnolPCRzYhVQxkq0B39c2zYRB4OLRsybc8LwAMFxsrCP98RRjbI--g/pub?gid=548776730&single=true&output=csv',
     SOCIAL_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSO-aSIrwtMiGFGMpxSqRhIFo7PMA9Uebo7FBxY1rhm_jbUi2cY4Kz3XTXbwVfi7Q/pub?gid=578202755&single=true&output=csv',
     FEEDBACK_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTsv4tsHlXao_Awr8Xe1RI3tzGkL11KMJga_vlXv7_y8Nz6jwbfzoaoBUTbTk63TiUYz2shPpG0cEof/pub?gid=0&single=true&output=csv',
-    TEACHER_COST_URL: 'https://docs.google.com/spreadsheets/d/1B95z7EC1sc7PVhxakfvebClDSu2yCGRyHwHtHw7xW-g/export?format=csv&gid=0'
+    TEACHER_COST_URL: 'https://docs.google.com/spreadsheets/d/1B95z7EC1sc7PVhxakfvebClDSu2yCGRyHwHtHw7xW-g/gviz/tq?tqx=out:csv&gid=0'
 };
 
 let CURRENT_RAW_DATA = null;
