@@ -475,7 +475,7 @@ function processAllData(data) {
         
         // Find latest date in tracked rows within selected month
         let trackDates = rowsTrack.slice(1)
-            .filter(r => isFromTargetMonth(r[0]))
+            .filter(r => isFromTargetMonth(r[0]) && r[1] && r[1].trim())
             .map(r => standardizeDate(r[0]))
             .filter(d => d);
         let latestDateInTrack = trackDates.length > 0 ? trackDates.sort().pop() : null;
