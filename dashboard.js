@@ -1040,8 +1040,8 @@ function renderFunnel() {
     const container = document.getElementById('funnel-container');
     if (!container) return;
     const steps = [
-        { label: 'SĐT (Leads) / Mục tiêu 480', val: `${f.totalLeads} / 480`, color: 'rgba(242,201,76,0.2)' },
-        { label: 'Đơn đã chốt', val: f.totalOrders, color: 'rgba(242,201,76,0.5)' }
+        { label: 'Mục tiêu doanh thu (MKT)', val: `250.000.000đ`, color: 'rgba(242,201,76,0.2)' },
+        { label: 'Số đơn / Mục tiêu 50', val: `${f.totalOrders} / 50`, color: 'rgba(242,201,76,0.5)' }
     ];
     container.innerHTML = steps.map(s => `
         <div style="background:${s.color}; padding:8px; border-radius:6px; text-align:center; border:1px solid rgba(255,255,255,0.05); margin-bottom:5px;">
