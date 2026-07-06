@@ -467,7 +467,7 @@ function processAllData(data) {
             const type = r[5]?.toUpperCase() || '';
             const isNew = type.includes('MỚI') || type.includes('NEW');
             const isMktTarget = source === 'MKT-ADS' || source.includes('REMIND') || source.includes('RE-MARKETING');
-            return isMktTarget && (status === 'DONE' || status === 'DEPOSIT');
+            return isMktTarget && isNew && (status === 'DONE' || status === 'DEPOSIT');
         }).length;
         DASHBOARD_DATA.customer.funnel = {
             totalData: mktData,
