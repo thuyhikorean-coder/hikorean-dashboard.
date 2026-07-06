@@ -450,7 +450,13 @@ function processAllData(data) {
 
         // Fix: MKT Cost Ratio is strictly against MKT-ADS revenue sum, not just any NEW revenue
         const currentMktNewRev = DASHBOARD_DATA.summary.totalNewRevenue || 0;
-        DASHBOARD_DATA.summary.mktCostRatio = currentMktNewRev > 0 ? ((mktCost / currentMktNewRev) * 100).toFixed(1) : 0;
+        if (currentMktNewRev > 0) {
+            DASHBOARD_DATA.summary.mktCostRatio = ((mktCost / currentMktNewRev) * 100).toFixed(1);
+        } else if (mktCost > 0) {
+            DASHBOARD_DATA.summary.mktCostRatio = "∞"; // Infinite ratio since there is cost but no revenue
+        } else {
+            DASHBOARD_DATA.summary.mktCostRatio = 0;
+        }
 
         const doneCount = rowsSale.filter(r => {
             if (!isFromTargetMonth(r[0])) return false;
@@ -923,7 +929,7 @@ function renderBSCTable() {
     if (!tbody) return;
     const items = [
         { kpi: 'Doanh thu thuần', actual: formatCurrency(d.summary.totalRevenue), target: formatCurrency(d.summary.revenueGoal), status: d.summary.totalRevenue >= d.summary.revenueGoal ? 'process' : 'finance' },
-        { kpi: 'Tỉ suất MKT/DT (Ads)', actual: `${d.summary.mktCostRatio}%`, target: `< ${d.summary.mktTarget}%`, status: d.summary.mktCostRatio <= d.summary.mktTarget ? 'process' : 'finance' },
+        { kpi: 'Tỉ suất MKT/DT (Ads)', actual: `${d.summary.mktCostRatio}% (${(d.summary.mktCost / 1000000).toFixed(1)}M)`, target: `< ${d.summary.mktTarget}%`, status: (d.summary.mktCostRatio === "∞" || parseFloat(d.summary.mktCostRatio) > d.summary.mktTarget) ? 'finance' : 'process' },
         { kpi: 'Tỉ suất GV/DT', actual: `${d.summary.teacherCostRatio}%`, target: '20-25%', status: 'process' },
         { kpi: 'Điểm CSAT', actual: d.growth.avgSatisfaction, target: '> 4.5', status: 'growth' },
         { kpi: 'Chốt đơn (Lead)', actual: `${d.customer.funnel.conversionRate}%`, target: '> 10%', status: 'process' }
