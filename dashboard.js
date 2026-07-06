@@ -800,12 +800,6 @@ function renderWeeklySprint() {
                 <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px; margin-bottom:4px;"><i class='bx bx-calendar'></i> Áp dụng: <b>Tháng 07/2026</b> - Học phí ưu đãi: <b style="color:var(--danger)">3.000.000đ</b></div>
                 <div style="font-size:0.75rem; color:var(--text-main);">Mục tiêu thu hút: <strong style="color:var(--warning)">25 bạn mới</strong> | Hiện tại: <strong style="color:var(--primary)">${teamTotalNew}</strong> Bạn</div>
             </div>
-            <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
-                <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; margin-bottom: 4px;">TIẾN ĐỘ ĐIỀU KIỆN TEAM (>80% KPI):</div>
-                <div style="font-size:0.8rem; font-weight:600; color:var(--text-main);">
-                    ${teamStatusHtml.join(' <span style="color:#ddd; margin:0 4px;">|</span> ')}
-                </div>
-            </div>
         </div>
     `;
 
