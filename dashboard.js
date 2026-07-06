@@ -591,7 +591,17 @@ function processAllData(data) {
         if (finishedClasses.length === 0) {
             const selector = document.getElementById('monthSelector');
             const selectedMonth = selector ? selector.value : "05-2026";
-            if (selectedMonth === "06-2026") {
+            if (selectedMonth === "07-2026") {
+                finishedClasses = [
+                    { id: "GT2K47OFF", teacher: "Dương Thị Trang", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "NT-SCK169OFF", teacher: "Dương Thị Trang", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "GT4K105OFF", teacher: "Lê Minh Anh", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "GT4K115ON", teacher: "Đoàn Thị Thu Hằng", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "NT-TCK103OFF", teacher: "Giáp Thị Thu Hà", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "NT-TCK117ON", teacher: "Lê Ngọc Ánh", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "TOPIK34K111ON", teacher: "Vũ Văn Dần", students: "-", passRate: "- %", csat: "0", attendance: "- %" }
+                ];
+            } else if (selectedMonth === "06-2026") {
                 finishedClasses = [
                     { id: "GT1SK171OFF", teacher: "Dương Thị Trang", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
                     { id: "GT2K136ON", teacher: "Giáp Thị Thu Hà", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
@@ -786,9 +796,9 @@ function renderWeeklySprint() {
     html += `
         <div style="grid-column: 1 / -1; background: linear-gradient(135deg, rgba(212,175,55,0.1) 0%, rgba(255,255,255,1) 100%); border: 1px solid var(--primary); padding: 10px 16px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.1);">
             <div style="display: flex; flex-direction: column;">
-                <h3 style="margin:0; color:var(--primary); font-size:0.95rem; text-transform:uppercase; font-weight: 800;"><i class='bx bxs-flag-checkered'></i> MỤC TIÊU TEAM TUẦN CUỐI</h3>
-                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px; margin-bottom:4px;"><i class='bx bx-calendar'></i> Thời gian áp dụng: Từ <b>22/06/2026</b> đến <b>28/06/2026</b></div>
-                <div style="font-size:0.75rem; color:var(--text-main);">Tổng DS: <strong style="color:var(--primary)">${(teamTotalRev/1000000).toFixed(1)}M</strong> | Tổng HV Mới: <strong style="color:var(--warning)">${teamTotalNew}</strong></div>
+                <h3 style="margin:0; color:var(--primary); font-size:0.95rem; text-transform:uppercase; font-weight: 800;"><i class='bx bxs-discount bx-tada'></i> CHƯƠNG TRÌNH ƯU ĐÃI NỀN TẢNG SƠ CẤP</h3>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px; margin-bottom:4px;"><i class='bx bx-calendar'></i> Áp dụng: <b>Tháng 07/2026</b> - Học phí ưu đãi: <b style="color:var(--danger)">3.000.000đ</b></div>
+                <div style="font-size:0.75rem; color:var(--text-main);">Mục tiêu thu hút: <strong style="color:var(--warning)">25 bạn mới</strong> | Hiện tại: <strong style="color:var(--primary)">${teamTotalNew}</strong> Bạn</div>
             </div>
             <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
                 <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700; margin-bottom: 4px;">TIẾN ĐỘ ĐIỀU KIỆN TEAM (>80% KPI):</div>
@@ -1155,11 +1165,14 @@ function renderRaceCards() {
     const container = document.getElementById('race-container');
     if (!container) return;
 
-    // Specifically target the 2 core warriors defined by the user
-    const targets = ['Khánh Linh', 'Hồng Thơm'];
-    const goalPerSale = 150000000; // Updated for May
-    const weeklyTarget = 60000000; // New requested weekly program
-    const dailyTarget = 10000000; 
+    // Team Targets cho Tháng 7/2026
+    const targets = [
+        { name: 'Khánh Linh', goal: 150000000, newGoal: 16, upGoal: 14 },
+        { name: 'Hồng Thơm', goal: 150000000, newGoal: 16, upGoal: 14 },
+        { name: 'Bích Ngọc', goal: 90000000, newGoal: 18, upGoal: 0 },
+        { name: 'Thu Thủy', goal: 50000000, newGoal: 10, upGoal: 0 }
+    ];
+    const dailyTarget = 5000000; 
     const stats = DASHBOARD_DATA.financial.saleStats || {};
 
     let dateText = 'nay';
@@ -1191,7 +1204,9 @@ function renderRaceCards() {
     // Global Weekly Sprint Banner removed
 
     let html = '';
-    targets.forEach(name => {
+    targets.forEach(t => {
+        let name = t.name;
+        let goalPerSale = t.goal;
         let s = stats[name] || { rev: 0, todayRev: 0, weeklyRev: 0 };
         // Fuzzy match for names like "Thơm" vs "Hồng Thơm"
         if (!stats[name]) {
@@ -1200,7 +1215,7 @@ function renderRaceCards() {
         }
 
         let monthProgress = Math.min(100, Math.round((s.rev / goalPerSale) * 100));
-        let weeklyProgress = Math.min(100, Math.round((s.weeklyRev / weeklyTarget) * 100));
+        let weeklyProgress = monthProgress;
         let dailyProgress = Math.min(100, Math.round((s.todayRev / dailyTarget) * 100));
 
         let dailyColor = dailyProgress >= 100 ? 'var(--process)' : (dailyProgress >= 50 ? 'var(--warning)' : 'var(--danger)');
@@ -1257,7 +1272,7 @@ function renderRaceCards() {
                 <!-- Month Progress bar -->
                 <div style="display:flex; justify-content:space-between; font-size: 0.65rem; color: var(--text-muted); padding-top:4px;">
                     <span>Tiến độ Tháng: ${monthProgress}%</span>
-                    <span>Hết tháng: 150M</span>
+                    <span>Hết tháng: ${(goalPerSale / 1000000).toFixed(0)}M</span>
                 </div>
             </div>
         `;
