@@ -802,11 +802,11 @@ function renderWeeklySprint() {
 
     // Team Banner
     html += `
-        <div style="grid-column: 1 / -1; background: linear-gradient(135deg, rgba(212,175,55,0.1) 0%, rgba(255,255,255,1) 100%); border: 1px solid var(--primary); padding: 10px 16px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.1);">
-            <div style="display: flex; flex-direction: column;">
-                <h3 style="margin:0; color:var(--primary); font-size:0.95rem; text-transform:uppercase; font-weight: 800;"><i class='bx bxs-discount bx-tada'></i> CHƯƠNG TRÌNH ƯU ĐÃI NỀN TẢNG SƠ CẤP</h3>
-                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px; margin-bottom:4px;"><i class='bx bx-calendar'></i> Áp dụng: <b>Tháng 07/2026</b> - Học phí ưu đãi: <b style="color:var(--danger)">3.000.000đ</b></div>
-                <div style="font-size:0.75rem; color:var(--text-main);">Mục tiêu thu hút: <strong style="color:var(--warning)">25 bạn mới</strong> | Hiện tại: <strong style="color:var(--primary)">${teamTotalNew}</strong> Bạn</div>
+        <div style="width: 100%; background: linear-gradient(135deg, rgba(212,175,55,0.1) 0%, rgba(255,255,255,1) 100%); border: 1px solid var(--primary); padding: 14px 20px; border-radius: 8px; display: flex; justify-content: center; align-items: center; text-align: center; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.1);">
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <h3 style="margin:0; color:var(--primary); font-size:1.3rem; text-transform:uppercase; font-weight: 900; letter-spacing: 0.5px;"><i class='bx bxs-discount bx-tada'></i> CHƯƠNG TRÌNH ƯU ĐÃI NỀN TẢNG SƠ CẤP</h3>
+                <div style="font-size:0.9rem; color:var(--text-muted); margin-top:6px; margin-bottom:6px;"><i class='bx bx-calendar'></i> Áp dụng: <b>Tháng 07/2026</b> - Học phí ưu đãi: <b style="color:var(--danger); font-size: 1rem;">3.000.000đ</b></div>
+                <div style="font-size:0.95rem; color:var(--text-main);">Mục tiêu thu hút: <strong style="color:var(--warning)">25 bạn mới</strong> &nbsp;|&nbsp; Hiện tại: <strong style="color:var(--primary); font-size: 1.1rem;">${teamTotalNew}</strong> Bạn</div>
             </div>
         </div>
     `;
