@@ -199,8 +199,10 @@ function processAllData(data) {
     let totalMktAdsRev = 0;
 
     if (rowsSale.length > 1) {
-        let revBySale = {}, revByCourse = {}, comboCount = {}, orderCount = {}, dailyMap = {}, newCount = {}, upCount = {};
-        let bonusMap = {};
+        let revBySale = { 'Khánh Linh': 0, 'Hồng Thơm': 0, 'Bích Ngọc': 0, 'Thu Thuỷ': 0 };
+        let newCount = { 'Khánh Linh': 0, 'Hồng Thơm': 0, 'Bích Ngọc': 0, 'Thu Thuỷ': 0 };
+        let upCount = { 'Khánh Linh': 0, 'Hồng Thơm': 0, 'Bích Ngọc': 0, 'Thu Thuỷ': 0 };
+        let revByCourse = {}, comboCount = {}, orderCount = {}, dailyMap = {}, bonusMap = {};
         rowsSale.slice(1).forEach(row => {
             if (!isFromTargetMonth(row[0])) return;
             const status = row[9]?.toUpperCase();
@@ -1030,16 +1032,41 @@ function renderSalesList() {
     const tbody = document.getElementById('sales-detail-list');
     if (!tbody) return;
     const stats = DASHBOARD_DATA.financial.saleStats || {};
+    
+    // Fallback if missing
+    const defaultStats = {
+        'Khánh Linh': { rev: 0, newCount: 0, upCount: 0 },
+        'Hồng Thơm': { rev: 0, newCount: 0, upCount: 0 },
+        'Bích Ngọc': { rev: 0, newCount: 0, upCount: 0 },
+        'Thu Thuỷ': { rev: 0, newCount: 0, upCount: 0 }
+    };
+
+    const targetMap = {
+        'Khánh Linh': { rev: 150000000, new: 16, up: 14 },
+        'Hồng Thơm': { rev: 150000000, new: 16, up: 14 },
+        'Bích Ngọc': { rev: 90000000, new: 18, up: 0 },
+        'Thu Thuỷ': { rev: 50000000, new: 10, up: 0 }
+    };
+
+    // Ensure all target users are present
+    Object.keys(targetMap).forEach(k => {
+        if (!stats[k]) stats[k] = defaultStats[k];
+    });
+
     const sorted = Object.entries(stats).sort((a, b) => b[1].rev - a[1].rev);
 
-    tbody.innerHTML = sorted.map(([name, s]) => `
+    tbody.innerHTML = sorted.map(([name, s]) => {
+        const t = targetMap[name] || { rev: 100000000, new: 0, up: 0 };
+        const revProgress = Math.round((s.rev / t.rev) * 100);
+        return `
         <tr>
-            <td style="font-weight:600;">${name}</td>
-            <td style="font-weight:700; color:var(--danger);">${(s.rev / 1000000).toFixed(1)}M</td>
-            <td style="text-align:right;"><span class="badge ${s.newCount >= 37 ? 'badge-process' : 'badge-danger'}">${s.newCount}/37</span></td>
-            <td style="text-align:right;"><span class="badge ${s.upCount >= 5 ? 'badge-process' : 'badge-danger'}">${s.upCount}/5</span></td>
+            <td style="font-weight:600; font-size: 0.8rem;">${name}</td>
+            <td style="font-weight:700; color:var(--danger); font-size: 0.8rem;">${(s.rev / 1000000).toFixed(1)}M <span style="font-size:0.6rem; color:var(--text-muted);">/ ${(t.rev / 1000000).toFixed(0)}M</span></td>
+            <td style="text-align:right;"><span class="badge ${s.newCount >= t.new ? 'badge-process' : 'badge-danger'}">${s.newCount}/${t.new}</span></td>
+            <td style="text-align:right;"><span class="badge ${s.upCount >= t.up ? 'badge-process' : 'badge-danger'}">${s.upCount}/${t.up}</span></td>
         </tr>
-    `).join('');
+        `;
+    }).join('');
 }
 
 function renderEngagementList() {
