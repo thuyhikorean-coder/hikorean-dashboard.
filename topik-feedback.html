@@ -668,16 +668,20 @@
             document.querySelectorAll('input[name="e1"]:checked').forEach(el => e1Values.push(el.value));
             formData.set('e1', e1Values.join(', '));
 
-            // Log output for now, you need to create a new Apps Script URL to handle this data structure
-            const dataObj = Object.fromEntries(formData.entries());
-            console.log("Submitting Data: ", dataObj);
-
             // Change button state
             const btn = document.getElementById('submitBtn');
             btn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Đang gửi...";
             btn.style.opacity = '0.8';
 
-            setTimeout(() => {
+            // Google Apps Script URL
+            const GOOGLE_APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtQbX4O1rMortUd5KRePI02iH6Q1zVRkPpLjqL7HNh-pIFhP_UpxsYPmFQ4Gy2uVAWhA/exec";
+
+            fetch(GOOGLE_APP_SCRIPT_URL, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
                 // Show Success
                 document.getElementById('topikForm').style.display = 'none';
                 document.querySelector('.header-section').style.display = 'none';
@@ -695,7 +699,13 @@
                     confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
                     confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
                 }, 250);
-            }, 1000);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Có lỗi xảy ra khi gửi. Bạn kiểm tra kết nối mạng rồi thử lại nhé!");
+                btn.innerHTML = "<i class='bx bx-send'></i> Gửi Khảo Sát";
+                btn.style.opacity = '1';
+            });
         });
     </script>
 </body>
