@@ -19,9 +19,10 @@
             --bg-panel: #ffffff;
             --text-main: #2D1B17;
             --text-muted: #5D4037;
-            --primary: #D4AF37;
-            --primary-glow: rgba(212, 175, 55, 0.3);
-            --primary-dark: #B8962A;
+            --primary: #FFD500;
+            --primary-glow: rgba(255, 213, 0, 0.3);
+            --primary-dark: #E6C000;
+            --primary-text: #3D2314;
             --accent: #8D6E63;
             --success: #2E7D32;
             --border-color: #E0E0E0;
@@ -159,7 +160,7 @@
         .rt-header {
             display: flex;
             background: var(--primary);
-            color: #fff;
+            color: var(--primary-text);
             font-weight: 700;
             text-align: center;
         }
@@ -271,7 +272,7 @@
             width: 100%;
             padding: 18px;
             background: var(--primary);
-            color: #fff;
+            color: var(--primary-text);
             border: none;
             border-radius: 12px;
             font-size: 1.2rem;
@@ -590,7 +591,7 @@
                 <textarea name="f4" placeholder="Nhập câu trả lời của em..."></textarea>
             </div>
 
-            <div style="background: #F57C00; color: white; padding: 20px; text-align: center; border-radius: 8px; margin-top: 30px;">
+            <div style="background: var(--primary-text); color: var(--primary); padding: 20px; text-align: center; border-radius: 8px; margin-top: 30px;">
                 <h3 style="margin-bottom: 10px;">CẢM ƠN BẠN ĐÃ CHIA SẺ! 🌟</h3>
                 <p style="font-style: italic;">Ý kiến của bạn rất quan trọng với chúng mình. Chúc bạn học tiếng Hàn thật vui!</p>
             </div>
