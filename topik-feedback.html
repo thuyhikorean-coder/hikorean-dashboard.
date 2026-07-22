@@ -56,7 +56,7 @@
         h1 {
             font-size: 1.8rem;
             font-weight: 800;
-            color: var(--primary);
+            color: var(--primary-text);
             margin-bottom: 10px;
             text-transform: uppercase;
         }
@@ -679,10 +679,10 @@
 
             fetch(GOOGLE_APP_SCRIPT_URL, {
                 method: 'POST',
-                body: formData
+                body: formData,
+                mode: 'no-cors'
             })
-            .then(response => response.json())
-            .then(data => {
+            .then(() => {
                 // Show Success
                 document.getElementById('topikForm').style.display = 'none';
                 document.querySelector('.header-section').style.display = 'none';
