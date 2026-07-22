@@ -679,7 +679,10 @@
 
             fetch(GOOGLE_APP_SCRIPT_URL, {
                 method: 'POST',
-                body: formData,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams(formData).toString(),
                 mode: 'no-cors'
             })
             .then(() => {
