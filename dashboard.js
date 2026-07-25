@@ -271,8 +271,8 @@ function processAllData(data) {
                         const dKey = stdDate.substring(5, 10);
                         dailyMap[dKey] = (dailyMap[dKey] || 0) + amount;
 
-                        // Final week stats calculation (22/6 - 28/6)
-                        if (dKey >= '06-22' && dKey <= '06-28') {
+                        // Final week stats calculation (23/7 - 31/7)
+                        if (dKey >= '07-23' && dKey <= '07-31') {
                             if (!window.FINAL_WEEK_STATS) window.FINAL_WEEK_STATS = {};
                             if (!window.FINAL_WEEK_STATS[saleName]) {
                                 window.FINAL_WEEK_STATS[saleName] = { rev: 0, newCount: 0 };
@@ -800,32 +800,64 @@ function renderWeeklySprint() {
         teamStatusHtml.push(`<b>${t.name.split(' ').pop()}</b>: <span style="color:${s.rev >= p80 ? 'var(--success)' : 'var(--danger)'}">${(s.rev/1000000).toFixed(1)}/${(kpiTarget/1000000).toFixed(1)}</span>`);
     });
 
+    const sprintTargets = [
+        { name: 'Khánh Linh', target: 30435000 },
+        { name: 'Hồng Thơm', target: 39320000 },
+        { name: 'Minh Ngọc', target: 80600000 },
+        { name: 'Khánh Hạ', target: 46105000 },
+        { name: 'Thu Thủy', target: 9035000 }
+    ];
+
+    let sprintHtml = '';
+    sprintTargets.forEach(st => {
+        let nameKey = Object.keys(stats).find(k => k.includes(st.name) || st.name.includes(k));
+        let achieved = nameKey ? stats[nameKey].rev : 0;
+        let target = st.target;
+        let missing = target - achieved;
+        if (missing < 0) missing = 0;
+        let percent = Math.min(100, Math.round((achieved / target) * 100));
+
+        sprintHtml += `
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 8px 12px; text-align: left;"><strong>${st.name}</strong></td>
+                <td style="padding: 8px 12px; text-align: right; color: var(--text-main); font-weight: bold;">${(target).toLocaleString('vi-VN')}</td>
+                <td style="padding: 8px 12px; text-align: right; color: var(--success); font-weight: bold;">${(achieved).toLocaleString('vi-VN')}</td>
+                <td style="padding: 8px 12px; text-align: right; color: var(--danger); font-weight: bold;">${(missing).toLocaleString('vi-VN')}</td>
+                <td style="padding: 8px 12px; text-align: center;">
+                    <div style="width: 100%; background: #eee; border-radius: 4px; height: 8px; margin-top: 4px;">
+                        <div style="width: ${percent}%; background: ${percent >= 100 ? 'var(--success)' : 'var(--warning)'}; height: 100%; border-radius: 4px;"></div>
+                    </div>
+                    <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">${percent}%</span>
+                </td>
+            </tr>
+        `;
+    });
+
     // Team Banner
     html += `
-        <div style="width: 100%; background: linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(255,255,255,1) 100%); border: 1px solid var(--primary); padding: 16px 20px; border-radius: 8px; display: flex; justify-content: center; align-items: center; text-align: center; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.1); margin-top: 10px;">
+        <div style="width: 100%; background: #fff; border: 1px solid var(--primary); padding: 16px 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.1); margin-top: 10px;">
             <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
                 <h3 style="margin:0; color:var(--primary); font-size:1.3rem; text-transform:uppercase; font-weight: 900; letter-spacing: 0.5px; margin-bottom: 8px;">
                     <i class='bx bx-gift bx-tada'></i> THƯỞNG TUẦN CUỐI THÁNG
                 </h3>
                 <div style="font-size:1rem; color:var(--text-main); margin-bottom: 12px; font-weight: 600;">
-                    <i class='bx bx-time-five'></i> Từ ngày 23/7 - 31/7 (còn 9 ngày), chỉ tiêu mỗi sale cần đạt thêm:
+                    <i class='bx bx-time-five'></i> Từ ngày 23/7 - 31/7 (còn 9 ngày), tiến độ đạt chỉ tiêu thêm:
                 </div>
-                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; width: 100%;">
-                    <div style="background: #fff; border: 1px dashed var(--primary); border-radius: 6px; padding: 8px 12px; font-size: 0.95rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                        <strong>Khánh Linh:</strong> <span style="color: var(--danger); font-weight: 900;">30.435.000</span>
-                    </div>
-                    <div style="background: #fff; border: 1px dashed var(--primary); border-radius: 6px; padding: 8px 12px; font-size: 0.95rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                        <strong>Hồng Thơm:</strong> <span style="color: var(--danger); font-weight: 900;">39.320.000</span>
-                    </div>
-                    <div style="background: #fff; border: 1px dashed var(--primary); border-radius: 6px; padding: 8px 12px; font-size: 0.95rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                        <strong>Minh Ngọc:</strong> <span style="color: var(--danger); font-weight: 900;">80.600.000</span>
-                    </div>
-                    <div style="background: #fff; border: 1px dashed var(--primary); border-radius: 6px; padding: 8px 12px; font-size: 0.95rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                        <strong>Khánh Hạ:</strong> <span style="color: var(--danger); font-weight: 900;">46.105.000</span>
-                    </div>
-                    <div style="background: #fff; border: 1px dashed var(--primary); border-radius: 6px; padding: 8px 12px; font-size: 0.95rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                        <strong>Thu Thủy:</strong> <span style="color: var(--danger); font-weight: 900;">9.035.000</span>
-                    </div>
+                <div style="width: 100%; overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; min-width: 500px; font-size: 0.95rem;">
+                        <thead>
+                            <tr style="background: rgba(212,175,55,0.15); border-bottom: 2px solid var(--primary);">
+                                <th style="padding: 10px 12px; text-align: left; color: var(--primary);">Sale</th>
+                                <th style="padding: 10px 12px; text-align: right; color: var(--primary);">Mục tiêu</th>
+                                <th style="padding: 10px 12px; text-align: right; color: var(--primary);">Đã đạt</th>
+                                <th style="padding: 10px 12px; text-align: right; color: var(--primary);">Còn thiếu</th>
+                                <th style="padding: 10px 12px; text-align: center; color: var(--primary);">Tiến độ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${sprintHtml}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
