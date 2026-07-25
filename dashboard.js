@@ -817,17 +817,19 @@ function renderWeeklySprint() {
         if (missing < 0) missing = 0;
         let percent = Math.min(100, Math.round((achieved / target) * 100));
 
+        let isDone = percent >= 100;
+        let barColor = isDone ? '#4caf50' : 'linear-gradient(90deg, #ff9800, #ffeb3b)';
         sprintHtml += `
-            <tr style="border-bottom: 1px solid #eee;">
-                <td style="padding: 8px 12px; text-align: left;"><strong>${st.name}</strong></td>
-                <td style="padding: 8px 12px; text-align: right; color: var(--text-main); font-weight: bold;">${(target).toLocaleString('vi-VN')}</td>
-                <td style="padding: 8px 12px; text-align: right; color: var(--success); font-weight: bold;">${(achieved).toLocaleString('vi-VN')}</td>
-                <td style="padding: 8px 12px; text-align: right; color: var(--danger); font-weight: bold;">${(missing).toLocaleString('vi-VN')}</td>
-                <td style="padding: 8px 12px; text-align: center;">
-                    <div style="width: 100%; background: #eee; border-radius: 4px; height: 8px; margin-top: 4px;">
-                        <div style="width: ${percent}%; background: ${percent >= 100 ? 'var(--success)' : 'var(--warning)'}; height: 100%; border-radius: 4px;"></div>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <td style="padding: 10px 12px; text-align: left;"><strong style="font-size: 1.05rem;">${st.name}</strong></td>
+                <td style="padding: 10px 12px; text-align: right; font-weight: bold;">${(target).toLocaleString('vi-VN')}</td>
+                <td style="padding: 10px 12px; text-align: right; color: #81c784; font-weight: 900;">${(achieved).toLocaleString('vi-VN')}</td>
+                <td style="padding: 10px 12px; text-align: right; color: #ffcdd2; font-weight: 900;">${(missing).toLocaleString('vi-VN')}</td>
+                <td style="padding: 10px 12px; text-align: center;">
+                    <div style="width: 100%; background: rgba(0,0,0,0.4); border-radius: 6px; height: 10px; margin-top: 4px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);">
+                        <div style="width: ${percent}%; background: ${barColor}; height: 100%; border-radius: 6px; box-shadow: 0 0 8px ${isDone ? '#4caf50' : '#ff9800'};"></div>
                     </div>
-                    <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">${percent}%</span>
+                    <span style="font-size: 0.85rem; color: #fff; font-weight: 700; margin-top:4px; display:inline-block;">${percent}%</span>
                 </td>
             </tr>
         `;
@@ -835,29 +837,31 @@ function renderWeeklySprint() {
 
     // Team Banner
     html += `
-        <div style="width: 100%; background: #fff; border: 1px solid var(--primary); padding: 16px 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.1); margin-top: 10px;">
-            <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-                <h3 style="margin:0; color:var(--primary); font-size:1.3rem; text-transform:uppercase; font-weight: 900; letter-spacing: 0.5px; margin-bottom: 8px;">
-                    <i class='bx bx-gift bx-tada'></i> THƯỞNG TUẦN CUỐI THÁNG
-                </h3>
-                <div style="font-size:1rem; color:var(--text-main); margin-bottom: 12px; font-weight: 600;">
-                    <i class='bx bx-time-five'></i> Từ ngày 23/7 - 31/7 (còn 9 ngày), tiến độ đạt chỉ tiêu thêm:
-                </div>
-                <div style="width: 100%; overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse; min-width: 500px; font-size: 0.95rem;">
-                        <thead>
-                            <tr style="background: rgba(212,175,55,0.15); border-bottom: 2px solid var(--primary);">
-                                <th style="padding: 10px 12px; text-align: left; color: var(--primary);">Sale</th>
-                                <th style="padding: 10px 12px; text-align: right; color: var(--primary);">Mục tiêu</th>
-                                <th style="padding: 10px 12px; text-align: right; color: var(--primary);">Đã đạt</th>
-                                <th style="padding: 10px 12px; text-align: right; color: var(--primary);">Còn thiếu</th>
-                                <th style="padding: 10px 12px; text-align: center; color: var(--primary);">Tiến độ</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${sprintHtml}
-                        </tbody>
-                    </table>
+        <div style="width: 100%; display: flex; justify-content: center; margin-top: 20px; margin-bottom: 20px;">
+            <div style="width: 100%; max-width: 800px; background: linear-gradient(135deg, #d32f2f 0%, #ff5722 50%, #ff9800 100%); border: 2px solid #ffeb3b; padding: 20px 24px; border-radius: 16px; box-shadow: 0 10px 25px rgba(211, 47, 47, 0.4); color: #fff;">
+                <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                    <h3 style="margin:0; color: #fff; font-size:1.5rem; text-transform:uppercase; font-weight: 900; letter-spacing: 1px; margin-bottom: 8px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
+                        <i class='bx bxs-hot bx-tada' style="color: #ffeb3b;"></i> CHIẾN DỊCH THƯỞNG TUẦN CUỐI THÁNG <i class='bx bxs-hot bx-tada' style="color: #ffeb3b;"></i>
+                    </h3>
+                    <div style="font-size:1.05rem; color: #ffe0b2; margin-bottom: 16px; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">
+                        <i class='bx bx-time-five'></i> 23/7 - 31/7 (Còn 9 ngày) - Mục tiêu Đột Phá!
+                    </div>
+                    <div style="width: 100%; overflow-x: auto; background: rgba(0,0,0,0.25); border-radius: 8px; padding: 8px;">
+                        <table style="width: 100%; border-collapse: collapse; min-width: 500px; font-size: 0.95rem;">
+                            <thead>
+                                <tr style="border-bottom: 2px solid rgba(255,255,255,0.3);">
+                                    <th style="padding: 10px 12px; text-align: left; color: #ffeb3b; text-transform: uppercase;">Chiến Thần</th>
+                                    <th style="padding: 10px 12px; text-align: right; color: #ffeb3b; text-transform: uppercase;">Mục tiêu</th>
+                                    <th style="padding: 10px 12px; text-align: right; color: #ffeb3b; text-transform: uppercase;">Đã đạt</th>
+                                    <th style="padding: 10px 12px; text-align: right; color: #ffeb3b; text-transform: uppercase;">Còn thiếu</th>
+                                    <th style="padding: 10px 12px; text-align: center; color: #ffeb3b; text-transform: uppercase;">Tiến độ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${sprintHtml}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
