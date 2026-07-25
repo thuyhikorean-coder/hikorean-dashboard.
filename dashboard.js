@@ -802,11 +802,31 @@ function renderWeeklySprint() {
 
     // Team Banner
     html += `
-        <div style="width: 100%; background: linear-gradient(135deg, rgba(212,175,55,0.1) 0%, rgba(255,255,255,1) 100%); border: 1px solid var(--primary); padding: 14px 20px; border-radius: 8px; display: flex; justify-content: center; align-items: center; text-align: center; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.1);">
-            <div style="display: flex; flex-direction: column; align-items: center;">
-                <h3 style="margin:0; color:var(--primary); font-size:1.3rem; text-transform:uppercase; font-weight: 900; letter-spacing: 0.5px;"><i class='bx bxs-discount bx-tada'></i> CHƯƠNG TRÌNH ƯU ĐÃI NỀN TẢNG SƠ CẤP</h3>
-                <div style="font-size:0.9rem; color:var(--text-muted); margin-top:6px; margin-bottom:6px;"><i class='bx bx-calendar'></i> Áp dụng: <b>Tháng 07/2026</b> - Học phí ưu đãi: <b style="color:var(--danger); font-size: 1rem;">3.000.000đ</b></div>
-                <div style="font-size:0.95rem; color:var(--text-main);">Mục tiêu thu hút: <strong style="color:var(--warning)">25 bạn mới</strong> &nbsp;|&nbsp; Hiện tại: <strong style="color:var(--primary); font-size: 1.1rem;">${teamTotalNew}</strong> Bạn</div>
+        <div style="width: 100%; background: linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(255,255,255,1) 100%); border: 1px solid var(--primary); padding: 16px 20px; border-radius: 8px; display: flex; justify-content: center; align-items: center; text-align: center; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.1); margin-top: 10px;">
+            <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                <h3 style="margin:0; color:var(--primary); font-size:1.3rem; text-transform:uppercase; font-weight: 900; letter-spacing: 0.5px; margin-bottom: 8px;">
+                    <i class='bx bx-gift bx-tada'></i> THƯỞNG TUẦN CUỐI THÁNG
+                </h3>
+                <div style="font-size:1rem; color:var(--text-main); margin-bottom: 12px; font-weight: 600;">
+                    <i class='bx bx-time-five'></i> Từ ngày 23/7 - 31/7 (còn 9 ngày), chỉ tiêu mỗi sale cần đạt thêm:
+                </div>
+                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; width: 100%;">
+                    <div style="background: #fff; border: 1px dashed var(--primary); border-radius: 6px; padding: 8px 12px; font-size: 0.95rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                        <strong>Khánh Linh:</strong> <span style="color: var(--danger); font-weight: 900;">30.435.000</span>
+                    </div>
+                    <div style="background: #fff; border: 1px dashed var(--primary); border-radius: 6px; padding: 8px 12px; font-size: 0.95rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                        <strong>Hồng Thơm:</strong> <span style="color: var(--danger); font-weight: 900;">39.320.000</span>
+                    </div>
+                    <div style="background: #fff; border: 1px dashed var(--primary); border-radius: 6px; padding: 8px 12px; font-size: 0.95rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                        <strong>Minh Ngọc:</strong> <span style="color: var(--danger); font-weight: 900;">80.600.000</span>
+                    </div>
+                    <div style="background: #fff; border: 1px dashed var(--primary); border-radius: 6px; padding: 8px 12px; font-size: 0.95rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                        <strong>Khánh Hạ:</strong> <span style="color: var(--danger); font-weight: 900;">46.105.000</span>
+                    </div>
+                    <div style="background: #fff; border: 1px dashed var(--primary); border-radius: 6px; padding: 8px 12px; font-size: 0.95rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                        <strong>Thu Thủy:</strong> <span style="color: var(--danger); font-weight: 900;">9.035.000</span>
+                    </div>
+                </div>
             </div>
         </div>
     `;
