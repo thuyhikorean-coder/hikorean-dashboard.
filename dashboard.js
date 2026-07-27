@@ -159,6 +159,9 @@ function processAllData(data) {
     if (!d.process) d.process = {};
     if (!d.growth) d.growth = {};
     if (!d.okrs) d.okrs = [];
+    
+    // Reset temporary state
+    window.FINAL_WEEK_STATS = {};
 
     const rowsSale = parseCSV(data.SALE_REVENUE_URL);
     const rowsMkt = parseCSV(data.MKT_ADS_URL);
@@ -810,8 +813,20 @@ function renderWeeklySprint() {
 
     let sprintHtml = '';
     sprintTargets.forEach(st => {
-        let nameKey = Object.keys(stats).find(k => k.includes(st.name) || st.name.includes(k));
-        let achieved = nameKey ? stats[nameKey].rev : 0;
+        let achieved = 0;
+        Object.keys(stats).forEach(k => {
+            let normalizedK = k;
+            if (k.includes('Thuỷ') || k.includes('Thủy')) normalizedK = 'Thu Thủy';
+            else if (k.includes('Minh Ngọc')) normalizedK = 'Minh Ngọc';
+            else if (k.includes('Khánh Hạ') || k.includes('Hạ')) normalizedK = 'Khánh Hạ';
+            else if (k.includes('Thơm')) normalizedK = 'Hồng Thơm';
+            else if (k.includes('Linh')) normalizedK = 'Khánh Linh';
+            
+            if (normalizedK === st.name) {
+                achieved += stats[k].rev || 0;
+            }
+        });
+        
         let target = st.target;
         let missing = target - achieved;
         if (missing < 0) missing = 0;
@@ -1102,20 +1117,26 @@ function renderSalesList() {
     Object.keys(stats).forEach(k => {
         let newKey = k;
         if (k.includes('Thuỷ') || k.includes('Thủy')) newKey = 'Thu Thủy';
-        if (k.includes('Ngọc')) newKey = 'Bích Ngọc';
-        if (k.includes('Thơm')) newKey = 'Hồng Thơm';
-        if (k.includes('Linh')) newKey = 'Khánh Linh';
+        else if (k.includes('Bích Ngọc')) newKey = 'Bích Ngọc';
+        else if (k.includes('Minh Ngọc')) newKey = 'Minh Ngọc';
+        else if (k.includes('Khánh Hạ') || k.includes('Hạ')) newKey = 'Khánh Hạ';
+        else if (k.includes('Thơm')) newKey = 'Hồng Thơm';
+        else if (k.includes('Linh')) newKey = 'Khánh Linh';
+        
         if (!normalizedStats[newKey]) normalizedStats[newKey] = { rev: 0, newCount: 0, upCount: 0 };
         normalizedStats[newKey].rev += stats[k].rev || 0;
         normalizedStats[newKey].newCount += stats[k].newCount || 0;
         normalizedStats[newKey].upCount += stats[k].upCount || 0;
     });
 
+    // Merge default targetMap keys to ensure they appear
     Object.keys(targetMap).forEach(k => {
         if (!normalizedStats[k]) normalizedStats[k] = { rev: 0, newCount: 0, upCount: 0 };
     });
 
-    const sorted = Object.entries(normalizedStats).sort((a, b) => b[1].rev - a[1].rev);
+    const sorted = Object.entries(normalizedStats)
+        .filter(([name, s]) => s.rev > 0 || targetMap[name]) // Only show active sales or those with targets
+        .sort((a, b) => b[1].rev - a[1].rev);
 
     tbody.innerHTML = sorted.map(([name, s]) => {
         const t = targetMap[name] || { rev: 100000000, new: 0, up: 0 };
