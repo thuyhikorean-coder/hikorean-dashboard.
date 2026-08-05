@@ -442,12 +442,8 @@ function processAllData(data) {
     if (rowsTrack.length > 1) {
         let engagement = {};
         
-        // Find latest date in tracked rows within selected month
-        let trackDates = rowsTrack.slice(1)
-            .filter(r => isFromTargetMonth(r[0]) && r[1] && r[1].trim())
-            .map(r => standardizeDate(r[0]))
-            .filter(d => d);
-        let latestDateInTrack = trackDates.length > 0 ? trackDates.sort().pop() : null;
+        // Find latest date PER PERSON in tracked rows within selected month
+        let perPersonLatest = {};
 
         rowsTrack.slice(1).forEach(row => {
             if (!isFromTargetMonth(row[0])) return;
@@ -457,20 +453,42 @@ function processAllData(data) {
             const deepLeads = parseInt(row[5]) || 0;
             const stdDate = standardizeDate(row[0]);
             
-            if (!engagement[name]) engagement[name] = { interaction: 0, deepLeads: 0, dailyPC: 0, dailyDeep: 0 };
+            if (!engagement[name]) engagement[name] = { interaction: 0, deepLeads: 0, dailyPC: 0, dailyDeep: 0, latestDate: '' };
             
-            // Monthly accumulation for reference
+            // Monthly accumulation
             engagement[name].interaction += interaction;
             engagement[name].deepLeads += deepLeads;
             
-            // Daily values for the requested dashboard view
-            if (latestDateInTrack && stdDate === latestDateInTrack) {
-                engagement[name].dailyPC += interaction;
-                engagement[name].dailyDeep += deepLeads;
+            // Track latest date per person (only if they have actual data)
+            if ((interaction > 0 || deepLeads > 0) && stdDate > (engagement[name].latestDate || '')) {
+                engagement[name].latestDate = stdDate;
+                engagement[name].dailyPC = interaction;
+                engagement[name].dailyDeep = deepLeads;
             }
         });
+
+        // Fallback: if dailyPC/Deep are 0 but monthly totals exist, show monthly averages
+        Object.keys(engagement).forEach(name => {
+            const e = engagement[name];
+            if (e.dailyPC === 0 && e.dailyDeep === 0 && (e.interaction > 0 || e.deepLeads > 0)) {
+                // Count days this person has data
+                let dayCount = 0;
+                let seenDates = new Set();
+                rowsTrack.slice(1).forEach(row => {
+                    if (!isFromTargetMonth(row[0])) return;
+                    const n = row[1]?.trim();
+                    if (n !== name) return;
+                    const sd = standardizeDate(row[0]);
+                    if (!seenDates.has(sd)) { seenDates.add(sd); dayCount++; }
+                });
+                if (dayCount > 0) {
+                    e.dailyPC = Math.round(e.interaction / dayCount);
+                    e.dailyDeep = Math.round(e.deepLeads / dayCount);
+                }
+            }
+        });
+
         DASHBOARD_DATA.process.saleEngagement = engagement;
-        DASHBOARD_DATA.process.latestTrackDate = latestDateInTrack;
     }
 
     if (rowsQlclD.length > 1) {
@@ -1010,11 +1028,14 @@ function renderEngagementList() {
     if (!tbody) return;
     const engagement = DASHBOARD_DATA.process.saleEngagement || {};
 
-    tbody.innerHTML = Object.entries(engagement).map(([name, e]) => `
+    // Sort by total deep leads descending
+    const sorted = Object.entries(engagement).sort((a, b) => b[1].deepLeads - a[1].deepLeads);
+
+    tbody.innerHTML = sorted.map(([name, e]) => `
         <tr>
             <td style="font-weight:600;">${name}</td>
-            <td style="text-align:center; font-weight:800; color:var(--info);">${e.dailyPC || 0}</td>
-            <td style="text-align:right; font-weight:800; color:var(--warning);">${e.dailyDeep || 0}</td>
+            <td style="text-align:center; font-weight:800; color:var(--info);">${e.interaction || 0}</td>
+            <td style="text-align:right; font-weight:800; color:var(--warning);">${e.deepLeads || 0}</td>
         </tr>
     `).join('');
 }
