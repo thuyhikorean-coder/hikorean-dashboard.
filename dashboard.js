@@ -221,34 +221,9 @@ function processAllData(data) {
                 revBySale[saleName] = (revBySale[saleName] || 0) + amount;
                 orderCount[saleName] = (orderCount[saleName] || 0) + 1;
 
-                // Thưởng nóng rules
+                // Bonus tracking removed for August 2026
                 let currentBonus = 0;
-                // a. Tệp Data Lạnh (Tải tài liệu)
-                if (source.includes('LẠNH') || source.includes('TÀI LIỆU')) {
-                    currentBonus += 200000;
-                }
-                // b. Học viên cũ giới thiệu
-                if (source.includes('CŨ GIỚI THIỆU') || source.includes('CŨ GT') || source.includes('HV CŨ')) {
-                    currentBonus += 100000;
-                }
-                // c. Đơn về trong ngày
-                if (noteStr.includes('TRONG NGÀY')) {
-                    currentBonus += 100000;
-                }
-                // d. Combo Topik 3, 4
-                const cName = row[6]?.toUpperCase().trim() || '';
-                if (isCombo && cName.includes('TOPIK 3')) {
-                    currentBonus += 200000;
-                }
-                if (isCombo && cName.includes('TOPIK 4')) {
-                    currentBonus += 300000;
-                }
-                // e. Bình dân mới
-                if (cName.includes('BÌNH DÂN') && (type.includes('MỚI') || type.includes('NEW'))) {
-                    currentBonus += 50000;
-                }
-                
-                bonusMap[saleName] = (bonusMap[saleName] || 0) + currentBonus;
+                bonusMap[saleName] = 0;
 
                 const isMktAdsRe = source.includes('MKT-ADS') || source.includes('RE-MARKETING');
 
@@ -349,44 +324,18 @@ function processAllData(data) {
             totalNewCount += newCount[name] || 0;
             totalUpCount += upCount[name] || 0;
             
-            let weeklyRev = 0;
-            let bonusAmount = bonusMap[name] || 0;
-            let daysHit = 0;
-            let revBefore15 = 0;
-
-            if (dailyRevMap[name]) {
-                const monthPrefix = selM.padStart(2, '0');
-                Object.keys(dailyRevMap[name]).forEach(dateKey => {
-                    if (dateKey >= `${monthPrefix}-01` && dateKey <= `${monthPrefix}-07`) {
-                        weeklyRev += dailyRevMap[name][dateKey];
-                    }
-                    if (dateKey <= `${monthPrefix}-15`) {
-                        revBefore15 += dailyRevMap[name][dateKey];
-                    }
-                });
-            }
-
-            // Milestone f: 40% (60M) before 15/05
-            if (revBefore15 >= 60000000) {
-                bonusAmount += 1000000;
-            }
-
-            // Milestone g & h: 80% (120M) and 100% (150M)
-            if (revBySale[name] >= 150000000) {
-                bonusAmount += 5000000; // 2M for 80% + 3M for 100%
-            } else if (revBySale[name] >= 120000000) {
-                bonusAmount += 2000000; // 2M for 80%
-            }
+            // Bonus milestones removed for August 2026
+            let bonusAmount = 0;
 
             saleStats[name] = {
                 rev: revBySale[name],
-                weeklyRev: weeklyRev,
+                weeklyRev: 0,
                 comboRate: orderCount[name] > 0 ? ((comboCount[name] || 0) / orderCount[name] * 100).toFixed(0) : 0,
                 newCount: newCount[name] || 0,
                 upCount: upCount[name] || 0,
                 todayRev: todayRevBySale[name] || 0,
-                bonus: bonusAmount,
-                daysHit: daysHit
+                bonus: 0,
+                daysHit: 0
             };
         });
         DASHBOARD_DATA.financial.saleStats = saleStats;
@@ -786,119 +735,9 @@ function initDashboard() {
 function renderWeeklySprint() {
     const container = document.getElementById('weekly-sprint-container');
     if (!container) return;
-
-    const targets = [
-        { name: 'Hồng Thơm', type: 'FT', title: 'CHIẾN THẦN FULLTIME' },
-        { name: 'Khánh Linh', type: 'FT', title: 'CHIẾN THẦN FULLTIME' },
-        { name: 'Khánh Hạ', type: 'FT', title: 'CHIẾN THẦN FULLTIME' },
-        { name: 'Thu Thủy', type: 'PT', title: 'TÂN BINH PARTTIME' }
-    ];
-
-    const stats = window.FINAL_WEEK_STATS || {};
-
-    let html = '';
-
-    // Calculate Team Goal & Stats
-    let teamTargetMet = true;
-    let teamTotalRev = 0;
-    let teamTotalNew = 0;
-    let teamStatusHtml = [];
-
-    targets.forEach(t => {
-        let nameKey = Object.keys(stats).find(k => k.includes(t.name) || t.name.includes(k));
-        let s = nameKey ? stats[nameKey] : { rev: 0, newCount: 0 };
-        teamTotalRev += s.rev;
-        teamTotalNew += s.newCount;
-        
-        let kpiTarget = t.type === 'FT' ? 37500000 : 12500000;
-        let p80 = kpiTarget * 0.8;
-        if (s.rev < p80) {
-            teamTargetMet = false;
-        }
-
-        teamStatusHtml.push(`<b>${t.name.split(' ').pop()}</b>: <span style="color:${s.rev >= p80 ? 'var(--success)' : 'var(--danger)'}">${(s.rev/1000000).toFixed(1)}/${(kpiTarget/1000000).toFixed(1)}</span>`);
-    });
-
-    const sprintTargets = [
-        { name: 'Khánh Linh', target: 30435000 },
-        { name: 'Hồng Thơm', target: 39320000 },
-        { name: 'Minh Ngọc', target: 80600000 },
-        { name: 'Khánh Hạ', target: 46105000 },
-        { name: 'Thu Thủy', target: 9035000 }
-    ];
-
-    let sprintHtml = '';
-    sprintTargets.forEach(st => {
-        let achieved = 0;
-        Object.keys(stats).forEach(k => {
-            let normalizedK = k;
-            if (k.includes('Thuỷ') || k.includes('Thủy')) normalizedK = 'Thu Thủy';
-            else if (k.includes('Minh Ngọc')) normalizedK = 'Minh Ngọc';
-            else if (k.includes('Khánh Hạ') || k.includes('Hạ')) normalizedK = 'Khánh Hạ';
-            else if (k.includes('Thơm')) normalizedK = 'Hồng Thơm';
-            else if (k.includes('Linh')) normalizedK = 'Khánh Linh';
-            
-            if (normalizedK === st.name) {
-                achieved += stats[k].rev || 0;
-            }
-        });
-        
-        let target = st.target;
-        let missing = target - achieved;
-        if (missing < 0) missing = 0;
-        let percent = Math.min(100, Math.round((achieved / target) * 100));
-
-        let isDone = percent >= 100;
-        let barColor = isDone ? '#4caf50' : 'linear-gradient(90deg, #ff9800, #ffeb3b)';
-        sprintHtml += `
-            <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
-                <td style="padding: 10px 12px; text-align: left;"><strong style="font-size: 1.05rem;">${st.name}</strong></td>
-                <td style="padding: 10px 12px; text-align: right; font-weight: bold;">${(target).toLocaleString('vi-VN')}</td>
-                <td style="padding: 10px 12px; text-align: right; color: #81c784; font-weight: 900;">${(achieved).toLocaleString('vi-VN')}</td>
-                <td style="padding: 10px 12px; text-align: right; color: #ffcdd2; font-weight: 900;">${(missing).toLocaleString('vi-VN')}</td>
-                <td style="padding: 10px 12px; text-align: center;">
-                    <div style="width: 100%; background: rgba(0,0,0,0.4); border-radius: 6px; height: 10px; margin-top: 4px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);">
-                        <div style="width: ${percent}%; background: ${barColor}; height: 100%; border-radius: 6px; box-shadow: 0 0 8px ${isDone ? '#4caf50' : '#ff9800'};"></div>
-                    </div>
-                    <span style="font-size: 0.85rem; color: #fff; font-weight: 700; margin-top:4px; display:inline-block;">${percent}%</span>
-                </td>
-            </tr>
-        `;
-    });
-
-    // Team Banner
-    html += `
-        <div style="width: 100%; display: flex; justify-content: center; margin-top: 20px; margin-bottom: 20px;">
-            <div style="width: 100%; max-width: 800px; background: linear-gradient(135deg, #d32f2f 0%, #ff5722 50%, #ff9800 100%); border: 2px solid #ffeb3b; padding: 20px 24px; border-radius: 16px; box-shadow: 0 10px 25px rgba(211, 47, 47, 0.4); color: #fff;">
-                <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-                    <h3 style="margin:0; color: #fff; font-size:1.5rem; text-transform:uppercase; font-weight: 900; letter-spacing: 1px; margin-bottom: 8px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
-                        <i class='bx bxs-hot bx-tada' style="color: #ffeb3b;"></i> CHIẾN DỊCH THƯỞNG TUẦN CUỐI THÁNG <i class='bx bxs-hot bx-tada' style="color: #ffeb3b;"></i>
-                    </h3>
-                    <div style="font-size:1.05rem; color: #ffe0b2; margin-bottom: 16px; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">
-                        <i class='bx bx-time-five'></i> 23/7 - 31/7 (Còn 9 ngày) - Mục tiêu Đột Phá!
-                    </div>
-                    <div style="width: 100%; overflow-x: auto; background: rgba(0,0,0,0.25); border-radius: 8px; padding: 8px;">
-                        <table style="width: 100%; border-collapse: collapse; min-width: 500px; font-size: 0.95rem;">
-                            <thead>
-                                <tr style="border-bottom: 2px solid rgba(255,255,255,0.3);">
-                                    <th style="padding: 10px 12px; text-align: left; color: #ffeb3b; text-transform: uppercase;">Chiến Thần</th>
-                                    <th style="padding: 10px 12px; text-align: right; color: #ffeb3b; text-transform: uppercase;">Mục tiêu</th>
-                                    <th style="padding: 10px 12px; text-align: right; color: #ffeb3b; text-transform: uppercase;">Đã đạt</th>
-                                    <th style="padding: 10px 12px; text-align: right; color: #ffeb3b; text-transform: uppercase;">Còn thiếu</th>
-                                    <th style="padding: 10px 12px; text-align: center; color: #ffeb3b; text-transform: uppercase;">Tiến độ</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${sprintHtml}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-
-    container.innerHTML = html;
+    // Chiến dịch thưởng tuần cuối tháng đã kết thúc (tháng 7/2026)
+    container.innerHTML = '';
+    container.style.display = 'none';
 }
 
 
@@ -1270,15 +1109,7 @@ function renderRaceCards() {
             }, 800 + (Math.random() * 500));
         }
 
-        let bonusHtml = '';
-        if (s.bonus > 0) {
-            bonusHtml = `
-                <div style="background: rgba(212,175,55,0.1); border-left: 3px solid var(--accent); padding: 6px 10px; margin-bottom: 10px; border-radius: 0 6px 6px 0; display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size: 0.7rem; color: #D4AF37; font-weight: 700;"><i class='bx bx-gift bx-tada'></i> Thưởng:</span>
-                    <span style="font-size: 0.85rem; font-weight: 900; color: #D4AF37;">${s.bonus.toLocaleString()}đ</span>
-                </div>
-            `;
-        }
+        // Bonus display removed for August 2026
 
         html += `
             <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); ${isWinner ? 'box-shadow: 0 0 15px rgba(255, 215, 0, 0.15); border-color: rgba(255, 215, 0, 0.3);' : ''}">
@@ -1287,11 +1118,7 @@ function renderRaceCards() {
                     <span style="font-weight: 700; color: var(--accent); font-size: 0.85rem;">Tháng: ${(s.rev / 1000000).toFixed(1)}M</span>
                 </div>
 
-                ${bonusHtml}
-                
 
-
-                <!-- Daily Mini Tracker -->
                 <div style="margin-bottom: 8px;">
                     <div style="display:flex; justify-content:space-between; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 3px;">
                         <span>Ngày ${dateText}: <strong style="color:${dailyColor}">${(s.todayRev / 1000000).toFixed(1)}M</strong> / 10M</span>
