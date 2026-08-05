@@ -5,7 +5,7 @@ const CONFIG = {
     QLCL_OUTCOME_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQY7qRLepn6kX8qNTuJqABTf5Xm7UBm6bPs89gSAZ6_fNbFfE6ULg8Jlxab5TD3oA/pub?gid=531665888&single=true&output=csv',
     SALE_TRACKING_URL: 'https://docs.google.com/spreadsheets/d/19XKkxjrQjs7zoeGMQFPyRhAORW5tD14FhvQP-Oj8Scw/gviz/tq?tqx=out:csv&gid=11036957',
     UPSALE_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRzh_K2wpZTdnolPCRzYhVQxkq0B39c2zYRB4OLRsybc8LwAMFxsrCP98RRjbI--g/pub?gid=548776730&single=true&output=csv',
-    SOCIAL_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSO-aSIrwtMiGFGMpxSqRhIFo7PMA9Uebo7FBxY1rhm_jbUi2cY4Kz3XTXbwVfi7Q/pub?gid=578202755&single=true&output=csv',
+    SOCIAL_URL: 'https://docs.google.com/spreadsheets/d/1VpBHpfY7foI6gLCCm62ABkXOYEMFlo_-/export?format=csv&gid=578202755',
     FEEDBACK_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTsv4tsHlXao_Awr8Xe1RI3tzGkL11KMJga_vlXv7_y8Nz6jwbfzoaoBUTbTk63TiUYz2shPpG0cEof/pub?gid=0&single=true&output=csv',
     TEACHER_COST_URL: 'https://docs.google.com/spreadsheets/d/1B95z7EC1sc7PVhxakfvebClDSu2yCGRyHwHtHw7xW-g/gviz/tq?tqx=out:csv&gid=0'
 };
@@ -624,38 +624,43 @@ function processAllData(data) {
     }
 
     if (rowsSocial.length > 1) {
-        let ytLatest = 0;
-        let fbLatest = 0;
-        let zaloLatest = 0;
-        let congDongLatest = 0;
-        let hitVideos = 0;
+        let fbTotal = 0;
+        let congDongTotal = 0;
+
+        // Data is weekly incremental — sum ALL weeks up to the selected month for cumulative totals
+        const selector = document.getElementById('monthSelector');
+        const selectedValue = selector ? selector.value : '08-2026';
+        const [selM, selY] = selectedValue.split('-');
+        const cutoffDate = `${selY}-${selM}-31`; // End of selected month
 
         rowsSocial.slice(1).forEach(r => {
-            if (!isFromTargetMonth(r[0])) return; // CHỈ LẤY THÁNG ĐƯỢC CHỌN
+            const dateStr = r[0]?.trim();
+            if (!dateStr) return;
 
-            const platform = r[1]?.toUpperCase() || '';
-            let rawStr = r[2] ? r[2].toString().replace(/\\./g, '') : '0';
-            const followers = parseFloat(rawStr) || 0;
-            const views1k = parseInt(r[3]) || 0;
-
-            if (platform.includes('FACEBOOK') || platform.includes('FANPAGE')) {
-                fbLatest += followers;
-            } else if (platform.includes('YOUTUBE') || platform.includes('YT')) {
-                ytLatest += followers;
-            } else if (platform.includes('ZALO') || platform.includes('OA')) {
-                zaloLatest += followers;
-            } else if (platform.includes('CỘNG ĐỒNG') || platform.includes('GROUP') || platform.includes('CĐ')) {
-                congDongLatest += followers;
+            // Standardize date to YYYY-MM-DD for comparison
+            let stdDate = '';
+            if (dateStr.includes('/')) {
+                const parts = dateStr.split('/');
+                if (parts.length >= 3) {
+                    stdDate = `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+                }
             }
-            hitVideos += views1k;
+            if (!stdDate || stdDate > cutoffDate) return; // Only include data up to selected month
+
+            const platform = r[1]?.trim() || '';
+            const rawStr = r[2] ? r[2].toString().replace(/[^\-0-9]/g, '') : '0';
+            const followers = parseInt(rawStr) || 0;
+
+            if (platform.includes('Fanpage') || platform.includes('FANPAGE') || platform.includes('fanpage')) {
+                fbTotal += followers;
+            } else if (platform.includes('cộng đồng') || platform.includes('Cộng đồng') || platform.includes('CỘNG ĐỒNG') || platform.includes('Tham gia')) {
+                congDongTotal += followers;
+            }
         });
 
-        DASHBOARD_DATA.growth.totalFollowers = fbLatest + ytLatest + zaloLatest + congDongLatest;
-        DASHBOARD_DATA.growth.fbFollowers = fbLatest;
-        DASHBOARD_DATA.growth.ytFollowers = ytLatest;
-        DASHBOARD_DATA.growth.zaloFollowers = zaloLatest;
-        DASHBOARD_DATA.growth.congDongMembers = congDongLatest;
-        DASHBOARD_DATA.growth.hitVideos = hitVideos;
+        DASHBOARD_DATA.growth.fbFollowers = fbTotal;
+        DASHBOARD_DATA.growth.congDongMembers = congDongTotal;
+        DASHBOARD_DATA.growth.totalFollowers = fbTotal + congDongTotal;
     }
 
     if (rowsUp.length > 1) {
@@ -932,23 +937,14 @@ function renderFunnel() {
 
     // Dynamic Meta Chips (Report Progress & Upsell Rate)
     const chipUp = document.getElementById('reportProgress');
-    if (chipUp) chipUp.textContent = `92%`; // Binding this to QLCL later if needed
+    if (chipUp) chipUp.textContent = `92%`;
 
     const chipRef = document.getElementById('upsellRate');
     if (chipRef) chipRef.textContent = `${DASHBOARD_DATA.summary.upsellRate || 0}%`;
 
-    // New MKT Chips
+    // Marketing Chips - only Fanpage & Cộng đồng
     const mktFB = document.getElementById('mktFB');
     if (mktFB) mktFB.textContent = `${DASHBOARD_DATA.growth.fbFollowers || 0} / 1000`;
-
-    const mktYT = document.getElementById('mktYT');
-    if (mktYT) mktYT.textContent = `${DASHBOARD_DATA.growth.ytFollowers || 0} / 500`;
-
-    const mktViews = document.getElementById('mktViews');
-    if (mktViews) mktViews.textContent = `${DASHBOARD_DATA.growth.hitVideos || 0}`;
-
-    const mktZalo = document.getElementById('mktZalo');
-    if (mktZalo) mktZalo.textContent = `${DASHBOARD_DATA.growth.zaloFollowers || 0} / 300`;
 
     const mktGroup = document.getElementById('mktGroup');
     if (mktGroup) mktGroup.textContent = `${DASHBOARD_DATA.growth.congDongMembers || 0} / 500`;
