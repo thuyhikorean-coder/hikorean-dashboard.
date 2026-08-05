@@ -928,7 +928,7 @@ function renderFunnel() {
 
     // Marketing Chips - only Fanpage & Cộng đồng
     const mktFB = document.getElementById('mktFB');
-    if (mktFB) mktFB.textContent = `${DASHBOARD_DATA.growth.fbFollowers || 0} / 1000`;
+    if (mktFB) mktFB.textContent = `${DASHBOARD_DATA.growth.fbFollowers || 0} / 300`;
 
     const mktGroup = document.getElementById('mktGroup');
     if (mktGroup) mktGroup.textContent = `${DASHBOARD_DATA.growth.congDongMembers || 0} / 500`;
