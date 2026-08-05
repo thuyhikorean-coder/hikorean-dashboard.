@@ -421,20 +421,21 @@ function processAllData(data) {
             DASHBOARD_DATA.summary.mktCostRatio = 0;
         }
 
-        const doneCount = rowsSale.filter(r => {
+        // Count ALL new orders (Done/Deposit) for funnel
+        const allNewDoneCount = rowsSale.filter(r => {
             if (!isFromTargetMonth(r[0])) return false;
             const status = r[9]?.toUpperCase();
-            const source = r[4]?.trim().toUpperCase() || '';
             const type = r[5]?.toUpperCase() || '';
             const isNew = type.includes('MỚI') || type.includes('NEW');
-            const isMktTarget = source === 'MKT-ADS' || source.includes('REMIND') || source.includes('RE-MARKETING');
-            return isMktTarget && isNew && (status === 'DONE' || status === 'DEPOSIT');
+            return isNew && (status === 'DONE' || status === 'DEPOSIT');
         }).length;
         DASHBOARD_DATA.customer.funnel = {
             totalData: mktData,
             totalLeads: mktLeads,
-            totalOrders: doneCount,
-            conversionRate: mktData > 0 ? ((doneCount / mktData) * 100).toFixed(1) : 0
+            totalOrders: allNewDoneCount,
+            targetOrders: 78,
+            targetNewRevenue: 390000000,
+            conversionRate: mktLeads > 0 ? ((allNewDoneCount / mktLeads) * 100).toFixed(1) : 0
         };
     }
 
@@ -894,16 +895,40 @@ function renderFunnel() {
     const f = DASHBOARD_DATA.customer.funnel;
     const container = document.getElementById('funnel-container');
     if (!container) return;
-    const steps = [
-        { label: 'Mục tiêu doanh thu (MKT)', val: `250.000.000đ`, color: 'rgba(242,201,76,0.2)' },
-        { label: 'Số đơn / Mục tiêu 50', val: `${f.totalOrders} / 50`, color: 'rgba(242,201,76,0.5)' }
-    ];
-    container.innerHTML = steps.map(s => `
-        <div style="background:${s.color}; padding:8px; border-radius:6px; text-align:center; border:1px solid rgba(255,255,255,0.05); margin-bottom:5px;">
-            <div style="font-size:0.75rem; color:var(--text-muted); font-weight: 500;">${s.label}</div>
-            <div style="font-size:1.1rem; font-weight:800; color:var(--primary)">${s.val}</div>
+
+    const targetOrders = f.targetOrders || 78;
+    const orderProgress = Math.min(100, Math.round((f.totalOrders / targetOrders) * 100));
+    const closeRate = f.totalLeads > 0 ? ((f.totalOrders / f.totalLeads) * 100).toFixed(1) : '0.0';
+    const orderColor = orderProgress >= 80 ? 'var(--success)' : (orderProgress >= 50 ? 'var(--warning)' : 'var(--danger)');
+
+    container.innerHTML = `
+        <div style="background:rgba(242,201,76,0.15); padding:10px 14px; border-radius:8px; border:1px solid rgba(242,201,76,0.2); margin-bottom:8px;">
+            <div style="font-size:0.7rem; color:var(--text-muted); font-weight:600; margin-bottom:2px;">Mục tiêu DT New</div>
+            <div style="font-size:1.15rem; font-weight:900; color:var(--primary)">390.000.000đ</div>
         </div>
-    `).join('');
+        <div style="background:rgba(242,201,76,0.3); padding:10px 14px; border-radius:8px; border:1px solid rgba(242,201,76,0.3); margin-bottom:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <div style="font-size:0.7rem; color:var(--text-muted); font-weight:600; margin-bottom:2px;">Đơn New đã chốt / Mục tiêu</div>
+                    <div style="font-size:1.3rem; font-weight:900; color:${orderColor}">${f.totalOrders} <span style="font-size:0.85rem; color:var(--text-muted)">/ ${targetOrders}</span></div>
+                </div>
+                <div style="font-size:1.1rem; font-weight:900; color:${orderColor}">${orderProgress}%</div>
+            </div>
+            <div style="background:rgba(0,0,0,0.15); border-radius:4px; height:6px; margin-top:6px; overflow:hidden;">
+                <div style="width:${orderProgress}%; height:100%; background:${orderColor}; border-radius:4px; transition:width 0.5s;"></div>
+            </div>
+        </div>
+        <div style="display:flex; gap:8px;">
+            <div style="flex:1; background:rgba(255,255,255,0.03); padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.05); text-align:center;">
+                <div style="font-size:0.65rem; color:var(--text-muted); font-weight:600;">Lead (SĐT)</div>
+                <div style="font-size:1rem; font-weight:800; color:var(--info)">${f.totalLeads}</div>
+            </div>
+            <div style="flex:1; background:rgba(255,255,255,0.03); padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.05); text-align:center;">
+                <div style="font-size:0.65rem; color:var(--text-muted); font-weight:600;">Tỉ lệ chốt</div>
+                <div style="font-size:1rem; font-weight:800; color:var(--warning)">${closeRate}%</div>
+            </div>
+        </div>
+    `;
 
     // Dynamic Meta Chips (Report Progress & Upsell Rate)
     const chipUp = document.getElementById('reportProgress');
