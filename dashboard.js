@@ -624,43 +624,27 @@ function processAllData(data) {
     }
 
     if (rowsSocial.length > 1) {
-        let fbTotal = 0;
-        let congDongTotal = 0;
+        let fbMonth = 0;
+        let congDongMonth = 0;
 
-        // Data is weekly incremental — sum ALL weeks up to the selected month for cumulative totals
-        const selector = document.getElementById('monthSelector');
-        const selectedValue = selector ? selector.value : '08-2026';
-        const [selM, selY] = selectedValue.split('-');
-        const cutoffDate = `${selY}-${selM}-31`; // End of selected month
-
+        // Sum weekly increments within the selected month only
         rowsSocial.slice(1).forEach(r => {
-            const dateStr = r[0]?.trim();
-            if (!dateStr) return;
-
-            // Standardize date to YYYY-MM-DD for comparison
-            let stdDate = '';
-            if (dateStr.includes('/')) {
-                const parts = dateStr.split('/');
-                if (parts.length >= 3) {
-                    stdDate = `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
-                }
-            }
-            if (!stdDate || stdDate > cutoffDate) return; // Only include data up to selected month
+            if (!isFromTargetMonth(r[0])) return;
 
             const platform = r[1]?.trim() || '';
             const rawStr = r[2] ? r[2].toString().replace(/[^\-0-9]/g, '') : '0';
             const followers = parseInt(rawStr) || 0;
 
             if (platform.includes('Fanpage') || platform.includes('FANPAGE') || platform.includes('fanpage')) {
-                fbTotal += followers;
+                fbMonth += followers;
             } else if (platform.includes('cộng đồng') || platform.includes('Cộng đồng') || platform.includes('CỘNG ĐỒNG') || platform.includes('Tham gia')) {
-                congDongTotal += followers;
+                congDongMonth += followers;
             }
         });
 
-        DASHBOARD_DATA.growth.fbFollowers = fbTotal;
-        DASHBOARD_DATA.growth.congDongMembers = congDongTotal;
-        DASHBOARD_DATA.growth.totalFollowers = fbTotal + congDongTotal;
+        DASHBOARD_DATA.growth.fbFollowers = fbMonth;
+        DASHBOARD_DATA.growth.congDongMembers = congDongMonth;
+        DASHBOARD_DATA.growth.totalFollowers = fbMonth + congDongMonth;
     }
 
     if (rowsUp.length > 1) {
