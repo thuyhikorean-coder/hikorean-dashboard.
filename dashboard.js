@@ -202,9 +202,9 @@ function processAllData(data) {
     let totalMktAdsRev = 0;
 
     if (rowsSale.length > 1) {
-        let revBySale = { 'Khánh Linh': 0, 'Hồng Thơm': 0, 'Bích Ngọc': 0, 'Thu Thuỷ': 0 };
-        let newCount = { 'Khánh Linh': 0, 'Hồng Thơm': 0, 'Bích Ngọc': 0, 'Thu Thuỷ': 0 };
-        let upCount = { 'Khánh Linh': 0, 'Hồng Thơm': 0, 'Bích Ngọc': 0, 'Thu Thuỷ': 0 };
+        let revBySale = { 'Khánh Linh': 0, 'Hồng Thơm': 0, 'Khánh Hạ': 0, 'Thu Thuỷ': 0 };
+        let newCount = { 'Khánh Linh': 0, 'Hồng Thơm': 0, 'Khánh Hạ': 0, 'Thu Thuỷ': 0 };
+        let upCount = { 'Khánh Linh': 0, 'Hồng Thơm': 0, 'Khánh Hạ': 0, 'Thu Thuỷ': 0 };
         let revByCourse = {}, comboCount = {}, orderCount = {}, dailyMap = {}, bonusMap = {};
         rowsSale.slice(1).forEach(row => {
             if (!isFromTargetMonth(row[0])) return;
@@ -399,6 +399,7 @@ function processAllData(data) {
         // Dynamic KPI calculation for week 10-16
         let thomRev = 0;
         let khanhLinhRev = 0;
+        let khanhHaRev = 0;
         let thuyRev = 0;
         const monthPrefix = selM.padStart(2, '0');
         
@@ -416,6 +417,13 @@ function processAllData(data) {
                 }
             });
         }
+        if (dailyRevMap['Khánh Hạ']) {
+            Object.keys(dailyRevMap['Khánh Hạ']).forEach(dateKey => {
+                if (dateKey >= `${monthPrefix}-10` && dateKey <= `${monthPrefix}-16`) {
+                    khanhHaRev += dailyRevMap['Khánh Hạ'][dateKey];
+                }
+            });
+        }
         if (dailyRevMap['Thu Thủy']) {
             Object.keys(dailyRevMap['Thu Thủy']).forEach(dateKey => {
                 if (dateKey >= `${monthPrefix}-10` && dateKey <= `${monthPrefix}-16`) {
@@ -427,7 +435,8 @@ function processAllData(data) {
         let individuals = [
             { name: 'Thơm', current: thomRev, type: 'full-time' },
             { name: 'Khánh Linh', current: khanhLinhRev, type: 'full-time' },
-            { name: 'Thu Thủy', current: thuyRev, type: 'part-time' } // Adjust type if needed
+            { name: 'Khánh Hạ', current: khanhHaRev, type: 'full-time' },
+            { name: 'Thu Thủy', current: thuyRev, type: 'part-time' }
         ];
 
         let teamTarget = 0;
@@ -437,7 +446,7 @@ function processAllData(data) {
 
         DASHBOARD_DATA.salesKPI = {
             individuals: individuals,
-            teamCurrent: thomRev + khanhLinhRev + thuyRev,
+            teamCurrent: thomRev + khanhLinhRev + khanhHaRev + thuyRev,
             teamTarget: teamTarget
         };
     }
@@ -602,7 +611,13 @@ function processAllData(data) {
         if (finishedClasses.length === 0) {
             const selector = document.getElementById('monthSelector');
             const selectedMonth = selector ? selector.value : "05-2026";
-            if (selectedMonth === "07-2026") {
+            if (selectedMonth === "08-2026") {
+                finishedClasses = [
+                    { id: "GT2K138ON", teacher: "Nguyễn Thị Thu Lan", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "NT-SCK187ON", teacher: "Nguyễn Thu Thủy", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "NT-TCK118ON", teacher: "Trịnh Thị Hồng Nhung", students: "-", passRate: "- %", csat: "0", attendance: "- %" }
+                ];
+            } else if (selectedMonth === "07-2026") {
                 finishedClasses = [
                     { id: "GT2K47OFF", teacher: "Dương Thị Trang", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
                     { id: "NT-SCK169OFF", teacher: "Dương Thị Trang", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
@@ -775,6 +790,7 @@ function renderWeeklySprint() {
     const targets = [
         { name: 'Hồng Thơm', type: 'FT', title: 'CHIẾN THẦN FULLTIME' },
         { name: 'Khánh Linh', type: 'FT', title: 'CHIẾN THẦN FULLTIME' },
+        { name: 'Khánh Hạ', type: 'FT', title: 'CHIẾN THẦN FULLTIME' },
         { name: 'Thu Thủy', type: 'PT', title: 'TÂN BINH PARTTIME' }
     ];
 
@@ -1105,10 +1121,10 @@ function renderSalesList() {
     const stats = DASHBOARD_DATA.financial.saleStats || {};
 
     const targetMap = {
-        'Khánh Linh': { rev: 150000000, new: 16, up: 14 },
-        'Hồng Thơm': { rev: 150000000, new: 16, up: 14 },
-        'Bích Ngọc': { rev: 90000000, new: 18, up: 0 },
-        'Thu Thủy': { rev: 50000000, new: 10, up: 0 }
+        'Khánh Linh': { rev: 150000000, new: 27, up: 3 },
+        'Hồng Thơm': { rev: 150000000, new: 27, up: 3 },
+        'Khánh Hạ': { rev: 80000000, new: 16, up: 0 },
+        'Thu Thủy': { rev: 40000000, new: 8, up: 0 }
     };
 
     // Sometimes the name is 'Thu Thuỷ' or 'Thuỷ' or 'Thủy'
@@ -1117,9 +1133,8 @@ function renderSalesList() {
     Object.keys(stats).forEach(k => {
         let newKey = k;
         if (k.includes('Thuỷ') || k.includes('Thủy')) newKey = 'Thu Thủy';
-        else if (k.includes('Bích Ngọc')) newKey = 'Bích Ngọc';
-        else if (k.includes('Minh Ngọc')) newKey = 'Minh Ngọc';
         else if (k.includes('Khánh Hạ') || k.includes('Hạ')) newKey = 'Khánh Hạ';
+        else if (k.includes('Minh Ngọc')) newKey = 'Minh Ngọc';
         else if (k.includes('Thơm')) newKey = 'Hồng Thơm';
         else if (k.includes('Linh')) newKey = 'Khánh Linh';
         
@@ -1183,12 +1198,12 @@ function renderRaceCards() {
     const container = document.getElementById('race-container');
     if (!container) return;
 
-    // Team Targets cho Tháng 7/2026
+    // Team Targets cho Tháng 8/2026
     const targets = [
-        { name: 'Khánh Linh', goal: 150000000, newGoal: 16, upGoal: 14 },
-        { name: 'Hồng Thơm', goal: 150000000, newGoal: 16, upGoal: 14 },
-        { name: 'Bích Ngọc', goal: 90000000, newGoal: 18, upGoal: 0 },
-        { name: 'Thu Thủy', goal: 50000000, newGoal: 10, upGoal: 0 }
+        { name: 'Khánh Linh', goal: 150000000, newGoal: 27, upGoal: 3 },
+        { name: 'Hồng Thơm', goal: 150000000, newGoal: 27, upGoal: 3 },
+        { name: 'Khánh Hạ', goal: 80000000, newGoal: 16, upGoal: 0 },
+        { name: 'Thu Thủy', goal: 40000000, newGoal: 8, upGoal: 0 }
     ];
     const dailyTarget = 5000000; 
     const stats = DASHBOARD_DATA.financial.saleStats || {};
