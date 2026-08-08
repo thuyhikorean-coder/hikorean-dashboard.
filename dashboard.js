@@ -981,6 +981,7 @@ function renderSalesList() {
     const tbody = document.getElementById('sales-detail-list');
     if (!tbody) return;
     const stats = DASHBOARD_DATA.financial.saleStats || {};
+    const targetAOV = 5880000; // 5.880.000 VNĐ
 
     const targetMap = {
         'Khánh Linh': { rev: 150000000, new: 23, up: 3 },
@@ -1018,12 +1019,44 @@ function renderSalesList() {
     tbody.innerHTML = sorted.map(([name, s]) => {
         const t = targetMap[name] || { rev: 100000000, new: 0, up: 0 };
         const revProgress = Math.round((s.rev / t.rev) * 100);
+        
+        const totalOrders = s.newCount + s.upCount;
+        const totalTargetOrders = t.new + t.up;
+        const actualAOV = totalOrders > 0 ? Math.round(s.rev / totalOrders) : 0;
+        const actualAOVInM = totalOrders > 0 ? (s.rev / totalOrders / 1000000).toFixed(2) : '0.00';
+        
+        const isRevDone = s.rev >= t.rev;
+        const isAOVDone = actualAOV >= targetAOV;
+        const isKPIDone = isRevDone && isAOVDone;
+
+        let statusText = 'Chưa đạt ⏳';
+        let statusBadge = 'badge-danger';
+        if (isKPIDone) {
+            statusText = 'ĐẠT KPI 🏆';
+            statusBadge = 'badge-process';
+        } else if (isRevDone && !isAOVDone) {
+            statusText = 'Thiếu AOV ⚠️';
+            statusBadge = 'badge-warning';
+        }
+
+        let aovBadge = (actualAOV >= targetAOV) ? 'badge-process' : (actualAOV > 0 ? 'badge-warning' : 'badge-danger');
+
         return `
         <tr>
             <td style="font-weight:600; font-size: 0.8rem;">${name}</td>
-            <td style="font-weight:700; color:var(--danger); font-size: 0.8rem;">${(s.rev / 1000000).toFixed(1)}M <span style="font-size:0.6rem; color:var(--text-muted);">/ ${(t.rev / 1000000).toFixed(0)}M (${revProgress}%)</span></td>
-            <td style="text-align:right;"><span class="badge ${s.newCount >= t.new ? 'badge-process' : 'badge-danger'}">${s.newCount}/${t.new}</span></td>
-            <td style="text-align:right;"><span class="badge ${s.upCount >= t.up ? 'badge-process' : 'badge-danger'}">${s.upCount}/${t.up}</span></td>
+            <td style="font-weight:700; color:var(--danger); font-size: 0.8rem;">
+                ${(s.rev / 1000000).toFixed(1)}M 
+                <span style="font-size:0.6rem; color:var(--text-muted);">/ ${(t.rev / 1000000).toFixed(0)}M (${revProgress}%)</span>
+            </td>
+            <td style="text-align:center; font-size: 0.8rem;">
+                <strong>${totalOrders}</strong> / ${totalTargetOrders} HV
+                <div style="font-size:0.65rem; color:var(--text-muted);">New: ${s.newCount}/${t.new} | Up: ${s.upCount}/${t.up}</div>
+            </td>
+            <td style="text-align:right;">
+                <span class="badge ${aovBadge}">${actualAOVInM}M</span>
+                <div style="font-size:0.6rem; color:var(--text-muted);">Mục tiêu: 5.88M</div>
+            </td>
+            <td style="text-align:right;"><span class="badge ${statusBadge}">${statusText}</span></td>
         </tr>
         `;
     }).join('');
@@ -1105,7 +1138,7 @@ function renderRaceCards() {
     targets.forEach(t => {
         let name = t.name;
         let goalPerSale = t.goal;
-        let s = stats[name] || { rev: 0, todayRev: 0, weeklyRev: 0 };
+        let s = stats[name] || { rev: 0, todayRev: 0, weeklyRev: 0, newCount: 0, upCount: 0 };
         // Fuzzy match for names like "Thơm" vs "Hồng Thơm"
         if (!stats[name]) {
             const fuzzyKey = Object.keys(stats).find(k => k.includes(name) || name.includes(k));
@@ -1115,6 +1148,9 @@ function renderRaceCards() {
         let monthProgress = Math.min(100, Math.round((s.rev / goalPerSale) * 100));
         let weeklyProgress = monthProgress;
         let dailyProgress = Math.min(100, Math.round((s.todayRev / dailyTarget) * 100));
+
+        let totalOrders = (s.newCount || 0) + (s.upCount || 0);
+        let actualAOV = totalOrders > 0 ? (s.rev / totalOrders / 1000000).toFixed(2) : '0.00';
 
         let dailyColor = dailyProgress >= 100 ? 'var(--process)' : (dailyProgress >= 50 ? 'var(--warning)' : 'var(--danger)');
         let weeklyColor = weeklyProgress >= 100 ? '#FFD700' : '#FF5252';
@@ -1155,10 +1191,10 @@ function renderRaceCards() {
                     </div>
                 </div>
 
-                <!-- Month Progress bar -->
+                <!-- Month Progress bar & AOV Info -->
                 <div style="display:flex; justify-content:space-between; font-size: 0.65rem; color: var(--text-muted); padding-top:4px;">
-                    <span>Tiến độ Tháng: ${monthProgress}%</span>
-                    <span>Hết tháng: ${(goalPerSale / 1000000).toFixed(0)}M</span>
+                    <span>Tiến độ DT: ${monthProgress}%</span>
+                    <span>AOV: <strong style="color:${actualAOV >= 5.88 ? 'var(--process)' : 'var(--danger)'}">${actualAOV}M</strong> / 5.88M</span>
                 </div>
             </div>
         `;
