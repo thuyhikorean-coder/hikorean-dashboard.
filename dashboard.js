@@ -894,43 +894,43 @@ function renderFunnel() {
 
     const targetOrders = f.targetOrders || 67;
     const orderProgress = Math.min(100, Math.round((f.totalOrders / targetOrders) * 100));
-    const orderColor = orderProgress >= 80 ? 'var(--success)' : (orderProgress >= 50 ? 'var(--warning)' : 'var(--danger)');
+    const orderColor = orderProgress >= 80 ? '#66BB6A' : (orderProgress >= 50 ? '#FFB74D' : '#FF5252');
 
     const targetNewRevStr = formatCurrency(f.targetNewRevenue || 394000000);
 
     container.innerHTML = `
         <!-- Top 2-Column Revenue & Order Progress -->
         <div style="display:grid; grid-template-columns: 1fr 1.1fr; gap: 6px; margin-bottom: 8px;">
-            <div style="background:rgba(242,201,76,0.12); padding: 6px 8px; border-radius: 6px; border:1px solid rgba(242,201,76,0.2);">
-                <div style="font-size:0.6rem; color:var(--text-muted); font-weight:600;">Mục tiêu DT New</div>
-                <div style="font-size:0.95rem; font-weight:900; color:var(--primary); margin-top:1px;">${targetNewRevStr}</div>
+            <div style="background:rgba(79,195,247,0.08); padding: 5px 7px; border-radius: 6px; border:1px solid rgba(79,195,247,0.2);">
+                <div style="font-size:0.58rem; color:#B0BEC5; font-weight:600;">Mục tiêu DT New</div>
+                <div style="font-size:0.9rem; font-weight:900; color:#4FC3F7; margin-top:1px;">${targetNewRevStr}</div>
             </div>
-            <div style="background:rgba(242,201,76,0.18); padding: 6px 8px; border-radius: 6px; border:1px solid rgba(242,201,76,0.25);">
+            <div style="background:rgba(79,195,247,0.12); padding: 5px 7px; border-radius: 6px; border:1px solid rgba(79,195,247,0.25);">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div style="font-size:0.6rem; color:var(--text-muted); font-weight:600;">Đơn New / Mục tiêu</div>
-                    <div style="font-size:0.75rem; font-weight:900; color:${orderColor};">${orderProgress}%</div>
+                    <div style="font-size:0.58rem; color:#B0BEC5; font-weight:600;">Đơn New / Mục tiêu</div>
+                    <div style="font-size:0.7rem; font-weight:900; color:${orderColor};">${orderProgress}%</div>
                 </div>
-                <div style="font-size:0.95rem; font-weight:900; color:${orderColor}; margin-top:1px;">${f.totalOrders} <span style="font-size:0.7rem; color:var(--text-muted); font-weight:600;">/ ${targetOrders} HV</span></div>
+                <div style="font-size:0.9rem; font-weight:900; color:${orderColor}; margin-top:1px;">${f.totalOrders} <span style="font-size:0.65rem; color:#B0BEC5; font-weight:600;">/ ${targetOrders} HV</span></div>
             </div>
         </div>
 
         <!-- Quick 4 Mini Chips Bar (DT Ads, CP Ads, Leads SĐT, Chốt Lead) -->
         <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 8px;">
-            <div style="background:rgba(0,0,0,0.15); padding: 4px 6px; border-radius: 4px; border:1px solid rgba(255,255,255,0.05); text-align:center;">
-                <div style="font-size:0.58rem; color:var(--text-muted);">DT Ads</div>
-                <div style="font-size:0.72rem; font-weight:800; color:var(--success);">${formatCurrency(DASHBOARD_DATA.summary.totalMktAdsRevenue || 0)}</div>
+            <div style="background:rgba(0,0,0,0.25); padding: 4px 5px; border-radius: 4px; border:1px solid rgba(255,255,255,0.06); text-align:center;">
+                <div style="font-size:0.55rem; color:#B0BEC5;">DT Ads</div>
+                <div style="font-size:0.68rem; font-weight:800; color:#66BB6A;">${formatCurrency(DASHBOARD_DATA.summary.totalMktAdsRevenue || 0)}</div>
             </div>
-            <div style="background:rgba(0,0,0,0.15); padding: 4px 6px; border-radius: 4px; border:1px solid rgba(255,255,255,0.05); text-align:center;">
-                <div style="font-size:0.58rem; color:var(--text-muted);">CP Ads</div>
-                <div style="font-size:0.72rem; font-weight:800; color:var(--warning);">${((DASHBOARD_DATA.summary.mktCost || 0) / 1000000).toFixed(1)}M <span style="font-size:0.6rem; color:var(--info);">(${DASHBOARD_DATA.summary.mktCostRatio}%)</span></div>
+            <div style="background:rgba(0,0,0,0.25); padding: 4px 5px; border-radius: 4px; border:1px solid rgba(255,255,255,0.06); text-align:center;">
+                <div style="font-size:0.55rem; color:#B0BEC5;">CP Ads</div>
+                <div style="font-size:0.68rem; font-weight:800; color:#FF9800;">${((DASHBOARD_DATA.summary.mktCost || 0) / 1000000).toFixed(1)}M <span style="font-size:0.55rem; color:#FF5252;">(${DASHBOARD_DATA.summary.mktCostRatio}%)</span></div>
             </div>
-            <div style="background:rgba(0,0,0,0.15); padding: 4px 6px; border-radius: 4px; border:1px solid rgba(255,255,255,0.05); text-align:center;">
-                <div style="font-size:0.58rem; color:var(--text-muted);">Leads SĐT</div>
-                <div style="font-size:0.72rem; font-weight:800; color:var(--info);">${f.totalLeads || 0} SĐT</div>
+            <div style="background:rgba(0,0,0,0.25); padding: 4px 5px; border-radius: 4px; border:1px solid rgba(255,255,255,0.06); text-align:center;">
+                <div style="font-size:0.55rem; color:#B0BEC5;">Leads SĐT</div>
+                <div style="font-size:0.68rem; font-weight:800; color:#4FC3F7;">${f.totalLeads || 0} SĐT</div>
             </div>
-            <div style="background:rgba(0,0,0,0.15); padding: 4px 6px; border-radius: 4px; border:1px solid rgba(255,255,255,0.05); text-align:center;">
-                <div style="font-size:0.58rem; color:var(--text-muted);">Chốt Lead</div>
-                <div style="font-size:0.72rem; font-weight:800; color:var(--primary);">${f.conversionRate || 0}%</div>
+            <div style="background:rgba(0,0,0,0.25); padding: 4px 5px; border-radius: 4px; border:1px solid rgba(255,255,255,0.06); text-align:center;">
+                <div style="font-size:0.55rem; color:#B0BEC5;">Chốt Lead</div>
+                <div style="font-size:0.68rem; font-weight:800; color:#4FC3F7;">${f.conversionRate || 0}%</div>
             </div>
         </div>
     `;
@@ -949,15 +949,15 @@ function renderMktKpiTable() {
     const mktCostRatioVal = parseFloat(DASHBOARD_DATA.summary.mktCostRatio) || 0;
     const isMktCostRatioValid = DASHBOARD_DATA.summary.mktCostRatio !== "∞" && mktCostRatioVal > 0 && mktCostRatioVal <= 15;
 
-    // 1. Data (558 target)
-    const dataProgress = Math.min(100, Math.round((mktData / 558) * 100));
+    // 1. Data (558 target) -> 20%
+    const dataProgress = Math.round((mktData / 558) * 100);
 
-    // 2. Chuyển đổi SĐT (60% target)
-    const leadRateProgress = Math.min(100, Math.round((dataToLeadRate / 60) * 100));
+    // 2. Chuyển đổi SĐT (60% target) -> 73%
+    const leadRateProgress = Math.round((dataToLeadRate / 60) * 100);
 
-    // 3. Phễu lớn (100 bạn target)
+    // 3. Phễu lớn (100 bạn target) -> 9%
     const registeredNew = f.totalOrders || 0;
-    const phieuProgress = Math.min(100, Math.round((registeredNew / 100) * 100));
+    const phieuProgress = Math.round((registeredNew / 100) * 100);
 
     // Check Bonus evaluation for Header Badge
     const passBlock1Basic = (mktData >= 558) && (dataToLeadRate >= 60) && isMktCostRatioValid;
@@ -968,39 +968,46 @@ function renderMktKpiTable() {
 
     const totalBonusBadge = document.getElementById('mktBonusTotalBadge');
     if (totalBonusBadge) {
-        totalBonusBadge.textContent = `🎁 Thưởng Dự Kiến: ${formatCurrency(totalBonus)}`;
+        totalBonusBadge.textContent = `🎁 Thưởng: ${formatCurrency(totalBonus)}`;
     }
+
+    // Update Social Chips
+    const mktFB = document.getElementById('mktFB');
+    if (mktFB) mktFB.textContent = `${DASHBOARD_DATA.growth.fbFollowers || 0}/300`;
+
+    const mktGroup = document.getElementById('mktGroup');
+    if (mktGroup) mktGroup.textContent = `${DASHBOARD_DATA.growth.congDongMembers || 0}/500`;
 
     tbody.innerHTML = `
         <tr style="background: rgba(255,255,255,0.02); vertical-align: middle;">
-            <td style="padding: 5px 8px; font-weight:700;"><i class='bx bx-data' style="color:var(--info);"></i> 1. Số lượng Data (Ads)</td>
-            <td style="padding: 5px 6px; text-align: center; color:var(--text-muted); font-weight:600;">558 Data</td>
-            <td style="padding: 5px 6px; text-align: center; font-weight:800; color:var(--info);">${mktData} Data</td>
-            <td style="padding: 5px 8px; text-align: right;"><span style="color:${dataProgress>=100?'var(--success)':'var(--warning)'}; font-weight:800;">${dataProgress}%</span></td>
+            <td style="padding: 4px 6px; font-weight:700; color:#E0E0E0; white-space:nowrap;"><i class='bx bx-data' style="color:#4FC3F7;"></i> 1. Số lượng Data (Ads)</td>
+            <td style="padding: 4px 6px; text-align: center; color:#B0BEC5; font-weight:600;">558 Data</td>
+            <td style="padding: 4px 6px; text-align: center; font-weight:800; color:#4FC3F7;">${mktData} Data</td>
+            <td style="padding: 4px 6px; text-align: right;"><span style="color:${dataProgress>=100?'#66BB6A':'#FFB74D'}; font-weight:800;">${dataProgress}%</span></td>
         </tr>
         <tr style="background: rgba(255,255,255,0.02); vertical-align: middle;">
-            <td style="padding: 5px 8px; font-weight:700;"><i class='bx bx-phone-call' style="color:var(--warning);"></i> 2. Chuyển đổi SĐT</td>
-            <td style="padding: 5px 6px; text-align: center; color:var(--text-muted); font-weight:600;">60%</td>
-            <td style="padding: 5px 6px; text-align: center; font-weight:800; color:var(--warning);">${dataToLeadRate.toFixed(1)}%</td>
-            <td style="padding: 5px 8px; text-align: right;"><span style="color:${leadRateProgress>=100?'var(--success)':'var(--warning)'}; font-weight:800;">${leadRateProgress}%</span></td>
+            <td style="padding: 4px 6px; font-weight:700; color:#E0E0E0; white-space:nowrap;"><i class='bx bx-phone-call' style="color:#FFB74D;"></i> 2. Chuyển đổi SĐT</td>
+            <td style="padding: 4px 6px; text-align: center; color:#B0BEC5; font-weight:600;">60%</td>
+            <td style="padding: 4px 6px; text-align: center; font-weight:800; color:#FFB74D;">${dataToLeadRate.toFixed(1)}%</td>
+            <td style="padding: 4px 6px; text-align: right;"><span style="color:${leadRateProgress>=100?'#66BB6A':'#FFB74D'}; font-weight:800;">${leadRateProgress}%</span></td>
         </tr>
         <tr style="background: rgba(255,255,255,0.02); vertical-align: middle;">
-            <td style="padding: 5px 8px; font-weight:700;"><i class='bx bx-dollar-circle' style="color:var(--danger);"></i> 3. Chi phí Ads tối đa</td>
-            <td style="padding: 5px 6px; text-align: center; color:var(--text-muted); font-weight:600;">≤ 15% DT</td>
-            <td style="padding: 5px 6px; text-align: center; font-weight:800; color:${isMktCostRatioValid?'var(--success)':'var(--danger)'};">${DASHBOARD_DATA.summary.mktCostRatio}%</td>
-            <td style="padding: 5px 8px; text-align: right;"><span style="color:${isMktCostRatioValid?'var(--success)':'var(--danger)'}; font-weight:800;">${isMktCostRatioValid?'Đạt':'Vượt'}</span></td>
+            <td style="padding: 4px 6px; font-weight:700; color:#E0E0E0; white-space:nowrap;"><i class='bx bx-dollar-circle' style="color:#FF5252;"></i> 3. Chi phí Ads tối đa</td>
+            <td style="padding: 4px 6px; text-align: center; color:#B0BEC5; font-weight:600;">≤ 15% DT</td>
+            <td style="padding: 4px 6px; text-align: center; font-weight:800; color:#FF5252;">${DASHBOARD_DATA.summary.mktCostRatio}%</td>
+            <td style="padding: 4px 6px; text-align: right;"><span style="color:${isMktCostRatioValid?'#66BB6A':'#FF5252'}; font-weight:800;">${isMktCostRatioValid?'Đạt':'Vượt'}</span></td>
         </tr>
         <tr style="background: rgba(255,255,255,0.02); vertical-align: middle;">
-            <td style="padding: 5px 8px; font-weight:700;"><i class='bx bx-filter' style="color:var(--primary);"></i> 4. Phễu lớn hàng tháng</td>
-            <td style="padding: 5px 6px; text-align: center; color:var(--text-muted); font-weight:600;">100 bạn</td>
-            <td style="padding: 5px 6px; text-align: center; font-weight:800; color:var(--primary);">${registeredNew} bạn</td>
-            <td style="padding: 5px 8px; text-align: right;"><span style="color:${phieuProgress>=90?'var(--success)':(phieuProgress>=50?'var(--warning)':'var(--danger)')}; font-weight:800;">${phieuProgress}%</span></td>
+            <td style="padding: 4px 6px; font-weight:700; color:#E0E0E0; white-space:nowrap;"><i class='bx bx-filter' style="color:#4FC3F7;"></i> 4. Phễu lớn hàng tháng</td>
+            <td style="padding: 4px 6px; text-align: center; color:#B0BEC5; font-weight:600;">100 bạn</td>
+            <td style="padding: 4px 6px; text-align: center; font-weight:800; color:#4FC3F7;">${registeredNew} bạn</td>
+            <td style="padding: 4px 6px; text-align: right;"><span style="color:${phieuProgress>=90?'#66BB6A':(phieuProgress>=50?'#FFB74D':'#FF5252')}; font-weight:800;">${phieuProgress}%</span></td>
         </tr>
         <tr style="background: rgba(255,255,255,0.02); vertical-align: middle;">
-            <td style="padding: 5px 8px; font-weight:700;"><i class='bx bx-video' style="color:var(--danger);"></i> 5. Livestream (Chị & Minji)</td>
-            <td style="padding: 5px 6px; text-align: center; color:var(--text-muted); font-weight:600;">30 mắt/buổi</td>
-            <td style="padding: 5px 6px; text-align: center; font-weight:700; color:var(--text-main);">Chị & Minji</td>
-            <td style="padding: 5px 8px; text-align: right; color:var(--text-muted); font-weight:600;">--</td>
+            <td style="padding: 4px 6px; font-weight:700; color:#E0E0E0; white-space:nowrap;"><i class='bx bx-video' style="color:#FF5252;"></i> 5. Livestream (C Thuý và C Minji)</td>
+            <td style="padding: 4px 6px; text-align: center; color:#B0BEC5; font-weight:600;">30 mắt/buổi</td>
+            <td style="padding: 4px 6px; text-align: center; font-weight:700; color:#E0E0E0;">C Thuý và C Minji</td>
+            <td style="padding: 4px 6px; text-align: right; color:#B0BEC5; font-weight:600;">--</td>
         </tr>
     `;
 }
