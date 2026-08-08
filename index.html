@@ -211,56 +211,33 @@
                         </div>
                     </div>
 
-                    <div class="card-funnel" style="display: flex; flex-direction: column; gap: 24px;">
+                    <div class="card-funnel">
                         <div class="glass-card">
-                            <h3 class="card-title"><i class='bx bx-filter-alt'></i> Phễu Data & Leads</h3>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
+                                <h3 class="card-title" style="margin:0; font-size:0.85rem;"><i class='bx bx-broadcast' style="color:var(--primary);"></i> PHỄU & MỤC TIÊU MARKETING</h3>
+                                <div style="display:flex; gap:6px; align-items:center;">
+                                    <span id="mktBonusTotalBadge" class="badge badge-success" style="font-size:0.7rem; padding: 3px 8px; font-weight:800;">🎁 Thưởng: 0 VNĐ</span>
+                                </div>
+                            </div>
+
+                            <!-- Phễu Doanh Thu & Lead Summary Container -->
                             <div id="funnel-container" class="funnel-modern">
                                 <!-- Filled by JS -->
                             </div>
-                            <div class="mini-meta" style="margin-top: 15px; display: flex; gap: 10px;">
 
-                                <div class="mini-chip">Đạt chỉ tiêu Đơn UP: <span id="upsellRate"
-                                        style="color:var(--process);">0%</span></div>
-                            </div>
-                        </div>
-
-                        <div class="glass-card">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
-                                <h3 class="card-title" style="margin:0; font-size:0.9rem;"><i class='bx bx-broadcast' style="color:var(--primary);"></i> HIỆU SUẤT & MỤC TIÊU MKT</h3>
-                                <div style="display:flex; gap:6px; align-items:center;">
-                                    <span id="mktBonusTotalBadge" class="badge badge-success" style="font-size:0.7rem; padding: 3px 8px; font-weight:800;">🎁 Thưởng Dự Kiến: 0 VNĐ</span>
-                                </div>
+                            <!-- MKT KPI Target vs Actual Table -->
+                            <div style="margin-top: 10px; margin-bottom: 6px; font-size: 0.72rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 4px;">
+                                <i class='bx bxs-target-lock'></i> BẢNG MỤC TIÊU & THỰC ĐẠT MKT
                             </div>
                             
-                            <!-- Ultra Compact Quick Metrics Bar -->
-                            <div style="display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap;">
-                                <div style="flex:1; min-width: 90px; background: rgba(0,0,0,0.18); padding: 5px 6px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); text-align:center;">
-                                    <div style="font-size: 0.6rem; color: var(--text-muted);">DT Ads</div>
-                                    <div id="mktAdsRev" style="font-size: 0.8rem; font-weight: 800; color: var(--success);">0 đ</div>
-                                </div>
-                                <div style="flex:1; min-width: 90px; background: rgba(0,0,0,0.18); padding: 5px 6px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); text-align:center;">
-                                    <div style="font-size: 0.6rem; color: var(--text-muted);">CP Ads / Tỉ Lệ</div>
-                                    <div style="font-size: 0.8rem; font-weight: 800; color: var(--warning);"><span id="mktCostVal">0M</span> <span id="mktCostRatioTag" style="font-size:0.68rem;">(0%)</span></div>
-                                </div>
-                                <div style="flex:1; min-width: 90px; background: rgba(0,0,0,0.18); padding: 5px 6px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); text-align:center;">
-                                    <div style="font-size: 0.6rem; color: var(--text-muted);">Lead SĐT / CPL</div>
-                                    <div style="font-size: 0.8rem; font-weight: 800; color: var(--info);"><span id="mktLeadCount">0</span> <span id="mktCPL" style="font-size:0.62rem; color:var(--text-muted); font-weight:500;">(--)</span></div>
-                                </div>
-                                <div style="flex:1; min-width: 90px; background: rgba(0,0,0,0.18); padding: 5px 6px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); text-align:center;">
-                                    <div style="font-size: 0.6rem; color: var(--text-muted);">Chốt Lead</div>
-                                    <div id="mktConvRate" style="font-size: 0.8rem; font-weight: 800; color: var(--primary);">0%</div>
-                                </div>
-                            </div>
-
-                            <!-- Compact Table Target vs Actual MKT (4 Columns) -->
                             <div class="table-wrapper">
                                 <table class="compact-table" style="width: 100%; border-collapse: separate; border-spacing: 0 2px; font-size: 0.72rem;">
                                     <thead>
                                         <tr style="color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.62rem; background: rgba(0,0,0,0.15);">
-                                            <th style="padding: 5px 8px; text-align: left; width: 40%;">Hạng Mục KPI MKT</th>
-                                            <th style="padding: 5px 6px; text-align: center; width: 20%;">Mục Tiêu</th>
-                                            <th style="padding: 5px 6px; text-align: center; width: 20%;">Thực Đạt</th>
-                                            <th style="padding: 5px 8px; text-align: right; width: 20%;">Tiến Độ %</th>
+                                            <th style="padding: 5px 8px; text-align: left; width: 38%;">Hạng Mục KPI</th>
+                                            <th style="padding: 5px 6px; text-align: center; width: 22%;">Mục Tiêu</th>
+                                            <th style="padding: 5px 6px; text-align: center; width: 22%;">Thực Đạt</th>
+                                            <th style="padding: 5px 8px; text-align: right; width: 18%;">Tiến Độ %</th>
                                         </tr>
                                     </thead>
                                     <tbody id="mkt-kpi-table-body">
@@ -269,7 +246,7 @@
                                 </table>
                             </div>
 
-                            <!-- Social Media Metrics Bar -->
+                            <!-- Social Media Footer Bar -->
                             <div style="display: flex; gap: 8px; margin-top: 8px;">
                                 <div style="flex:1; display:flex; justify-content:space-between; font-size: 0.68rem; background: rgba(0,0,0,0.12); padding: 4px 8px; border-radius: 4px;">
                                     <span style="color:var(--text-muted);"><i class='bx bxl-facebook-square'></i> Fanpage:</span>
@@ -409,7 +386,7 @@
 
     <!-- Scripts with Cache Busting -->
     <script src="data.js?v=4.0"></script>
-    <script src="dashboard.js?v=8.5"></script>
+    <script src="dashboard.js?v=9.0"></script>
 
 </body>
 

@@ -888,88 +888,52 @@ function renderBSCTable() {
 }
 
 function renderFunnel() {
-    const f = DASHBOARD_DATA.customer.funnel;
+    const f = DASHBOARD_DATA.customer.funnel || {};
     const container = document.getElementById('funnel-container');
     if (!container) return;
 
     const targetOrders = f.targetOrders || 67;
     const orderProgress = Math.min(100, Math.round((f.totalOrders / targetOrders) * 100));
-    const closeRate = f.totalLeads > 0 ? ((f.totalOrders / f.totalLeads) * 100).toFixed(1) : '0.0';
     const orderColor = orderProgress >= 80 ? 'var(--success)' : (orderProgress >= 50 ? 'var(--warning)' : 'var(--danger)');
 
     const targetNewRevStr = formatCurrency(f.targetNewRevenue || 394000000);
 
     container.innerHTML = `
-        <div style="background:rgba(242,201,76,0.15); padding:10px 14px; border-radius:8px; border:1px solid rgba(242,201,76,0.2); margin-bottom:8px;">
-            <div style="font-size:0.7rem; color:var(--text-muted); font-weight:600; margin-bottom:2px;">Mục tiêu DT New</div>
-            <div style="font-size:1.15rem; font-weight:900; color:var(--primary)">${targetNewRevStr}</div>
-        </div>
-        <div style="background:rgba(242,201,76,0.3); padding:10px 14px; border-radius:8px; border:1px solid rgba(242,201,76,0.3); margin-bottom:8px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <div>
-                    <div style="font-size:0.7rem; color:var(--text-muted); font-weight:600; margin-bottom:2px;">Đơn New đã chốt / Mục tiêu</div>
-                    <div style="font-size:1.3rem; font-weight:900; color:${orderColor}">${f.totalOrders} <span style="font-size:0.85rem; color:var(--text-muted)">/ ${targetOrders}</span></div>
+        <!-- Top 2-Column Revenue & Order Progress -->
+        <div style="display:grid; grid-template-columns: 1fr 1.1fr; gap: 6px; margin-bottom: 8px;">
+            <div style="background:rgba(242,201,76,0.12); padding: 6px 8px; border-radius: 6px; border:1px solid rgba(242,201,76,0.2);">
+                <div style="font-size:0.6rem; color:var(--text-muted); font-weight:600;">Mục tiêu DT New</div>
+                <div style="font-size:0.95rem; font-weight:900; color:var(--primary); margin-top:1px;">${targetNewRevStr}</div>
+            </div>
+            <div style="background:rgba(242,201,76,0.18); padding: 6px 8px; border-radius: 6px; border:1px solid rgba(242,201,76,0.25);">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="font-size:0.6rem; color:var(--text-muted); font-weight:600;">Đơn New / Mục tiêu</div>
+                    <div style="font-size:0.75rem; font-weight:900; color:${orderColor};">${orderProgress}%</div>
                 </div>
-                <div style="font-size:1.1rem; font-weight:900; color:${orderColor}">${orderProgress}%</div>
-            </div>
-            <div style="background:rgba(0,0,0,0.15); border-radius:4px; height:6px; margin-top:6px; overflow:hidden;">
-                <div style="width:${orderProgress}%; height:100%; background:${orderColor}; border-radius:4px; transition:width 0.5s;"></div>
+                <div style="font-size:0.95rem; font-weight:900; color:${orderColor}; margin-top:1px;">${f.totalOrders} <span style="font-size:0.7rem; color:var(--text-muted); font-weight:600;">/ ${targetOrders} HV</span></div>
             </div>
         </div>
-        <div style="display:flex; gap:8px;">
-            <div style="flex:1; background:rgba(255,255,255,0.03); padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.05); text-align:center;">
-                <div style="font-size:0.65rem; color:var(--text-muted); font-weight:600;">Lead (SĐT)</div>
-                <div style="font-size:1rem; font-weight:800; color:var(--info)">${f.totalLeads}</div>
+
+        <!-- Quick 4 Mini Chips Bar (DT Ads, CP Ads, Leads SĐT, Chốt Lead) -->
+        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 8px;">
+            <div style="background:rgba(0,0,0,0.15); padding: 4px 6px; border-radius: 4px; border:1px solid rgba(255,255,255,0.05); text-align:center;">
+                <div style="font-size:0.58rem; color:var(--text-muted);">DT Ads</div>
+                <div style="font-size:0.72rem; font-weight:800; color:var(--success);">${formatCurrency(DASHBOARD_DATA.summary.totalMktAdsRevenue || 0)}</div>
             </div>
-            <div style="flex:1; background:rgba(255,255,255,0.03); padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.05); text-align:center;">
-                <div style="font-size:0.65rem; color:var(--text-muted); font-weight:600;">Tỉ lệ chốt</div>
-                <div style="font-size:1rem; font-weight:800; color:var(--warning)">${closeRate}%</div>
+            <div style="background:rgba(0,0,0,0.15); padding: 4px 6px; border-radius: 4px; border:1px solid rgba(255,255,255,0.05); text-align:center;">
+                <div style="font-size:0.58rem; color:var(--text-muted);">CP Ads</div>
+                <div style="font-size:0.72rem; font-weight:800; color:var(--warning);">${((DASHBOARD_DATA.summary.mktCost || 0) / 1000000).toFixed(1)}M <span style="font-size:0.6rem; color:var(--info);">(${DASHBOARD_DATA.summary.mktCostRatio}%)</span></div>
+            </div>
+            <div style="background:rgba(0,0,0,0.15); padding: 4px 6px; border-radius: 4px; border:1px solid rgba(255,255,255,0.05); text-align:center;">
+                <div style="font-size:0.58rem; color:var(--text-muted);">Leads SĐT</div>
+                <div style="font-size:0.72rem; font-weight:800; color:var(--info);">${f.totalLeads || 0} SĐT</div>
+            </div>
+            <div style="background:rgba(0,0,0,0.15); padding: 4px 6px; border-radius: 4px; border:1px solid rgba(255,255,255,0.05); text-align:center;">
+                <div style="font-size:0.58rem; color:var(--text-muted);">Chốt Lead</div>
+                <div style="font-size:0.72rem; font-weight:800; color:var(--primary);">${f.conversionRate || 0}%</div>
             </div>
         </div>
     `;
-
-    // Dynamic Meta Chips (Report Progress & Upsell Rate)
-    const chipUp = document.getElementById('reportProgress');
-    if (chipUp) chipUp.textContent = `92%`;
-
-    const chipRef = document.getElementById('upsellRate');
-    if (chipRef) chipRef.textContent = `${DASHBOARD_DATA.summary.upsellRate || 0}% (${DASHBOARD_DATA.summary.totalUpCount || 0}/6)`;
-
-    // Detailed Real-Time Marketing Performance Metrics
-    const mktAdsRevEl = document.getElementById('mktAdsRev');
-    if (mktAdsRevEl) mktAdsRevEl.textContent = formatCurrency(DASHBOARD_DATA.summary.totalMktAdsRevenue || 0);
-
-    const mktCostValEl = document.getElementById('mktCostVal');
-    if (mktCostValEl) mktCostValEl.textContent = `${((DASHBOARD_DATA.summary.mktCost || 0) / 1000000).toFixed(1)}M`;
-
-    const mktCostRatioTagEl = document.getElementById('mktCostRatioTag');
-    if (mktCostRatioTagEl) {
-        const ratio = DASHBOARD_DATA.summary.mktCostRatio;
-        const color = (ratio !== "∞" && parseFloat(ratio) <= 12) ? 'var(--process)' : 'var(--danger)';
-        mktCostRatioTagEl.innerHTML = `<span style="color:${color}; font-weight:800;">(${ratio}%)</span>`;
-    }
-
-    const mktLeadCountEl = document.getElementById('mktLeadCount');
-    if (mktLeadCountEl) mktLeadCountEl.textContent = f.totalLeads || 0;
-
-    const mktCPLEl = document.getElementById('mktCPL');
-    if (mktCPLEl) {
-        const cpl = f.totalLeads > 0 ? Math.round((DASHBOARD_DATA.summary.mktCost || 0) / f.totalLeads) : 0;
-        mktCPLEl.textContent = cpl > 0 ? `(${formatCurrency(cpl)}/lead)` : '(--/lead)';
-    }
-
-    const mktConvRateEl = document.getElementById('mktConvRate');
-    if (mktConvRateEl) mktConvRateEl.textContent = `${f.conversionRate || 0}%`;
-
-    // Marketing Chips - only Fanpage & Cộng đồng
-    const mktFB = document.getElementById('mktFB');
-    if (mktFB) mktFB.textContent = `${DASHBOARD_DATA.growth.fbFollowers || 0} / 300`;
-
-    const mktGroup = document.getElementById('mktGroup');
-    if (mktGroup) mktGroup.textContent = `${DASHBOARD_DATA.growth.congDongMembers || 0} / 500`;
-
-    const mktCostNew = document.getElementById('mktCostRatioNew');
-    if (mktCostNew) mktCostNew.textContent = `${DASHBOARD_DATA.summary.mktCostRatio}%`;
 
     renderMktKpiTable();
 }
