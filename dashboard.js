@@ -347,9 +347,9 @@ function processAllData(data) {
         DASHBOARD_DATA.financial.saleStats = saleStats;
         DASHBOARD_DATA.financial.latestDate = latestDateKey;
 
-        // Calculate Global Upsell Rate based on target of 65% for BSC
-        const totalEligibleUpsellLeads = 53; // Hardcoded from user context ("Tháng 3 chị count ra 53 người dưới 2 triệu")
-        DASHBOARD_DATA.summary.upsellRate = totalEligibleUpsellLeads > 0 ? ((totalUpCount / totalEligibleUpsellLeads) * 100).toFixed(1) : 0;
+        // Calculate Global Upsell Rate (% số đơn Up trên tổng số đơn chốt trong tháng)
+        const totalOrdersAll = totalNewCount + totalUpCount;
+        DASHBOARD_DATA.summary.upsellRate = totalOrdersAll > 0 ? ((totalUpCount / totalOrdersAll) * 100).toFixed(1) : 0;
 
         // Dynamic KPI calculation for week 10-16
         let thomRev = 0;
