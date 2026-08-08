@@ -935,6 +935,32 @@ function renderFunnel() {
     const chipRef = document.getElementById('upsellRate');
     if (chipRef) chipRef.textContent = `${DASHBOARD_DATA.summary.upsellRate || 0}% (${DASHBOARD_DATA.summary.totalUpCount || 0}/6)`;
 
+    // Detailed Real-Time Marketing Performance Metrics
+    const mktAdsRevEl = document.getElementById('mktAdsRev');
+    if (mktAdsRevEl) mktAdsRevEl.textContent = formatCurrency(DASHBOARD_DATA.summary.totalMktAdsRevenue || 0);
+
+    const mktCostValEl = document.getElementById('mktCostVal');
+    if (mktCostValEl) mktCostValEl.textContent = `${((DASHBOARD_DATA.summary.mktCost || 0) / 1000000).toFixed(1)}M`;
+
+    const mktCostRatioTagEl = document.getElementById('mktCostRatioTag');
+    if (mktCostRatioTagEl) {
+        const ratio = DASHBOARD_DATA.summary.mktCostRatio;
+        const color = (ratio !== "∞" && parseFloat(ratio) <= 12) ? 'var(--process)' : 'var(--danger)';
+        mktCostRatioTagEl.innerHTML = `<span style="color:${color}; font-weight:800;">(${ratio}%)</span>`;
+    }
+
+    const mktLeadCountEl = document.getElementById('mktLeadCount');
+    if (mktLeadCountEl) mktLeadCountEl.textContent = f.totalLeads || 0;
+
+    const mktCPLEl = document.getElementById('mktCPL');
+    if (mktCPLEl) {
+        const cpl = f.totalLeads > 0 ? Math.round((DASHBOARD_DATA.summary.mktCost || 0) / f.totalLeads) : 0;
+        mktCPLEl.textContent = cpl > 0 ? `(${formatCurrency(cpl)}/lead)` : '(--/lead)';
+    }
+
+    const mktConvRateEl = document.getElementById('mktConvRate');
+    if (mktConvRateEl) mktConvRateEl.textContent = `${f.conversionRate || 0}%`;
+
     // Marketing Chips - only Fanpage & Cộng đồng
     const mktFB = document.getElementById('mktFB');
     if (mktFB) mktFB.textContent = `${DASHBOARD_DATA.growth.fbFollowers || 0} / 300`;
