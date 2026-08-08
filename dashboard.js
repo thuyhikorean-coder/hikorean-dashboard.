@@ -347,9 +347,10 @@ function processAllData(data) {
         DASHBOARD_DATA.financial.saleStats = saleStats;
         DASHBOARD_DATA.financial.latestDate = latestDateKey;
 
-        // Calculate Global Upsell Rate (% số đơn Up trên tổng số đơn chốt trong tháng)
-        const totalOrdersAll = totalNewCount + totalUpCount;
-        DASHBOARD_DATA.summary.upsellRate = totalOrdersAll > 0 ? ((totalUpCount / totalOrdersAll) * 100).toFixed(1) : 0;
+        // Calculate Global Upsell Completion Rate (% Hoàn thành chỉ tiêu Đơn UP: thực đạt / 6 đơn UP chỉ tiêu)
+        const targetUpOrders = 6;
+        DASHBOARD_DATA.summary.upsellRate = targetUpOrders > 0 ? ((totalUpCount / targetUpOrders) * 100).toFixed(1) : 0;
+        DASHBOARD_DATA.summary.totalUpCount = totalUpCount;
 
         // Dynamic KPI calculation for week 10-16
         let thomRev = 0;
@@ -932,7 +933,7 @@ function renderFunnel() {
     if (chipUp) chipUp.textContent = `92%`;
 
     const chipRef = document.getElementById('upsellRate');
-    if (chipRef) chipRef.textContent = `${DASHBOARD_DATA.summary.upsellRate || 0}%`;
+    if (chipRef) chipRef.textContent = `${DASHBOARD_DATA.summary.upsellRate || 0}% (${DASHBOARD_DATA.summary.totalUpCount || 0}/6)`;
 
     // Marketing Chips - only Fanpage & Cộng đồng
     const mktFB = document.getElementById('mktFB');
