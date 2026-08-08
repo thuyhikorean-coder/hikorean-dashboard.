@@ -1018,7 +1018,7 @@ function renderSalesList() {
 
     tbody.innerHTML = sorted.map(([name, s]) => {
         const t = targetMap[name] || { rev: 100000000, new: 0, up: 0 };
-        const revProgress = Math.round((s.rev / t.rev) * 100);
+        const revProgress = Math.min(100, Math.round((s.rev / t.rev) * 100));
         
         const totalOrders = s.newCount + s.upCount;
         const totalTargetOrders = t.new + t.up;
@@ -1030,33 +1030,55 @@ function renderSalesList() {
         const isKPIDone = isRevDone && isAOVDone;
 
         let statusText = 'Chưa đạt ⏳';
-        let statusBadge = 'badge-danger';
+        let statusStyle = 'background: rgba(239, 83, 80, 0.15); color: #EF5350; border: 1px solid rgba(239, 83, 80, 0.3);';
         if (isKPIDone) {
-            statusText = 'ĐẠT KPI 🏆';
-            statusBadge = 'badge-process';
+            statusText = 'ĐẠT 🏆';
+            statusStyle = 'background: rgba(76, 175, 80, 0.2); color: #81C784; border: 1px solid rgba(76, 175, 80, 0.4);';
         } else if (isRevDone && !isAOVDone) {
             statusText = 'Thiếu AOV ⚠️';
-            statusBadge = 'badge-warning';
+            statusStyle = 'background: rgba(255, 152, 0, 0.2); color: #FFB74D; border: 1px solid rgba(255, 152, 0, 0.4);';
         }
 
-        let aovBadge = (actualAOV >= targetAOV) ? 'badge-process' : (actualAOV > 0 ? 'badge-warning' : 'badge-danger');
+        let aovStyle = (actualAOV >= targetAOV) 
+            ? 'background: rgba(76, 175, 80, 0.15); color: #81C784; border: 1px solid rgba(76, 175, 80, 0.3);' 
+            : (actualAOV > 0 
+                ? 'background: rgba(255, 152, 0, 0.15); color: #FFB74D; border: 1px solid rgba(255, 152, 0, 0.3);'
+                : 'background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.1);');
 
         return `
-        <tr>
-            <td style="font-weight:600; font-size: 0.8rem;">${name}</td>
-            <td style="font-weight:700; color:var(--danger); font-size: 0.8rem;">
-                ${(s.rev / 1000000).toFixed(1)}M 
-                <span style="font-size:0.6rem; color:var(--text-muted);">/ ${(t.rev / 1000000).toFixed(0)}M (${revProgress}%)</span>
+        <tr style="background: rgba(255, 255, 255, 0.02); transition: background 0.2s;">
+            <td style="padding: 10px; vertical-align: middle; width: 22%;">
+                <div style="font-weight: 700; font-size: 0.82rem; color: var(--text-main);">${name}</div>
             </td>
-            <td style="text-align:center; font-size: 0.8rem;">
-                <strong>${totalOrders}</strong> / ${totalTargetOrders} HV
-                <div style="font-size:0.65rem; color:var(--text-muted);">New: ${s.newCount}/${t.new} | Up: ${s.upCount}/${t.up}</div>
+
+            <td style="padding: 10px; vertical-align: middle; width: 24%;">
+                <div style="display:flex; justify-content:space-between; align-items:baseline; font-size: 0.78rem; font-weight: 700; color: var(--text-main);">
+                    <span>${(s.rev / 1000000).toFixed(1)}M <span style="font-weight: 400; font-size: 0.68rem; color: var(--text-muted);">/ ${(t.rev / 1000000).toFixed(0)}M</span></span>
+                    <span style="font-size: 0.7rem; color: ${revProgress >= 100 ? '#81C784' : 'var(--primary)'}; font-weight: 700;">${revProgress}%</span>
+                </div>
+                <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; margin-top: 4px; overflow: hidden;">
+                    <div style="width: ${revProgress}%; height: 100%; background: ${revProgress >= 100 ? '#81C784' : 'var(--primary)'}; border-radius: 2px;"></div>
+                </div>
             </td>
-            <td style="text-align:right;">
-                <span class="badge ${aovBadge}">${actualAOVInM}M</span>
-                <div style="font-size:0.6rem; color:var(--text-muted);">Mục tiêu: 5.88M</div>
+
+            <td style="padding: 10px; text-align: center; vertical-align: middle; width: 22%;">
+                <div style="font-size: 0.8rem; font-weight: 800; color: var(--text-main);">
+                    ${totalOrders} <span style="font-weight: 500; font-size: 0.72rem; color: var(--text-muted);">/ ${totalTargetOrders} HV</span>
+                </div>
+                <div style="display: flex; justify-content: center; gap: 6px; font-size: 0.64rem; color: var(--text-muted); margin-top: 3px;">
+                    <span style="background: rgba(255,255,255,0.05); padding: 1px 5px; border-radius: 4px;">New ${s.newCount}/${t.new}</span>
+                    <span style="background: rgba(255,255,255,0.05); padding: 1px 5px; border-radius: 4px;">Up ${s.upCount}/${t.up}</span>
+                </div>
             </td>
-            <td style="text-align:right;"><span class="badge ${statusBadge}">${statusText}</span></td>
+
+            <td style="padding: 10px; text-align: center; vertical-align: middle; width: 17%;">
+                <span style="display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; ${aovStyle}">${actualAOVInM}M</span>
+                <div style="font-size: 0.62rem; color: var(--text-muted); margin-top: 2px;">Target 5.88M</div>
+            </td>
+
+            <td style="padding: 10px; text-align: right; vertical-align: middle; width: 15%;">
+                <span style="display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 800; ${statusStyle}">${statusText}</span>
+            </td>
         </tr>
         `;
     }).join('');
