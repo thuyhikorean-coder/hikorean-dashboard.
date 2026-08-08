@@ -983,10 +983,10 @@ function renderSalesList() {
     const stats = DASHBOARD_DATA.financial.saleStats || {};
 
     const targetMap = {
-        'Khánh Linh': { rev: 150000000, new: 27, up: 3 },
-        'Hồng Thơm': { rev: 150000000, new: 27, up: 3 },
-        'Khánh Hạ': { rev: 80000000, new: 16, up: 0 },
-        'Thu Thủy': { rev: 40000000, new: 8, up: 0 }
+        'Khánh Linh': { rev: 150000000, new: 23, up: 3 },
+        'Hồng Thơm': { rev: 150000000, new: 23, up: 3 },
+        'Khánh Hạ': { rev: 80000000, new: 14, up: 0 },
+        'Thu Thủy': { rev: 40000000, new: 7, up: 0 }
     };
 
     // Sometimes the name is 'Thu Thuỷ' or 'Thuỷ' or 'Thủy'
@@ -1065,10 +1065,10 @@ function renderRaceCards() {
 
     // Team Targets cho Tháng 8/2026
     const targets = [
-        { name: 'Khánh Linh', goal: 150000000, newGoal: 27, upGoal: 3 },
-        { name: 'Hồng Thơm', goal: 150000000, newGoal: 27, upGoal: 3 },
-        { name: 'Khánh Hạ', goal: 80000000, newGoal: 16, upGoal: 0 },
-        { name: 'Thu Thủy', goal: 40000000, newGoal: 8, upGoal: 0 }
+        { name: 'Khánh Linh', goal: 150000000, newGoal: 23, upGoal: 3 },
+        { name: 'Hồng Thơm', goal: 150000000, newGoal: 23, upGoal: 3 },
+        { name: 'Khánh Hạ', goal: 80000000, newGoal: 14, upGoal: 0 },
+        { name: 'Thu Thủy', goal: 40000000, newGoal: 7, upGoal: 0 }
     ];
     const dailyTarget = 5000000; 
     const stats = DASHBOARD_DATA.financial.saleStats || {};
