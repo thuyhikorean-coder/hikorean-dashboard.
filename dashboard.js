@@ -916,19 +916,19 @@ function renderFunnel() {
 
         <!-- Quick 4 Mini Chips Bar -->
         <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px;">
-            <div style="background:rgba(255,255,255,0.03); padding: 6px 8px; border-radius: 6px; border:1px solid rgba(255,255,255,0.06); text-align:center;">
+            <div style="background:rgba(0,0,0,0.03); padding: 6px 8px; border-radius: 6px; border:1px solid rgba(0,0,0,0.06); text-align:center;">
                 <div style="font-size:0.6rem; color:var(--text-muted);">DT Ads</div>
                 <div style="font-size:0.75rem; font-weight:800; color:var(--success);">${formatCurrency(DASHBOARD_DATA.summary.totalMktAdsRevenue || 0)}</div>
             </div>
-            <div style="background:rgba(255,255,255,0.03); padding: 6px 8px; border-radius: 6px; border:1px solid rgba(255,255,255,0.06); text-align:center;">
+            <div style="background:rgba(0,0,0,0.03); padding: 6px 8px; border-radius: 6px; border:1px solid rgba(0,0,0,0.06); text-align:center;">
                 <div style="font-size:0.6rem; color:var(--text-muted);">CP Ads</div>
                 <div style="font-size:0.75rem; font-weight:800; color:var(--warning);">${((DASHBOARD_DATA.summary.mktCost || 0) / 1000000).toFixed(1)}M <span style="font-size:0.6rem; color:var(--danger);">(${DASHBOARD_DATA.summary.mktCostRatio}%)</span></div>
             </div>
-            <div style="background:rgba(255,255,255,0.03); padding: 6px 8px; border-radius: 6px; border:1px solid rgba(255,255,255,0.06); text-align:center;">
+            <div style="background:rgba(0,0,0,0.03); padding: 6px 8px; border-radius: 6px; border:1px solid rgba(0,0,0,0.06); text-align:center;">
                 <div style="font-size:0.6rem; color:var(--text-muted);">Leads SĐT</div>
                 <div style="font-size:0.75rem; font-weight:800; color:var(--info);">${f.totalLeads || 0} SĐT</div>
             </div>
-            <div style="background:rgba(255,255,255,0.03); padding: 6px 8px; border-radius: 6px; border:1px solid rgba(255,255,255,0.06); text-align:center;">
+            <div style="background:rgba(0,0,0,0.03); padding: 6px 8px; border-radius: 6px; border:1px solid rgba(0,0,0,0.06); text-align:center;">
                 <div style="font-size:0.6rem; color:var(--text-muted);">Chốt Lead</div>
                 <div style="font-size:0.75rem; font-weight:800; color:var(--warning);">${f.conversionRate || 0}%</div>
             </div>
@@ -968,7 +968,7 @@ function renderMktKpiTable() {
 
     const totalBonusBadge = document.getElementById('mktBonusTotalBadge');
     if (totalBonusBadge) {
-        totalBonusBadge.textContent = `🎁 Thưởng: ${formatCurrency(totalBonus)}`;
+        totalBonusBadge.innerHTML = `🎁 Thưởng: <strong>${formatCurrency(totalBonus)}</strong>`;
     }
 
     // Update Social Chips
@@ -979,31 +979,31 @@ function renderMktKpiTable() {
     if (mktGroup) mktGroup.textContent = `${DASHBOARD_DATA.growth.congDongMembers || 0} / 500`;
 
     tbody.innerHTML = `
-        <tr style="background: rgba(255, 255, 255, 0.02); vertical-align: middle;">
+        <tr style="background: rgba(0, 0, 0, 0.02); vertical-align: middle;">
             <td style="padding: 8px 10px; font-weight: 700; color: var(--text-main); font-size: 0.78rem; white-space: nowrap;"><i class='bx bx-data' style="color:var(--info);"></i> 1. Số lượng Data (Ads)</td>
             <td style="padding: 8px 6px; text-align: center; color: var(--text-muted); font-size: 0.75rem; font-weight: 600;">558 Data</td>
-            <td style="padding: 8px 6px; text-align: center; font-weight: 800; color: var(--text-main); font-size: 0.78rem;">${mktData} Data</td>
+            <td style="padding: 8px 6px; text-align: center; font-weight: 800; color: var(--info); font-size: 0.78rem;">${mktData} Data</td>
             <td style="padding: 8px 10px; text-align: right;"><span style="color: ${dataProgress>=100?'var(--success)':'var(--warning)'}; font-weight: 800; font-size: 0.78rem;">${dataProgress}%</span></td>
         </tr>
-        <tr style="background: rgba(255, 255, 255, 0.02); vertical-align: middle;">
+        <tr style="background: rgba(0, 0, 0, 0.02); vertical-align: middle;">
             <td style="padding: 8px 10px; font-weight: 700; color: var(--text-main); font-size: 0.78rem; white-space: nowrap;"><i class='bx bx-phone-call' style="color:var(--warning);"></i> 2. Chuyển đổi SĐT</td>
             <td style="padding: 8px 6px; text-align: center; color: var(--text-muted); font-size: 0.75rem; font-weight: 600;">60%</td>
-            <td style="padding: 8px 6px; text-align: center; font-weight: 800; color: var(--text-main); font-size: 0.78rem;">${dataToLeadRate.toFixed(1)}%</td>
+            <td style="padding: 8px 6px; text-align: center; font-weight: 800; color: var(--warning); font-size: 0.78rem;">${dataToLeadRate.toFixed(1)}%</td>
             <td style="padding: 8px 10px; text-align: right;"><span style="color: ${leadRateProgress>=100?'var(--success)':'var(--warning)'}; font-weight: 800; font-size: 0.78rem;">${leadRateProgress}%</span></td>
         </tr>
-        <tr style="background: rgba(255, 255, 255, 0.02); vertical-align: middle;">
+        <tr style="background: rgba(0, 0, 0, 0.02); vertical-align: middle;">
             <td style="padding: 8px 10px; font-weight: 700; color: var(--text-main); font-size: 0.78rem; white-space: nowrap;"><i class='bx bx-dollar-circle' style="color:var(--danger);"></i> 3. Chi phí Ads tối đa</td>
             <td style="padding: 8px 6px; text-align: center; color: var(--text-muted); font-size: 0.75rem; font-weight: 600;">≤ 15% DT</td>
             <td style="padding: 8px 6px; text-align: center; font-weight: 800; color: var(--danger); font-size: 0.78rem;">${DASHBOARD_DATA.summary.mktCostRatio}%</td>
-            <td style="padding: 8px 10px; text-align: right;"><span style="background: rgba(239, 83, 80, 0.15); color: #EF5350; border: 1px solid rgba(239, 83, 80, 0.3); padding: 2px 8px; border-radius: 12px; font-weight: 700; font-size: 0.72rem;">Vượt</span></td>
+            <td style="padding: 8px 10px; text-align: right;"><span class="badge badge-danger" style="font-size: 0.72rem; padding: 3px 10px; font-weight: 800;">Vượt</span></td>
         </tr>
-        <tr style="background: rgba(255, 255, 255, 0.02); vertical-align: middle;">
+        <tr style="background: rgba(0, 0, 0, 0.02); vertical-align: middle;">
             <td style="padding: 8px 10px; font-weight: 700; color: var(--text-main); font-size: 0.78rem; white-space: nowrap;"><i class='bx bx-filter' style="color:var(--primary);"></i> 4. Phễu lớn hàng tháng</td>
             <td style="padding: 8px 6px; text-align: center; color: var(--text-muted); font-size: 0.75rem; font-weight: 600;">100 bạn</td>
-            <td style="padding: 8px 6px; text-align: center; font-weight: 800; color: var(--text-main); font-size: 0.78rem;">${registeredNew} bạn</td>
+            <td style="padding: 8px 6px; text-align: center; font-weight: 800; color: var(--info); font-size: 0.78rem;">${registeredNew} bạn</td>
             <td style="padding: 8px 10px; text-align: right;"><span style="color: ${phieuProgress>=90?'var(--success)':(phieuProgress>=50?'var(--warning)':'var(--danger)')}; font-weight: 800; font-size: 0.78rem;">${phieuProgress}%</span></td>
         </tr>
-        <tr style="background: rgba(255, 255, 255, 0.02); vertical-align: middle;">
+        <tr style="background: rgba(0, 0, 0, 0.02); vertical-align: middle;">
             <td style="padding: 8px 10px; font-weight: 700; color: var(--text-main); font-size: 0.78rem; white-space: nowrap;"><i class='bx bx-video' style="color:var(--info);"></i> 5. Livestream (C Thuý và C Minji)</td>
             <td style="padding: 8px 6px; text-align: center; color: var(--text-muted); font-size: 0.75rem; font-weight: 600;">30 mắt/buổi</td>
             <td style="padding: 8px 6px; text-align: center; font-weight: 700; color: var(--text-main); font-size: 0.78rem;">C Thuý và C Minji</td>
