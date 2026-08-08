@@ -418,8 +418,8 @@ function processAllData(data) {
         });
         DASHBOARD_DATA.summary.mktCost = mktCost;
 
-        // Fix: MKT Cost Ratio is strictly against MKT-ADS revenue sum, not just any NEW revenue
-        const currentMktNewRev = DASHBOARD_DATA.summary.totalNewRevenue || 0;
+        // Fix: MKT Cost Ratio is strictly against MKT-ADS revenue sum (totalMktAdsRevenue)
+        const currentMktNewRev = DASHBOARD_DATA.summary.totalMktAdsRevenue || 0;
         if (currentMktNewRev > 0) {
             DASHBOARD_DATA.summary.mktCostRatio = ((mktCost / currentMktNewRev) * 100).toFixed(1);
         } else if (mktCost > 0) {
