@@ -439,8 +439,8 @@ function processAllData(data) {
             totalData: mktData,
             totalLeads: mktLeads,
             totalOrders: allNewDoneCount,
-            targetOrders: 78,
-            targetNewRevenue: 390000000,
+            targetOrders: 67,
+            targetNewRevenue: 394000000,
             conversionRate: mktLeads > 0 ? ((allNewDoneCount / mktLeads) * 100).toFixed(1) : 0
         };
     }
@@ -891,15 +891,17 @@ function renderFunnel() {
     const container = document.getElementById('funnel-container');
     if (!container) return;
 
-    const targetOrders = f.targetOrders || 78;
+    const targetOrders = f.targetOrders || 67;
     const orderProgress = Math.min(100, Math.round((f.totalOrders / targetOrders) * 100));
     const closeRate = f.totalLeads > 0 ? ((f.totalOrders / f.totalLeads) * 100).toFixed(1) : '0.0';
     const orderColor = orderProgress >= 80 ? 'var(--success)' : (orderProgress >= 50 ? 'var(--warning)' : 'var(--danger)');
 
+    const targetNewRevStr = formatCurrency(f.targetNewRevenue || 394000000);
+
     container.innerHTML = `
         <div style="background:rgba(242,201,76,0.15); padding:10px 14px; border-radius:8px; border:1px solid rgba(242,201,76,0.2); margin-bottom:8px;">
             <div style="font-size:0.7rem; color:var(--text-muted); font-weight:600; margin-bottom:2px;">Mục tiêu DT New</div>
-            <div style="font-size:1.15rem; font-weight:900; color:var(--primary)">390.000.000đ</div>
+            <div style="font-size:1.15rem; font-weight:900; color:var(--primary)">${targetNewRevStr}</div>
         </div>
         <div style="background:rgba(242,201,76,0.3); padding:10px 14px; border-radius:8px; border:1px solid rgba(242,201,76,0.3); margin-bottom:8px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
