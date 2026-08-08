@@ -633,8 +633,11 @@ function processAllData(data) {
     if (rowsSocial.length > 1) {
         let fbMonth = 0;
         let congDongMonth = 0;
+        let liveViewsSum = 0;
+        let liveCount = 0;
+        let liveMap = {};
 
-        // Sum weekly increments within the selected month only
+        // Sum weekly increments & livestream views within the selected month
         rowsSocial.slice(1).forEach(r => {
             if (!isFromTargetMonth(r[0])) return;
 
@@ -646,12 +649,21 @@ function processAllData(data) {
                 fbMonth += followers;
             } else if (platform.includes('cộng đồng') || platform.includes('Cộng đồng') || platform.includes('CỘNG ĐỒNG') || platform.includes('Tham gia')) {
                 congDongMonth += followers;
+            } else if (platform.toLowerCase().includes('livestream')) {
+                const liveVal = parseInt(r[2] || r[4] || 0) || 0;
+                if (liveVal > 0) {
+                    liveViewsSum += liveVal;
+                    liveCount++;
+                    liveMap[platform] = liveVal;
+                }
             }
         });
 
         DASHBOARD_DATA.growth.fbFollowers = fbMonth;
         DASHBOARD_DATA.growth.congDongMembers = congDongMonth;
         DASHBOARD_DATA.growth.totalFollowers = fbMonth + congDongMonth;
+        DASHBOARD_DATA.growth.livestreamViewsAvg = liveCount > 0 ? Math.round(liveViewsSum / liveCount) : 0;
+        DASHBOARD_DATA.growth.livestreamDetails = liveMap;
     }
 
     if (rowsUp.length > 1) {
@@ -978,6 +990,17 @@ function renderMktKpiTable() {
     const mktGroup = document.getElementById('mktGroup');
     if (mktGroup) mktGroup.textContent = `${DASHBOARD_DATA.growth.congDongMembers || 0} / 500`;
 
+    // 5. Livestream stats
+    const liveAvg = DASHBOARD_DATA.growth.livestreamViewsAvg || 0;
+    let liveActualText = 'C Thuý và C Minji';
+    let liveProgressHtml = '<span style="color: var(--text-muted); font-weight: 600; font-size: 0.75rem;">--</span>';
+    if (liveAvg > 0) {
+        liveActualText = `${liveAvg} mắt/buổi`;
+        const liveProgressPct = Math.round((liveAvg / 30) * 100);
+        const liveColor = liveProgressPct >= 100 ? 'var(--success)' : 'var(--warning)';
+        liveProgressHtml = `<span style="color: ${liveColor}; font-weight: 800; font-size: 0.78rem;">${liveProgressPct}%</span>`;
+    }
+
     tbody.innerHTML = `
         <tr style="background: rgba(0, 0, 0, 0.02); vertical-align: middle;">
             <td style="padding: 8px 10px; font-weight: 700; color: var(--text-main); font-size: 0.78rem; white-space: nowrap;"><i class='bx bx-data' style="color:var(--info);"></i> 1. Số lượng Data (Ads)</td>
@@ -1006,8 +1029,8 @@ function renderMktKpiTable() {
         <tr style="background: rgba(0, 0, 0, 0.02); vertical-align: middle;">
             <td style="padding: 8px 10px; font-weight: 700; color: var(--text-main); font-size: 0.78rem; white-space: nowrap;"><i class='bx bx-video' style="color:var(--info);"></i> 5. Livestream (C Thuý và C Minji)</td>
             <td style="padding: 8px 6px; text-align: center; color: var(--text-muted); font-size: 0.75rem; font-weight: 600;">30 mắt/buổi</td>
-            <td style="padding: 8px 6px; text-align: center; font-weight: 700; color: var(--text-main); font-size: 0.78rem;">C Thuý và C Minji</td>
-            <td style="padding: 8px 10px; text-align: right; color: var(--text-muted); font-weight: 600; font-size: 0.75rem;">--</td>
+            <td style="padding: 8px 6px; text-align: center; font-weight: 700; color: var(--text-main); font-size: 0.78rem;">${liveActualText}</td>
+            <td style="padding: 8px 10px; text-align: right;">${liveProgressHtml}</td>
         </tr>
     `;
 }
