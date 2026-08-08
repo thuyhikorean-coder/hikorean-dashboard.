@@ -225,48 +225,42 @@
                         </div>
 
                         <div class="glass-card">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-                                <h3 class="card-title" style="margin:0;"><i class='bx bx-broadcast' style="color:var(--primary);"></i> HIỆU SUẤT & THƯỞNG MARKETING</h3>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
+                                <h3 class="card-title" style="margin:0; font-size:0.9rem;"><i class='bx bx-broadcast' style="color:var(--primary);"></i> HIỆU SUẤT & MỤC TIÊU MKT</h3>
                                 <div style="display:flex; gap:6px; align-items:center;">
-                                    <span class="badge badge-process" style="font-size:0.62rem;">Real-time</span>
-                                    <span id="mktBonusTotalBadge" class="badge badge-success" style="font-size:0.72rem; padding: 3px 8px; font-weight:800;">Thưởng Dự Kiến: 0 VNĐ</span>
+                                    <span id="mktBonusTotalBadge" class="badge badge-success" style="font-size:0.7rem; padding: 3px 8px; font-weight:800;">🎁 Thưởng Dự Kiến: 0 VNĐ</span>
                                 </div>
                             </div>
                             
-                            <!-- Top 4 Quick Metric Badges -->
-                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 12px;">
-                                <div style="background: rgba(0,0,0,0.2); padding: 6px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
-                                    <div style="font-size: 0.62rem; color: var(--text-muted);">Doanh Thu Ads</div>
-                                    <div id="mktAdsRev" style="font-size: 0.88rem; font-weight: 800; color: var(--success);">0 đ</div>
+                            <!-- Ultra Compact Quick Metrics Bar -->
+                            <div style="display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap;">
+                                <div style="flex:1; min-width: 90px; background: rgba(0,0,0,0.18); padding: 5px 6px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); text-align:center;">
+                                    <div style="font-size: 0.6rem; color: var(--text-muted);">DT Ads</div>
+                                    <div id="mktAdsRev" style="font-size: 0.8rem; font-weight: 800; color: var(--success);">0 đ</div>
                                 </div>
-                                <div style="background: rgba(0,0,0,0.2); padding: 6px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
-                                    <div style="font-size: 0.62rem; color: var(--text-muted);">Chi Phí Ads / Tỉ lệ</div>
-                                    <div style="font-size: 0.88rem; font-weight: 800; color: var(--warning);"><span id="mktCostVal">0M</span> <span id="mktCostRatioTag" style="font-size:0.7rem;">(0%)</span></div>
+                                <div style="flex:1; min-width: 90px; background: rgba(0,0,0,0.18); padding: 5px 6px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); text-align:center;">
+                                    <div style="font-size: 0.6rem; color: var(--text-muted);">CP Ads / Tỉ Lệ</div>
+                                    <div style="font-size: 0.8rem; font-weight: 800; color: var(--warning);"><span id="mktCostVal">0M</span> <span id="mktCostRatioTag" style="font-size:0.68rem;">(0%)</span></div>
                                 </div>
-                                <div style="background: rgba(0,0,0,0.2); padding: 6px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
-                                    <div style="font-size: 0.62rem; color: var(--text-muted);">Số Lead SĐT / CPL</div>
-                                    <div style="font-size: 0.88rem; font-weight: 800; color: var(--info);"><span id="mktLeadCount">0</span> <span id="mktCPL" style="font-size:0.62rem; color:var(--text-muted); font-weight:500;">(--)</span></div>
+                                <div style="flex:1; min-width: 90px; background: rgba(0,0,0,0.18); padding: 5px 6px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); text-align:center;">
+                                    <div style="font-size: 0.6rem; color: var(--text-muted);">Lead SĐT / CPL</div>
+                                    <div style="font-size: 0.8rem; font-weight: 800; color: var(--info);"><span id="mktLeadCount">0</span> <span id="mktCPL" style="font-size:0.62rem; color:var(--text-muted); font-weight:500;">(--)</span></div>
                                 </div>
-                                <div style="background: rgba(0,0,0,0.2); padding: 6px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
-                                    <div style="font-size: 0.62rem; color: var(--text-muted);">Tỉ Lệ Chốt Lead</div>
-                                    <div id="mktConvRate" style="font-size: 0.88rem; font-weight: 800; color: var(--primary);">0%</div>
+                                <div style="flex:1; min-width: 90px; background: rgba(0,0,0,0.18); padding: 5px 6px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); text-align:center;">
+                                    <div style="font-size: 0.6rem; color: var(--text-muted);">Chốt Lead</div>
+                                    <div id="mktConvRate" style="font-size: 0.8rem; font-weight: 800; color: var(--primary);">0%</div>
                                 </div>
                             </div>
 
-                            <!-- Table Target vs Actual MKT (Chính sách Thưởng MKT) -->
-                            <div style="margin-bottom: 8px; font-size: 0.72rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 4px;">
-                                <i class='bx bxs-award'></i> CHỈ TIÊU & THỰC ĐẠT THƯỞNG MKT
-                            </div>
-                            
-                            <div class="table-wrapper" style="overflow-x: auto;">
-                                <table class="compact-table" style="width: 100%; border-collapse: separate; border-spacing: 0 3px; font-size: 0.72rem;">
+                            <!-- Compact Table Target vs Actual MKT (4 Columns) -->
+                            <div class="table-wrapper">
+                                <table class="compact-table" style="width: 100%; border-collapse: separate; border-spacing: 0 2px; font-size: 0.72rem;">
                                     <thead>
-                                        <tr style="color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.65rem; background: rgba(0,0,0,0.2);">
-                                            <th style="padding: 6px 8px; text-align: left; width: 34%;">Hạng Mục KPI</th>
-                                            <th style="padding: 6px 6px; text-align: center; width: 18%;">Chỉ Tiêu</th>
-                                            <th style="padding: 6px 6px; text-align: center; width: 18%;">Thực Đạt</th>
-                                            <th style="padding: 6px 6px; text-align: center; width: 14%;">Tiến Độ</th>
-                                            <th style="padding: 6px 8px; text-align: right; width: 16%;">Thưởng</th>
+                                        <tr style="color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.62rem; background: rgba(0,0,0,0.15);">
+                                            <th style="padding: 5px 8px; text-align: left; width: 40%;">Hạng Mục KPI MKT</th>
+                                            <th style="padding: 5px 6px; text-align: center; width: 20%;">Mục Tiêu</th>
+                                            <th style="padding: 5px 6px; text-align: center; width: 20%;">Thực Đạt</th>
+                                            <th style="padding: 5px 8px; text-align: right; width: 20%;">Tiến Độ %</th>
                                         </tr>
                                     </thead>
                                     <tbody id="mkt-kpi-table-body">
@@ -275,13 +269,13 @@
                                 </table>
                             </div>
 
-                            <!-- Social Media Metrics -->
-                            <div style="display: flex; gap: 8px; margin-top: 10px;">
-                                <div style="flex:1; display:flex; justify-content:space-between; font-size: 0.7rem; background: rgba(0,0,0,0.15); padding: 5px 8px; border-radius: 6px;">
+                            <!-- Social Media Metrics Bar -->
+                            <div style="display: flex; gap: 8px; margin-top: 8px;">
+                                <div style="flex:1; display:flex; justify-content:space-between; font-size: 0.68rem; background: rgba(0,0,0,0.12); padding: 4px 8px; border-radius: 4px;">
                                     <span style="color:var(--text-muted);"><i class='bx bxl-facebook-square'></i> Fanpage:</span>
                                     <span id="mktFB" style="color:var(--info); font-weight:700;">-- / 300</span>
                                 </div>
-                                <div style="flex:1; display:flex; justify-content:space-between; font-size: 0.7rem; background: rgba(0,0,0,0.15); padding: 5px 8px; border-radius: 6px;">
+                                <div style="flex:1; display:flex; justify-content:space-between; font-size: 0.68rem; background: rgba(0,0,0,0.12); padding: 4px 8px; border-radius: 4px;">
                                     <span style="color:var(--text-muted);"><i class='bx bx-group'></i> Cộng đồng:</span>
                                     <span id="mktGroup" style="color:var(--warning); font-weight:700;">-- / 500</span>
                                 </div>
@@ -415,7 +409,7 @@
 
     <!-- Scripts with Cache Busting -->
     <script src="data.js?v=4.0"></script>
-    <script src="dashboard.js?v=8.0"></script>
+    <script src="dashboard.js?v=8.5"></script>
 
 </body>
 

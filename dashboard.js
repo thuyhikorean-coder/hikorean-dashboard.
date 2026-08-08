@@ -991,75 +991,52 @@ function renderMktKpiTable() {
     // 2. Chuyển đổi SĐT (60% target)
     const leadRateProgress = Math.min(100, Math.round((dataToLeadRate / 60) * 100));
 
-    // Check Block 1 Bonus: (Data >= 558 AND LeadRate >= 60% AND CostRatio <= 15%)
-    let block1Bonus = 0;
-    let block1Badge = '<span class="badge badge-muted" style="font-size:0.65rem;">Chưa đạt</span>';
-    const passBlock1Basic = (mktData >= 558) && (dataToLeadRate >= 60) && isMktCostRatioValid;
-    const passBlock1Pro = (mktData >= 558 * 1.2) && (dataToLeadRate >= 60 * 1.2) && (mktCostRatioVal <= 15 * 0.9);
-
-    if (passBlock1Pro) {
-        block1Bonus = 1000000;
-        block1Badge = '<span class="badge badge-success" style="font-size:0.65rem;">+1.000.000đ 🏆</span>';
-    } else if (passBlock1Basic) {
-        block1Bonus = 500000;
-        block1Badge = '<span class="badge badge-success" style="font-size:0.65rem;">+500.000đ 🎁</span>';
-    }
-
-    // 4. Phễu lớn hàng tháng (100 bạn target)
+    // 3. Phễu lớn (100 bạn target)
     const registeredNew = f.totalOrders || 0;
     const phieuProgress = Math.min(100, Math.round((registeredNew / 100) * 100));
-    let block2Bonus = 0;
-    let block2Badge = '<span class="badge badge-muted" style="font-size:0.65rem;">Chưa đạt</span>';
-    if (registeredNew >= 90) {
-        block2Bonus = 1000000;
-        block2Badge = '<span class="badge badge-success" style="font-size:0.65rem;">+1.000.000đ (≥90%) 🏆</span>';
-    } else if (registeredNew >= 50) {
-        block2Bonus = 500000;
-        block2Badge = '<span class="badge badge-success" style="font-size:0.65rem;">+500.000đ (≥50%) 🎁</span>';
-    }
 
-    // 5. Livestream (30 mắt/buổi)
-    let block3Badge = '<span class="badge badge-info" style="font-size:0.65rem;">200k - 300k/buổi</span>';
-
+    // Check Bonus evaluation for Header Badge
+    const passBlock1Basic = (mktData >= 558) && (dataToLeadRate >= 60) && isMktCostRatioValid;
+    const passBlock1Pro = (mktData >= 558 * 1.2) && (dataToLeadRate >= 60 * 1.2) && (mktCostRatioVal <= 15 * 0.9);
+    let block1Bonus = passBlock1Pro ? 1000000 : (passBlock1Basic ? 500000 : 0);
+    let block2Bonus = registeredNew >= 90 ? 1000000 : (registeredNew >= 50 ? 500000 : 0);
     const totalBonus = block1Bonus + block2Bonus;
+
     const totalBonusBadge = document.getElementById('mktBonusTotalBadge');
     if (totalBonusBadge) {
-        totalBonusBadge.textContent = `Thưởng Dự Kiến: ${formatCurrency(totalBonus)}`;
+        totalBonusBadge.textContent = `🎁 Thưởng Dự Kiến: ${formatCurrency(totalBonus)}`;
     }
 
     tbody.innerHTML = `
         <tr style="background: rgba(255,255,255,0.02); vertical-align: middle;">
-            <td style="padding: 6px 8px; font-weight:700;"><i class='bx bx-data' style="color:var(--info);"></i> 1. Số lượng Data (Ads)</td>
-            <td style="padding: 6px 6px; text-align: center; color:var(--text-muted); font-weight:600;">558 Data</td>
-            <td style="padding: 6px 6px; text-align: center; font-weight:800; color:var(--info);">${mktData} Data</td>
-            <td style="padding: 6px 6px; text-align: center;"><span style="color:${dataProgress>=100?'var(--success)':'var(--warning)'}; font-weight:700;">${dataProgress}%</span></td>
-            <td style="padding: 6px 8px; text-align: right;" rowspan="3">${block1Badge}</td>
+            <td style="padding: 5px 8px; font-weight:700;"><i class='bx bx-data' style="color:var(--info);"></i> 1. Số lượng Data (Ads)</td>
+            <td style="padding: 5px 6px; text-align: center; color:var(--text-muted); font-weight:600;">558 Data</td>
+            <td style="padding: 5px 6px; text-align: center; font-weight:800; color:var(--info);">${mktData} Data</td>
+            <td style="padding: 5px 8px; text-align: right;"><span style="color:${dataProgress>=100?'var(--success)':'var(--warning)'}; font-weight:800;">${dataProgress}%</span></td>
         </tr>
         <tr style="background: rgba(255,255,255,0.02); vertical-align: middle;">
-            <td style="padding: 6px 8px; font-weight:700;"><i class='bx bx-phone-call' style="color:var(--warning);"></i> 2. Chuyển đổi SĐT</td>
-            <td style="padding: 6px 6px; text-align: center; color:var(--text-muted); font-weight:600;">60%</td>
-            <td style="padding: 6px 6px; text-align: center; font-weight:800; color:var(--warning);">${dataToLeadRate.toFixed(1)}%</td>
-            <td style="padding: 6px 6px; text-align: center;"><span style="color:${leadRateProgress>=100?'var(--success)':'var(--warning)'}; font-weight:700;">${leadRateProgress}%</span></td>
+            <td style="padding: 5px 8px; font-weight:700;"><i class='bx bx-phone-call' style="color:var(--warning);"></i> 2. Chuyển đổi SĐT</td>
+            <td style="padding: 5px 6px; text-align: center; color:var(--text-muted); font-weight:600;">60%</td>
+            <td style="padding: 5px 6px; text-align: center; font-weight:800; color:var(--warning);">${dataToLeadRate.toFixed(1)}%</td>
+            <td style="padding: 5px 8px; text-align: right;"><span style="color:${leadRateProgress>=100?'var(--success)':'var(--warning)'}; font-weight:800;">${leadRateProgress}%</span></td>
         </tr>
         <tr style="background: rgba(255,255,255,0.02); vertical-align: middle;">
-            <td style="padding: 6px 8px; font-weight:700;"><i class='bx bx-dollar-circle' style="color:var(--danger);"></i> 3. Chi phí Ads tối đa</td>
-            <td style="padding: 6px 6px; text-align: center; color:var(--text-muted); font-weight:600;">≤ 15% DT</td>
-            <td style="padding: 6px 6px; text-align: center; font-weight:800; color:${isMktCostRatioValid?'var(--success)':'var(--danger)'};">${DASHBOARD_DATA.summary.mktCostRatio}%</td>
-            <td style="padding: 6px 6px; text-align: center;"><span style="color:${isMktCostRatioValid?'var(--success)':'var(--danger)'}; font-weight:700;">${isMktCostRatioValid?'Đạt':'Vượt'}</span></td>
+            <td style="padding: 5px 8px; font-weight:700;"><i class='bx bx-dollar-circle' style="color:var(--danger);"></i> 3. Chi phí Ads tối đa</td>
+            <td style="padding: 5px 6px; text-align: center; color:var(--text-muted); font-weight:600;">≤ 15% DT</td>
+            <td style="padding: 5px 6px; text-align: center; font-weight:800; color:${isMktCostRatioValid?'var(--success)':'var(--danger)'};">${DASHBOARD_DATA.summary.mktCostRatio}%</td>
+            <td style="padding: 5px 8px; text-align: right;"><span style="color:${isMktCostRatioValid?'var(--success)':'var(--danger)'}; font-weight:800;">${isMktCostRatioValid?'Đạt':'Vượt'}</span></td>
         </tr>
         <tr style="background: rgba(255,255,255,0.02); vertical-align: middle;">
-            <td style="padding: 6px 8px; font-weight:700;"><i class='bx bx-filter' style="color:var(--primary);"></i> 4. Phễu lớn hàng tháng</td>
-            <td style="padding: 6px 6px; text-align: center; color:var(--text-muted); font-weight:600;">100 bạn</td>
-            <td style="padding: 6px 6px; text-align: center; font-weight:800; color:var(--primary);">${registeredNew} bạn</td>
-            <td style="padding: 6px 6px; text-align: center;"><span style="color:${phieuProgress>=90?'var(--success)':(phieuProgress>=50?'var(--warning)':'var(--danger)')}; font-weight:700;">${phieuProgress}%</span></td>
-            <td style="padding: 6px 8px; text-align: right;">${block2Badge}</td>
+            <td style="padding: 5px 8px; font-weight:700;"><i class='bx bx-filter' style="color:var(--primary);"></i> 4. Phễu lớn hàng tháng</td>
+            <td style="padding: 5px 6px; text-align: center; color:var(--text-muted); font-weight:600;">100 bạn</td>
+            <td style="padding: 5px 6px; text-align: center; font-weight:800; color:var(--primary);">${registeredNew} bạn</td>
+            <td style="padding: 5px 8px; text-align: right;"><span style="color:${phieuProgress>=90?'var(--success)':(phieuProgress>=50?'var(--warning)':'var(--danger)')}; font-weight:800;">${phieuProgress}%</span></td>
         </tr>
         <tr style="background: rgba(255,255,255,0.02); vertical-align: middle;">
-            <td style="padding: 6px 8px; font-weight:700;"><i class='bx bx-video' style="color:var(--danger);"></i> 5. Livestream (Chị & Minji)</td>
-            <td style="padding: 6px 6px; text-align: center; color:var(--text-muted); font-weight:600;">30 mắt/buổi</td>
-            <td style="padding: 6px 6px; text-align: center; font-weight:700; color:var(--text-main);">Chị & Minji</td>
-            <td style="padding: 6px 6px; text-align: center; color:var(--text-muted);">--</td>
-            <td style="padding: 6px 8px; text-align: right;">${block3Badge}</td>
+            <td style="padding: 5px 8px; font-weight:700;"><i class='bx bx-video' style="color:var(--danger);"></i> 5. Livestream (Chị & Minji)</td>
+            <td style="padding: 5px 6px; text-align: center; color:var(--text-muted); font-weight:600;">30 mắt/buổi</td>
+            <td style="padding: 5px 6px; text-align: center; font-weight:700; color:var(--text-main);">Chị & Minji</td>
+            <td style="padding: 5px 8px; text-align: right; color:var(--text-muted); font-weight:600;">--</td>
         </tr>
     `;
 }
