@@ -231,12 +231,18 @@ function processAllData(data) {
                     totalMktAdsRev += amount;
                 }
 
-                if ((type.includes('MỚI') || type.includes('NEW')) && isMktAdsRe) {
+                const isNewOrder = type.includes('MỚI') || type.includes('NEW');
+                const isUpOrder = type.includes('CŨ') || type.includes('UPSELL') || type.includes('UP');
+
+                if (isNewOrder) {
                     newCount[saleName] = (newCount[saleName] || 0) + 1;
                     totalNewRev += amount;
-                } else if (type.includes('CŨ') || type.includes('UPSELL') || type.includes('UP')) {
+                } else if (isUpOrder) {
                     upCount[saleName] = (upCount[saleName] || 0) + 1;
                     totalUpRev += amount;
+                } else {
+                    newCount[saleName] = (newCount[saleName] || 0) + 1;
+                    totalNewRev += amount;
                 }
 
                 if (isCombo) comboCount[saleName] = (comboCount[saleName] || 0) + 1;
@@ -256,7 +262,7 @@ function processAllData(data) {
                                 window.FINAL_WEEK_STATS[saleName] = { rev: 0, newCount: 0 };
                             }
                             window.FINAL_WEEK_STATS[saleName].rev += amount;
-                            if ((type.includes('MỚI') || type.includes('NEW')) && isMktAdsRe) {
+                            if (isNewOrder) {
                                 window.FINAL_WEEK_STATS[saleName].newCount += 1;
                             }
                         }
