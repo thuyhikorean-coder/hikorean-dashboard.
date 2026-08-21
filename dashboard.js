@@ -442,7 +442,7 @@ function processAllData(data) {
             totalOrders: allNewDoneCount,
             targetOrders: 67,
             targetNewRevenue: 394000000,
-            conversionRate: mktLeads > 0 ? ((allNewDoneCount / mktLeads) * 100).toFixed(1) : 0
+            conversionRate: mktData > 0 ? ((allNewDoneCount / mktData) * 100).toFixed(1) : 0
         };
     }
 
@@ -887,7 +887,7 @@ function renderBSCTable() {
         { kpi: 'Tỉ suất MKT/DT (Ads)', actual: `${d.summary.mktCostRatio}% (${(d.summary.mktCost / 1000000).toFixed(1)}M)`, target: `< ${d.summary.mktTarget}%`, status: (d.summary.mktCostRatio === "∞" || parseFloat(d.summary.mktCostRatio) > d.summary.mktTarget) ? 'finance' : 'process' },
         { kpi: 'Tỉ suất GV/DT', actual: `${d.summary.teacherCostRatio}%`, target: '20-25%', status: 'process' },
         { kpi: 'Điểm CSAT', actual: d.growth.avgSatisfaction, target: '> 4.5', status: 'growth' },
-        { kpi: 'Chốt đơn (Lead)', actual: `${d.customer.funnel.conversionRate}%`, target: '> 10%', status: 'process' }
+        { kpi: 'Chốt đơn / Inbox', actual: `${d.customer.funnel.conversionRate}%`, target: '> 10%', status: 'process' }
     ];
     tbody.innerHTML = items.map(i => `
         <tr>
@@ -941,7 +941,7 @@ function renderFunnel() {
                 <div style="font-size:0.75rem; font-weight:800; color:var(--info);">${f.totalLeads || 0} SĐT</div>
             </div>
             <div style="background:rgba(0,0,0,0.03); padding: 6px 8px; border-radius: 6px; border:1px solid rgba(0,0,0,0.06); text-align:center;">
-                <div style="font-size:0.6rem; color:var(--text-muted);">Chốt Lead</div>
+                <div style="font-size:0.6rem; color:var(--text-muted);">Chốt Inbox</div>
                 <div style="font-size:0.75rem; font-weight:800; color:var(--warning);">${f.conversionRate || 0}%</div>
             </div>
         </div>
