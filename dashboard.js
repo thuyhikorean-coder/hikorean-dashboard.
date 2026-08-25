@@ -917,7 +917,7 @@ function renderBSCTable() {
     if (!tbody) return;
     const items = [
         { kpi: 'Doanh thu thuần', actual: formatCurrency(d.summary.totalRevenue), target: formatCurrency(d.summary.revenueGoal), status: d.summary.totalRevenue >= d.summary.revenueGoal ? 'process' : 'finance' },
-        { kpi: 'Tỉ suất MKT/DT (Ads)', actual: `${d.summary.mktCostRatio}% (${(d.summary.mktCost / 1000000).toFixed(1)}M)`, target: `< ${d.summary.mktTarget}%`, status: (d.summary.mktCostRatio === "∞" || parseFloat(d.summary.mktCostRatio) > d.summary.mktTarget) ? 'finance' : 'process' },
+        { kpi: 'Tỉ suất MKT/DT (Ads)', actual: `${d.summary.mktCostRatio}% (CP: ${(d.summary.mktCost / 1000000).toFixed(1)}M / DT New: ${(d.summary.totalMktAdsRevenue / 1000000).toFixed(1)}M)`, target: `< ${d.summary.mktTarget}%`, status: (d.summary.mktCostRatio === "∞" || parseFloat(d.summary.mktCostRatio) > d.summary.mktTarget) ? 'finance' : 'process' },
         { kpi: 'Tỉ suất GV/DT', actual: `${d.summary.teacherCostRatio}%`, target: '20-25%', status: 'process' },
         { kpi: 'Điểm CSAT', actual: d.growth.avgSatisfaction, target: '> 4.5', status: 'growth' },
         { kpi: 'Chốt đơn / Inbox', actual: `${d.customer.funnel.conversionRate}%`, target: '> 10%', status: 'process' }
