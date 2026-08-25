@@ -215,7 +215,7 @@ function processAllData(data) {
             const type = row[5]?.toUpperCase() || '';
             const isNewOrder = type.includes('MỚI') || type.includes('NEW');
             const isUpOrder = type.includes('CŨ') || type.includes('UPSELL') || type.includes('UP');
-            const isMktAds = source.includes('MKT-ADS') || source.includes('MKT ADS');
+            const isMktAds = (source.includes('MKT-ADS') || source.includes('MKT ADS') || source.includes('MKT- ADS')) && !source.includes('RE-MARKETING') && !source.includes('RE- MARKETING');
             const isNewMktAds = isMktAds && (isNewOrder || (!isNewOrder && !isUpOrder));
 
             // Unique student identification
