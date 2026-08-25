@@ -97,7 +97,7 @@ function parseCSV(text) {
 function isFromTargetMonth(dateStr) {
     if (!dateStr) return false;
     const selector = document.getElementById('monthSelector');
-    const selectedValue = selector ? selector.value : "05-2026";
+    const selectedValue = selector ? selector.value : "08-2026";
     const [selM, selY] = selectedValue.split('-');
 
     // Robust parsing
