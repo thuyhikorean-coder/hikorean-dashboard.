@@ -206,42 +206,76 @@ function processAllData(data) {
         let newCount = { 'Khánh Linh': 0, 'Hồng Thơm': 0, 'Khánh Hạ': 0, 'Thu Thuỷ': 0 };
         let upCount = { 'Khánh Linh': 0, 'Hồng Thơm': 0, 'Khánh Hạ': 0, 'Thu Thuỷ': 0 };
         let revByCourse = {}, comboCount = {}, orderCount = {}, dailyMap = {}, bonusMap = {};
+        let seenStudentsBySale = new Set();
+        let seenMktAdsStudents = {};
+
         rowsSale.slice(1).forEach(row => {
             if (!isFromTargetMonth(row[0])) return;
             const status = row[9]?.toUpperCase();
+            const source = row[4]?.trim().toUpperCase() || '';
+            const type = row[5]?.toUpperCase() || '';
+            const isNewOrder = type.includes('MỚI') || type.includes('NEW');
+            const isUpOrder = type.includes('CŨ') || type.includes('UPSELL') || type.includes('UP');
+            const isMktAds = source.includes('MKT-ADS') || source.includes('MKT ADS');
+            const isNewMktAds = isMktAds && (isNewOrder || (!isNewOrder && !isUpOrder));
+
+            // Unique student identification
+            const studentName = (row[1] || '').trim().toLowerCase();
+            const rawPhone = (row[2] || '').trim().replace(/[^0-9]/g, '');
+            const studentKey = rawPhone.length >= 6 ? rawPhone : studentName;
+
+            // 1. MKT Ads New Revenue = Doanh thu Khách mới từ MKT Ads + Công nợ hợp đồng
+            if (isNewMktAds && (status === 'DONE' || status === 'DEPOSIT' || status === 'PENDING')) {
+                const paidAmt = parseMoney(row[8]);
+                const fullContractVal = parseMoney(row[10]);
+                const effectiveAmt = fullContractVal > paidAmt ? fullContractVal : paidAmt;
+
+                if (studentKey) {
+                    if (seenMktAdsStudents[studentKey] === undefined) {
+                        seenMktAdsStudents[studentKey] = effectiveAmt;
+                        totalMktAdsRev += effectiveAmt;
+                    } else if (effectiveAmt > seenMktAdsStudents[studentKey]) {
+                        const diff = effectiveAmt - seenMktAdsStudents[studentKey];
+                        seenMktAdsStudents[studentKey] = effectiveAmt;
+                        totalMktAdsRev += diff;
+                    }
+                } else {
+                    totalMktAdsRev += effectiveAmt;
+                }
+            }
+
+            // 2. Sale Performance Metrics (Chỉ tính thực thu / cọc DONE & DEPOSIT, không tính PENDING)
             if (status === 'DONE' || status === 'DEPOSIT') {
                 const amount = parseMoney(row[8]);
                 const saleName = row[3]?.trim() || 'N/A';
-                const source = row[4]?.trim().toUpperCase() || '';
-                const type = row[5]?.toUpperCase() || '';
                 const isCombo = row[7]?.toUpperCase() === 'YES';
                 const noteStr = (row[10] || '').toUpperCase() + ' ' + (row[11] || '').toUpperCase();
 
+                const uniqueSaleStudentKey = `${saleName}_${studentKey}`;
+                const isFirstTimeStudent = studentKey && !seenStudentsBySale.has(uniqueSaleStudentKey);
+
+                if (isFirstTimeStudent) {
+                    seenStudentsBySale.add(uniqueSaleStudentKey);
+                }
+
                 totalRev += amount;
                 revBySale[saleName] = (revBySale[saleName] || 0) + amount;
-                orderCount[saleName] = (orderCount[saleName] || 0) + 1;
+                if (isFirstTimeStudent) {
+                    orderCount[saleName] = (orderCount[saleName] || 0) + 1;
+                }
 
                 // Bonus tracking removed for August 2026
                 let currentBonus = 0;
                 bonusMap[saleName] = 0;
 
-                const isMktAdsRe = source.includes('MKT-ADS') || source.includes('RE-MARKETING');
-
-                if (isMktAdsRe) {
-                    totalMktAdsRev += amount;
-                }
-
-                const isNewOrder = type.includes('MỚI') || type.includes('NEW');
-                const isUpOrder = type.includes('CŨ') || type.includes('UPSELL') || type.includes('UP');
-
                 if (isNewOrder) {
-                    newCount[saleName] = (newCount[saleName] || 0) + 1;
+                    if (isFirstTimeStudent) newCount[saleName] = (newCount[saleName] || 0) + 1;
                     totalNewRev += amount;
                 } else if (isUpOrder) {
-                    upCount[saleName] = (upCount[saleName] || 0) + 1;
+                    if (isFirstTimeStudent) upCount[saleName] = (upCount[saleName] || 0) + 1;
                     totalUpRev += amount;
                 } else {
-                    newCount[saleName] = (newCount[saleName] || 0) + 1;
+                    if (isFirstTimeStudent) newCount[saleName] = (newCount[saleName] || 0) + 1;
                     totalNewRev += amount;
                 }
 
