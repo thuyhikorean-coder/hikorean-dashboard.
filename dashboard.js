@@ -194,7 +194,6 @@ function processAllData(data) {
             }
         });
     }
-
     // 1. FINANCIAL (Sale Performance)
     let totalRev = 0;
     let totalNewRev = 0;
