@@ -97,7 +97,7 @@ function parseCSV(text) {
 function isFromTargetMonth(dateStr) {
     if (!dateStr) return false;
     const selector = document.getElementById('monthSelector');
-    const selectedValue = selector ? selector.value : "08-2026";
+    const selectedValue = selector ? selector.value : "09-2026";
     const [selM, selY] = selectedValue.split('-');
 
     // Robust parsing
@@ -151,8 +151,14 @@ function processAllData(data) {
     // Structural Safety Check - Ensure all categories exist
     if (!window.DASHBOARD_DATA) window.DASHBOARD_DATA = {};
     const d = DASHBOARD_DATA;
-    if (!d.summary) d.summary = {};
-    if (!d.summary.revenueGoal || d.summary.revenueGoal === 0) d.summary.revenueGoal = 394000000;
+    const selector = document.getElementById('monthSelector');
+    const selectedMonth = selector ? selector.value : "09-2026";
+    const [selM, selY] = selectedMonth.split('-');
+    if (selectedMonth === "08-2026") {
+        d.summary.revenueGoal = 420000000;
+    } else {
+        d.summary.revenueGoal = 300000000;
+    }
     if (!d.summary.mktTarget) d.summary.mktTarget = 12;
     if (!d.financial) d.financial = {};
     if (!d.customer) d.customer = {};
@@ -201,9 +207,14 @@ function processAllData(data) {
     let totalMktAdsRev = 0;
 
     if (rowsSale.length > 1) {
-        let revBySale = { 'Khánh Linh': 0, 'Hồng Thơm': 0, 'Khánh Hạ': 0, 'Thu Thuỷ': 0 };
-        let newCount = { 'Khánh Linh': 0, 'Hồng Thơm': 0, 'Khánh Hạ': 0, 'Thu Thuỷ': 0 };
-        let upCount = { 'Khánh Linh': 0, 'Hồng Thơm': 0, 'Khánh Hạ': 0, 'Thu Thuỷ': 0 };
+        let revBySale = { 'Khánh Linh': 0, 'Hồng Thơm': 0 };
+        let newCount = { 'Khánh Linh': 0, 'Hồng Thơm': 0 };
+        let upCount = { 'Khánh Linh': 0, 'Hồng Thơm': 0 };
+        if (selectedMonth === "08-2026") {
+            revBySale['Khánh Hạ'] = 0; revBySale['Thu Thuỷ'] = 0;
+            newCount['Khánh Hạ'] = 0; newCount['Thu Thuỷ'] = 0;
+            upCount['Khánh Hạ'] = 0; upCount['Thu Thuỷ'] = 0;
+        }
         let revByCourse = {}, comboCount = {}, orderCount = {}, dailyMap = {}, bonusMap = {};
         let seenStudentsBySale = new Set();
         let seenMktAdsStudents = {};
@@ -380,8 +391,8 @@ function processAllData(data) {
         DASHBOARD_DATA.financial.saleStats = saleStats;
         DASHBOARD_DATA.financial.latestDate = latestDateKey;
 
-        // Calculate Global Upsell Completion Rate (% Hoàn thành chỉ tiêu Đơn UP: thực đạt / 6 đơn UP chỉ tiêu)
-        const targetUpOrders = 6;
+        // Calculate Global Upsell Completion Rate (% Hoàn thành chỉ tiêu Đơn UP: thực đạt / chỉ tiêu)
+        const targetUpOrders = (selM === "08") ? 6 : 10;
         DASHBOARD_DATA.summary.upsellRate = targetUpOrders > 0 ? ((totalUpCount / targetUpOrders) * 100).toFixed(1) : 0;
         DASHBOARD_DATA.summary.totalUpCount = totalUpCount;
 
@@ -423,10 +434,14 @@ function processAllData(data) {
 
         let individuals = [
             { name: 'Thơm', current: thomRev, type: 'full-time' },
-            { name: 'Khánh Linh', current: khanhLinhRev, type: 'full-time' },
-            { name: 'Khánh Hạ', current: khanhHaRev, type: 'full-time' },
-            { name: 'Thu Thủy', current: thuyRev, type: 'part-time' }
+            { name: 'Khánh Linh', current: khanhLinhRev, type: 'full-time' }
         ];
+        if (selM === "08") {
+            individuals.push(
+                { name: 'Khánh Hạ', current: khanhHaRev, type: 'full-time' },
+                { name: 'Thu Thủy', current: thuyRev, type: 'part-time' }
+            );
+        }
 
         let teamTarget = 0;
         individuals.forEach(p => {
@@ -473,8 +488,8 @@ function processAllData(data) {
             totalData: mktData,
             totalLeads: mktLeads,
             totalOrders: allNewDoneCount,
-            targetOrders: 67,
-            targetNewRevenue: 394000000,
+            targetOrders: (selM === "08") ? 67 : 44,
+            targetNewRevenue: (selM === "08") ? 394000000 : 250000000,
             conversionRate: mktData > 0 ? ((allNewDoneCount / mktData) * 100).toFixed(1) : 0
         };
     }
@@ -618,8 +633,13 @@ function processAllData(data) {
         // Fallback if Google Sheet is empty or date doesn't match
         if (finishedClasses.length === 0) {
             const selector = document.getElementById('monthSelector');
-            const selectedMonth = selector ? selector.value : "05-2026";
-            if (selectedMonth === "08-2026") {
+            const selectedMonth = selector ? selector.value : "09-2026";
+            if (selectedMonth === "09-2026") {
+                finishedClasses = [
+                    { id: "NT-TCK119ON", teacher: "Bùi Ngọc Anh", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "TOPIK34K112ON", teacher: "Vũ Thảo", students: "-", passRate: "- %", csat: "0", attendance: "- %" }
+                ];
+            } else if (selectedMonth === "08-2026") {
                 finishedClasses = [
                     { id: "GT2K138ON", teacher: "Nguyễn Thị Thu Lan", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
                     { id: "NT-SCK187ON", teacher: "Nguyễn Thu Thủy", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
@@ -732,6 +752,7 @@ function processAllData(data) {
     // Update OKRs logic
     d.okrs[0].krs[0].current = (d.summary.totalRevenue / 1000000).toFixed(0);
     d.okrs[0].krs[0].target = (d.summary.revenueGoal / 1000000).toFixed(0);
+    d.okrs[0].krs[0].name = `Doanh thu tháng (Mục tiêu: ${(d.summary.revenueGoal / 1000000).toFixed(0)}tr)`;
     d.okrs[0].krs[0].progress = Math.min(100, Math.round((d.summary.totalRevenue / d.summary.revenueGoal) * 100));
 
     d.okrs[0].krs[1].current = d.summary.mktCostRatio;
@@ -764,6 +785,18 @@ function initDashboard() {
 
     const upRevEl = document.getElementById('upRevenue');
     if (upRevEl) upRevEl.textContent = formatCurrency(d.summary.totalUpRevenue || 0);
+
+    const targetNewRevEl = document.getElementById('targetNewRevLabel');
+    const targetUpRevEl = document.getElementById('targetUpRevLabel');
+    const selectorMonth = document.getElementById('monthSelector');
+    const curSelVal = selectorMonth ? selectorMonth.value : "09-2026";
+    if (curSelVal === "08-2026") {
+        if (targetNewRevEl) targetNewRevEl.textContent = 'Mục tiêu: 394.000.000 đ';
+        if (targetUpRevEl) targetUpRevEl.textContent = 'Mục tiêu: 26.000.000 đ';
+    } else {
+        if (targetNewRevEl) targetNewRevEl.textContent = 'Mục tiêu: 44 HV (22 HV/bạn)';
+        if (targetUpRevEl) targetUpRevEl.textContent = 'Mục tiêu: 10 HV (5 HV/bạn)';
+    }
 
     const otherRevEl = document.getElementById('otherRevenue');
     if (otherRevEl) otherRevEl.textContent = formatCurrency(d.summary.totalOtherRevenue || 0);
@@ -1112,14 +1145,27 @@ function renderSalesList() {
     const tbody = document.getElementById('sales-detail-list');
     if (!tbody) return;
     const stats = DASHBOARD_DATA.financial.saleStats || {};
-    const targetAOV = 5880000; // 5.880.000 VNĐ
+    const selector = document.getElementById('monthSelector');
+    const selectedMonth = selector ? selector.value : "09-2026";
 
-    const targetMap = {
-        'Khánh Linh': { rev: 150000000, new: 23, up: 3 },
-        'Hồng Thơm': { rev: 150000000, new: 23, up: 3 },
-        'Khánh Hạ': { rev: 80000000, new: 14, up: 0 },
-        'Thu Thủy': { rev: 40000000, new: 7, up: 0 }
-    };
+    let targetAOV = 5555555; // 150M / 27 = 5.56M
+    let targetMap = {};
+
+    if (selectedMonth === "08-2026") {
+        targetAOV = 5880000;
+        targetMap = {
+            'Khánh Linh': { rev: 150000000, new: 23, up: 3 },
+            'Hồng Thơm': { rev: 150000000, new: 23, up: 3 },
+            'Khánh Hạ': { rev: 80000000, new: 14, up: 0 },
+            'Thu Thủy': { rev: 40000000, new: 7, up: 0 }
+        };
+    } else {
+        targetAOV = 5555555;
+        targetMap = {
+            'Khánh Linh': { rev: 150000000, new: 22, up: 5 },
+            'Hồng Thơm': { rev: 150000000, new: 22, up: 5 }
+        };
+    }
 
     // Sometimes the name is 'Thu Thuỷ' or 'Thuỷ' or 'Thủy'
     // Let's normalize stats keys before rendering
@@ -1204,7 +1250,7 @@ function renderSalesList() {
 
             <td style="padding: 10px; text-align: center; vertical-align: middle; width: 17%;">
                 <span style="display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; ${aovStyle}">${actualAOVInM}M</span>
-                <div style="font-size: 0.62rem; color: var(--text-muted); margin-top: 2px;">Target 5.88M</div>
+                <div style="font-size: 0.62rem; color: var(--text-muted); margin-top: 2px;">Target ${(targetAOV / 1000000).toFixed(2)}M</div>
             </td>
 
             <td style="padding: 10px; text-align: right; vertical-align: middle; width: 15%;">
@@ -1249,13 +1295,27 @@ function renderRaceCards() {
     const container = document.getElementById('race-container');
     if (!container) return;
 
-    // Team Targets cho Tháng 8/2026
-    const targets = [
-        { name: 'Khánh Linh', goal: 150000000, newGoal: 23, upGoal: 3 },
-        { name: 'Hồng Thơm', goal: 150000000, newGoal: 23, upGoal: 3 },
-        { name: 'Khánh Hạ', goal: 80000000, newGoal: 14, upGoal: 0 },
-        { name: 'Thu Thủy', goal: 40000000, newGoal: 7, upGoal: 0 }
-    ];
+    const selector = document.getElementById('monthSelector');
+    const selectedMonth = selector ? selector.value : "09-2026";
+
+    let targets = [];
+    let targetAOVVal = 5.56;
+
+    if (selectedMonth === "08-2026") {
+        targetAOVVal = 5.88;
+        targets = [
+            { name: 'Khánh Linh', goal: 150000000, newGoal: 23, upGoal: 3 },
+            { name: 'Hồng Thơm', goal: 150000000, newGoal: 23, upGoal: 3 },
+            { name: 'Khánh Hạ', goal: 80000000, newGoal: 14, upGoal: 0 },
+            { name: 'Thu Thủy', goal: 40000000, newGoal: 7, upGoal: 0 }
+        ];
+    } else {
+        targetAOVVal = 5.56;
+        targets = [
+            { name: 'Khánh Linh', goal: 150000000, newGoal: 22, upGoal: 5 },
+            { name: 'Hồng Thơm', goal: 150000000, newGoal: 22, upGoal: 5 }
+        ];
+    }
     const dailyTarget = 5000000; 
     const stats = DASHBOARD_DATA.financial.saleStats || {};
 
@@ -1347,7 +1407,7 @@ function renderRaceCards() {
                 <!-- Month Progress bar & AOV Info -->
                 <div style="display:flex; justify-content:space-between; font-size: 0.65rem; color: var(--text-muted); padding-top:4px;">
                     <span>Tiến độ DT: ${monthProgress}%</span>
-                    <span>AOV: <strong style="color:${actualAOV >= 5.88 ? 'var(--process)' : 'var(--danger)'}">${actualAOV}M</strong> / 5.88M</span>
+                    <span>AOV: <strong style="color:${actualAOV >= targetAOVVal ? 'var(--process)' : 'var(--danger)'}">${actualAOV}M</strong> / ${targetAOVVal}M</span>
                 </div>
             </div>
         `;
