@@ -755,19 +755,28 @@ function processAllData(data) {
     d.okrs[0].krs[0].name = `Doanh thu tháng (Mục tiêu: ${(d.summary.revenueGoal / 1000000).toFixed(0)}tr)`;
     d.okrs[0].krs[0].progress = Math.min(100, Math.round((d.summary.totalRevenue / d.summary.revenueGoal) * 100));
 
+    const mktRatioTarget = (selectedMonth === "09-2026") ? 15 : 12;
     d.okrs[0].krs[1].current = d.summary.mktCostRatio;
-    d.okrs[0].krs[1].target = d.summary.mktTarget;
+    d.okrs[0].krs[1].target = mktRatioTarget;
+    d.okrs[0].krs[1].name = `Tối ưu MKT/DT (Mục tiêu: < ${mktRatioTarget}%)`;
     // For MKT ratio, progress is inverse: if ratio <= target, it's 100%
-    d.okrs[0].krs[1].progress = d.summary.mktCostRatio <= d.summary.mktTarget ? 100 : Math.max(0, Math.round(100 - (d.summary.mktCostRatio - d.summary.mktTarget) * 5));
+    d.okrs[0].krs[1].progress = d.summary.mktCostRatio <= mktRatioTarget ? 100 : Math.max(0, Math.round(100 - (d.summary.mktCostRatio - mktRatioTarget) * 5));
 
-    // OKR O2: Quality & Operations
+    // OKR O2: Quality & Operations (Slide 15)
     d.okrs[1].krs[0].current = d.growth.avgSatisfaction;
+    d.okrs[1].krs[0].target = 4.5;
+    d.okrs[1].krs[0].name = 'Chất lượng GV (CSAT ≥ 4.5)';
     d.okrs[1].krs[0].progress = Math.min(100, Math.round((d.growth.avgSatisfaction / 4.5) * 100));
 
+    const targetPass = (selectedMonth === "09-2026") ? 85 : 90;
     d.okrs[1].krs[1].current = d.growth.avgPassRate;
-    d.okrs[1].krs[1].progress = Math.min(100, Math.round((d.growth.avgPassRate / 90) * 100));
+    d.okrs[1].krs[1].target = targetPass;
+    d.okrs[1].krs[1].name = `HV Đạt chuẩn (≥ ${targetPass}%)`;
+    d.okrs[1].krs[1].progress = Math.min(100, Math.round((d.growth.avgPassRate / targetPass) * 100));
 
     d.okrs[1].krs[2].current = d.process.avgAttendance;
+    d.okrs[1].krs[2].target = 80;
+    d.okrs[1].krs[2].name = 'Tỉ lệ chuyên cần (≥ 80%)';
     d.okrs[1].krs[2].progress = Math.min(100, Math.round((d.process.avgAttendance / 80) * 100));
 }
 
@@ -828,9 +837,86 @@ function initDashboard() {
 function renderWeeklySprint() {
     const container = document.getElementById('weekly-sprint-container');
     if (!container) return;
-    // Chiến dịch thưởng tuần cuối tháng đã kết thúc (tháng 7/2026)
-    container.innerHTML = '';
-    container.style.display = 'none';
+
+    const selector = document.getElementById('monthSelector');
+    const selectedMonth = selector ? selector.value : "09-2026";
+
+    if (selectedMonth !== "09-2026") {
+        container.innerHTML = '';
+        container.style.display = 'none';
+        return;
+    }
+
+    container.style.display = 'block';
+    container.innerHTML = `
+        <div style="background: linear-gradient(135deg, rgba(212,175,55,0.08) 0%, rgba(20,20,30,0.85) 100%); border: 1.5px solid var(--primary); padding: 16px 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15); margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="background: var(--primary); color: #fff; padding: 3px 8px; border-radius: 6px; font-weight: 900; font-size: 0.72rem; letter-spacing: 0.5px;">THÁNG 09/2026</span>
+                    <h3 style="margin: 0; font-size: 0.95rem; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: -0.2px;">
+                        <i class='bx bxs-bullseye' style="color: var(--primary);"></i> BỨC TRANH MỤC TIÊU & HÀNH ĐỘNG CHIẾN LƯỢC HIKOREAN
+                    </h3>
+                </div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">
+                    <i class='bx bx-group'></i> Nhân sự Sale: <strong style="color: var(--text-main);">2 TVV Fulltime</strong> (Khánh Linh & Hồng Thơm) · TB <strong style="color: var(--warning);">~1.5 đơn/ngày/bạn</strong>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px;">
+                <!-- Card 1: SALE -->
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 10px 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <span style="font-weight: 800; font-size: 0.78rem; color: var(--primary); text-transform: uppercase;"><i class='bx bx-dollar-circle'></i> 1. SALE (300M)</span>
+                        <span style="font-size: 0.68rem; background: rgba(212,175,55,0.15); color: var(--primary); padding: 1px 6px; border-radius: 4px; font-weight: 700;">44 New + 10 Up</span>
+                    </div>
+                    <div style="font-size: 0.73rem; color: var(--text-muted); line-height: 1.45;">
+                        • <b>Khánh Linh:</b> 150M (22 New + 5 Up) — Duy trì phong độ<br>
+                        • <b>Hồng Thơm:</b> 150M (22 New + 5 Up) — Bứt phá x2<br>
+                        • <i>Ưu tiên Combo Topik 13–14M, hạn chế đơn lẻ &lt;1M</i>
+                    </div>
+                </div>
+
+                <!-- Card 2: MKT -->
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 10px 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <span style="font-weight: 800; font-size: 0.78rem; color: var(--info); text-transform: uppercase;"><i class='bx bx-line-chart'></i> 2. MKT (Huyền)</span>
+                        <span style="font-size: 0.68rem; background: rgba(33,150,243,0.15); color: var(--info); padding: 1px 6px; border-radius: 4px; font-weight: 700;">280 Leads</span>
+                    </div>
+                    <div style="font-size: 0.73rem; color: var(--text-muted); line-height: 1.45;">
+                        • <b>Leads SĐT:</b> 280 · CPL <b>&lt; 100K</b> · CP/DT <b>&lt; 15%</b><br>
+                        • <b>Fanpage:</b> +100 follow · <b>Cộng đồng:</b> +300 TV<br>
+                        • <b>Livestream:</b> C Thuý & Minji TB <b>&gt; 30 mắt/buổi</b>
+                    </div>
+                </div>
+
+                <!-- Card 3: QLCL -->
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 10px 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <span style="font-weight: 800; font-size: 0.78rem; color: var(--success); text-transform: uppercase;"><i class='bx bx-award'></i> 3. QLCL (Admin)</span>
+                        <span style="font-size: 0.68rem; background: rgba(76,175,80,0.15); color: var(--success); padding: 1px 6px; border-radius: 4px; font-weight: 700;">Chuẩn T8</span>
+                    </div>
+                    <div style="font-size: 0.73rem; color: var(--text-muted); line-height: 1.45;">
+                        • <b>Hài lòng CSAT:</b> &ge; 4.5/5 · <b>Đạt chuẩn:</b> &ge; 85%<br>
+                        • <b>Chuyên cần:</b> &ge; 80% (Cải thiện GT2K138ON)<br>
+                        • <b>Hoàn thành:</b> &ge; 90% · <b>BTVN đúng hạn:</b> &gt; 80%
+                    </div>
+                </div>
+
+                <!-- Card 4: ACTION -->
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 10px 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <span style="font-weight: 800; font-size: 0.78rem; color: var(--danger); text-transform: uppercase;"><i class='bx bxs-hot bx-tada'></i> 4. HÀNH ĐỘNG NÓNG</span>
+                        <span style="font-size: 0.68rem; background: rgba(244,67,54,0.15); color: var(--danger); padding: 1px 6px; border-radius: 4px; font-weight: 700;">Deadline 15/9</span>
+                    </div>
+                    <div style="font-size: 0.73rem; color: var(--text-muted); line-height: 1.45;">
+                        • <b>TOPIK34K114ON</b> (08/9 - Vũ Dần+Minji): <i>Push data gấp!</i><br>
+                        • <b>CS-01 (1-10/9):</b> Cọc sớm tặng PXPA (300K), Combo tặng Elearning (1.5M)<br>
+                        • <b>Upsale T8:</b> T1 gọi 100% 41 HV; 15/9 chốt cọc &ge; 6/10 HV UP
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
 }
 
 
@@ -1020,41 +1106,37 @@ function renderMktKpiTable() {
     const tbody = document.getElementById('mkt-kpi-table-body');
     if (!tbody) return;
 
+    const selector = document.getElementById('monthSelector');
+    const selectedMonth = selector ? selector.value : "09-2026";
+    const isSep = (selectedMonth === "09-2026");
+
     const f = DASHBOARD_DATA.customer.funnel || {};
     const mktData = f.totalData || 0;
     const mktLeads = f.totalLeads || 0;
     const dataToLeadRate = mktData > 0 ? (mktLeads / mktData * 100) : 0;
+    const mktCost = DASHBOARD_DATA.summary.mktCost || 0;
     const mktCostRatioVal = parseFloat(DASHBOARD_DATA.summary.mktCostRatio) || 0;
-    const isMktCostRatioValid = DASHBOARD_DATA.summary.mktCostRatio !== "∞" && mktCostRatioVal > 0 && mktCostRatioVal <= 15;
+    const mktCostTarget = isSep ? 15 : 12;
+    const isMktCostRatioValid = DASHBOARD_DATA.summary.mktCostRatio !== "∞" && mktCostRatioVal > 0 && mktCostRatioVal <= mktCostTarget;
 
-    // 1. Data (558 target)
-    const dataProgress = Math.round((mktData / 558) * 100);
+    const targetLeads = isSep ? 280 : 334;
+    const leadProgress = Math.round((mktLeads / targetLeads) * 100);
+
+    const cpl = mktLeads > 0 ? Math.round(mktCost / mktLeads) : 0;
+    const cplTarget = isSep ? 100000 : 120000;
+    const isCplValid = cpl > 0 && cpl <= cplTarget;
 
     // 2. Chuyển đổi SĐT (60% target)
     const leadRateProgress = Math.round((dataToLeadRate / 60) * 100);
 
-    // 3. Phễu lớn (100 bạn target)
-    const registeredNew = f.totalOrders || 0;
-    const phieuProgress = Math.round((registeredNew / 100) * 100);
-
-    // Check Bonus evaluation for Header Badge
-    const passBlock1Basic = (mktData >= 558) && (dataToLeadRate >= 60) && isMktCostRatioValid;
-    const passBlock1Pro = (mktData >= 558 * 1.2) && (dataToLeadRate >= 60 * 1.2) && (mktCostRatioVal <= 15 * 0.9);
-    let block1Bonus = passBlock1Pro ? 1000000 : (passBlock1Basic ? 500000 : 0);
-    let block2Bonus = registeredNew >= 90 ? 1000000 : (registeredNew >= 50 ? 500000 : 0);
-    const totalBonus = block1Bonus + block2Bonus;
-
-    const totalBonusBadge = document.getElementById('mktBonusTotalBadge');
-    if (totalBonusBadge) {
-        totalBonusBadge.innerHTML = `🎁 Thưởng: <strong>${formatCurrency(totalBonus)}</strong>`;
-    }
-
     // Update Social Chips
     const mktFB = document.getElementById('mktFB');
-    if (mktFB) mktFB.textContent = `${DASHBOARD_DATA.growth.fbFollowers || 0} / 300`;
+    const fbTarget = isSep ? 100 : 300;
+    if (mktFB) mktFB.textContent = `${DASHBOARD_DATA.growth.fbFollowers || 0} / ${fbTarget}`;
 
     const mktGroup = document.getElementById('mktGroup');
-    if (mktGroup) mktGroup.textContent = `${DASHBOARD_DATA.growth.congDongMembers || 0} / 500`;
+    const groupTarget = isSep ? 300 : 500;
+    if (mktGroup) mktGroup.textContent = `${DASHBOARD_DATA.growth.congDongMembers || 0} / ${groupTarget}`;
 
     // 5. Livestream stats
     const liveAvg = DASHBOARD_DATA.growth.livestreamViewsAvg || 0;
@@ -1069,32 +1151,32 @@ function renderMktKpiTable() {
 
     tbody.innerHTML = `
         <tr style="background: rgba(0, 0, 0, 0.02); vertical-align: middle;">
-            <td style="padding: 8px 10px; font-weight: 700; color: var(--text-main); font-size: 0.78rem; white-space: nowrap;"><i class='bx bx-data' style="color:var(--info);"></i> 1. Số lượng Data (Ads)</td>
-            <td style="padding: 8px 6px; text-align: center; color: var(--text-muted); font-size: 0.75rem; font-weight: 600;">558 Data</td>
-            <td style="padding: 8px 6px; text-align: center; font-weight: 800; color: var(--info); font-size: 0.78rem;">${mktData} Data</td>
-            <td style="padding: 8px 10px; text-align: right;"><span style="color: ${dataProgress>=100?'var(--success)':'var(--warning)'}; font-weight: 800; font-size: 0.78rem;">${dataProgress}%</span></td>
+            <td style="padding: 8px 10px; font-weight: 700; color: var(--text-main); font-size: 0.78rem; white-space: nowrap;"><i class='bx bx-phone-call' style="color:var(--info);"></i> 1. Tổng Leads (SĐT) Ads</td>
+            <td style="padding: 8px 6px; text-align: center; color: var(--text-muted); font-size: 0.75rem; font-weight: 600;">${targetLeads} Leads</td>
+            <td style="padding: 8px 6px; text-align: center; font-weight: 800; color: var(--info); font-size: 0.78rem;">${mktLeads} Leads</td>
+            <td style="padding: 8px 10px; text-align: right;"><span style="color: ${leadProgress>=100?'var(--success)':'var(--warning)'}; font-weight: 800; font-size: 0.78rem;">${leadProgress}%</span></td>
         </tr>
         <tr style="background: rgba(0, 0, 0, 0.02); vertical-align: middle;">
-            <td style="padding: 8px 10px; font-weight: 700; color: var(--text-main); font-size: 0.78rem; white-space: nowrap;"><i class='bx bx-phone-call' style="color:var(--warning);"></i> 2. Chuyển đổi SĐT</td>
-            <td style="padding: 8px 6px; text-align: center; color: var(--text-muted); font-size: 0.75rem; font-weight: 600;">60%</td>
+            <td style="padding: 8px 10px; font-weight: 700; color: var(--text-main); font-size: 0.78rem; white-space: nowrap;"><i class='bx bx-coin' style="color:var(--warning);"></i> 2. Chi phí / Lead (CPL)</td>
+            <td style="padding: 8px 6px; text-align: center; color: var(--text-muted); font-size: 0.75rem; font-weight: 600;">&lt; ${cplTarget.toLocaleString('vi-VN')} đ</td>
+            <td style="padding: 8px 6px; text-align: center; font-weight: 800; color: ${isCplValid ? 'var(--success)' : 'var(--warning)'}; font-size: 0.78rem;">${cpl > 0 ? cpl.toLocaleString('vi-VN') + ' đ' : '--'}</td>
+            <td style="padding: 8px 10px; text-align: right;"><span class="badge badge-${isCplValid ? 'process' : 'warning'}" style="font-size: 0.72rem; padding: 3px 10px; font-weight: 800;">${cpl > 0 ? (isCplValid ? 'Đạt' : 'Cao') : '--'}</span></td>
+        </tr>
+        <tr style="background: rgba(0, 0, 0, 0.02); vertical-align: middle;">
+            <td style="padding: 8px 10px; font-weight: 700; color: var(--text-main); font-size: 0.78rem; white-space: nowrap;"><i class='bx bx-dollar-circle' style="color:var(--danger);"></i> 3. Tỉ lệ CP Ads / DT New</td>
+            <td style="padding: 8px 6px; text-align: center; color: var(--text-muted); font-size: 0.75rem; font-weight: 600;">&le; ${mktCostTarget}%</td>
+            <td style="padding: 8px 6px; text-align: center; font-weight: 800; color: var(--danger); font-size: 0.78rem;">${DASHBOARD_DATA.summary.mktCostRatio}%</td>
+            <td style="padding: 8px 10px; text-align: right;"><span class="badge badge-${isMktCostRatioValid ? 'process' : 'danger'}" style="font-size: 0.72rem; padding: 3px 10px; font-weight: 800;">${isMktCostRatioValid ? 'Đạt' : 'Vượt'}</span></td>
+        </tr>
+        <tr style="background: rgba(0, 0, 0, 0.02); vertical-align: middle;">
+            <td style="padding: 8px 10px; font-weight: 700; color: var(--text-main); font-size: 0.78rem; white-space: nowrap;"><i class='bx bx-conversation' style="color:var(--primary);"></i> 4. Chuyển đổi Mess &rarr; SĐT</td>
+            <td style="padding: 8px 6px; text-align: center; color: var(--text-muted); font-size: 0.75rem; font-weight: 600;">&ge; 60%</td>
             <td style="padding: 8px 6px; text-align: center; font-weight: 800; color: var(--warning); font-size: 0.78rem;">${dataToLeadRate.toFixed(1)}%</td>
             <td style="padding: 8px 10px; text-align: right;"><span style="color: ${leadRateProgress>=100?'var(--success)':'var(--warning)'}; font-weight: 800; font-size: 0.78rem;">${leadRateProgress}%</span></td>
         </tr>
         <tr style="background: rgba(0, 0, 0, 0.02); vertical-align: middle;">
-            <td style="padding: 8px 10px; font-weight: 700; color: var(--text-main); font-size: 0.78rem; white-space: nowrap;"><i class='bx bx-dollar-circle' style="color:var(--danger);"></i> 3. Chi phí Ads tối đa</td>
-            <td style="padding: 8px 6px; text-align: center; color: var(--text-muted); font-size: 0.75rem; font-weight: 600;">≤ 15% DT</td>
-            <td style="padding: 8px 6px; text-align: center; font-weight: 800; color: var(--danger); font-size: 0.78rem;">${DASHBOARD_DATA.summary.mktCostRatio}%</td>
-            <td style="padding: 8px 10px; text-align: right;"><span class="badge badge-danger" style="font-size: 0.72rem; padding: 3px 10px; font-weight: 800;">Vượt</span></td>
-        </tr>
-        <tr style="background: rgba(0, 0, 0, 0.02); vertical-align: middle;">
-            <td style="padding: 8px 10px; font-weight: 700; color: var(--text-main); font-size: 0.78rem; white-space: nowrap;"><i class='bx bx-filter' style="color:var(--primary);"></i> 4. Phễu lớn hàng tháng</td>
-            <td style="padding: 8px 6px; text-align: center; color: var(--text-muted); font-size: 0.75rem; font-weight: 600;">100 bạn</td>
-            <td style="padding: 8px 6px; text-align: center; font-weight: 800; color: var(--info); font-size: 0.78rem;">${registeredNew} bạn</td>
-            <td style="padding: 8px 10px; text-align: right;"><span style="color: ${phieuProgress>=90?'var(--success)':(phieuProgress>=50?'var(--warning)':'var(--danger)')}; font-weight: 800; font-size: 0.78rem;">${phieuProgress}%</span></td>
-        </tr>
-        <tr style="background: rgba(0, 0, 0, 0.02); vertical-align: middle;">
-            <td style="padding: 8px 10px; font-weight: 700; color: var(--text-main); font-size: 0.78rem; white-space: nowrap;"><i class='bx bx-video' style="color:var(--info);"></i> 5. Livestream (C Thuý và C Minji)</td>
-            <td style="padding: 8px 6px; text-align: center; color: var(--text-muted); font-size: 0.75rem; font-weight: 600;">30 mắt/buổi</td>
+            <td style="padding: 8px 10px; font-weight: 700; color: var(--text-main); font-size: 0.78rem; white-space: nowrap;"><i class='bx bx-video' style="color:var(--info);"></i> 5. Livestream (C Thuý & Minji)</td>
+            <td style="padding: 8px 6px; text-align: center; color: var(--text-muted); font-size: 0.75rem; font-weight: 600;">&gt; 30 mắt/buổi</td>
             <td style="padding: 8px 6px; text-align: center; font-weight: 700; color: var(--text-main); font-size: 0.78rem;">${liveActualText}</td>
             <td style="padding: 8px 10px; text-align: right;">${liveProgressHtml}</td>
         </tr>
@@ -1222,10 +1304,20 @@ function renderSalesList() {
                 ? 'background: rgba(255, 152, 0, 0.15); color: #FFB74D; border: 1px solid rgba(255, 152, 0, 0.3);'
                 : 'background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.1);');
 
+        let roleBadge = '';
+        if (selectedMonth === "09-2026") {
+            if (name === 'Khánh Linh') {
+                roleBadge = `<div style="font-size: 0.65rem; color: var(--primary); font-weight: 600; margin-top: 2px;">Duy trì phong độ · Combo Topik 13–14M</div>`;
+            } else if (name === 'Hồng Thơm') {
+                roleBadge = `<div style="font-size: 0.65rem; color: var(--warning); font-weight: 600; margin-top: 2px;">Bứt phá x2 · Combo Topik 13–14M</div>`;
+            }
+        }
+
         return `
         <tr style="background: rgba(255, 255, 255, 0.02); transition: background 0.2s;">
             <td style="padding: 10px; vertical-align: middle; width: 22%;">
                 <div style="font-weight: 700; font-size: 0.82rem; color: var(--text-main);">${name}</div>
+                ${roleBadge}
             </td>
 
             <td style="padding: 10px; vertical-align: middle; width: 24%;">
