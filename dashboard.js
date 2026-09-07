@@ -636,6 +636,9 @@ function processAllData(data) {
             const selectedMonth = selector ? selector.value : "09-2026";
             if (selectedMonth === "09-2026") {
                 finishedClasses = [
+                    { id: "MATCHUM2K191OFF 1:2", teacher: "Lê Ngọc Ánh", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "NT-MATCHUM1K189ON", teacher: "Nguyễn Thị Thu Lan", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "NT-TCK104OFF", teacher: "Lê Ngọc Ánh", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
                     { id: "NT-TCK119ON", teacher: "Bùi Ngọc Anh", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
                     { id: "TOPIK34K112ON", teacher: "Vũ Thảo", students: "-", passRate: "- %", csat: "0", attendance: "- %" }
                 ];
@@ -849,69 +852,69 @@ function renderWeeklySprint() {
 
     container.style.display = 'block';
     container.innerHTML = `
-        <div style="background: linear-gradient(135deg, rgba(212,175,55,0.08) 0%, rgba(20,20,30,0.85) 100%); border: 1.5px solid var(--primary); padding: 16px 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.15); margin-bottom: 20px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+        <div style="background: var(--bg-panel); border: 1.5px solid rgba(212, 175, 55, 0.4); padding: 16px 20px; border-radius: var(--card-radius); box-shadow: var(--glass-shadow); margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(121, 85, 72, 0.12); padding-bottom: 10px; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
                 <div style="display: flex; align-items: center; gap: 8px;">
-                    <span style="background: var(--primary); color: #fff; padding: 3px 8px; border-radius: 6px; font-weight: 900; font-size: 0.72rem; letter-spacing: 0.5px;">THÁNG 09/2026</span>
-                    <h3 style="margin: 0; font-size: 0.95rem; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: -0.2px;">
-                        <i class='bx bxs-bullseye' style="color: var(--primary);"></i> BỨC TRANH MỤC TIÊU & HÀNH ĐỘNG CHIẾN LƯỢC HIKOREAN
+                    <span style="background: var(--primary); color: #fff; padding: 3px 8px; border-radius: 6px; font-weight: 800; font-size: 0.72rem; letter-spacing: 0.5px;">THÁNG 09/2026</span>
+                    <h3 style="margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: -0.2px;">
+                        <i class='bx bxs-bullseye' style="color: var(--primary);"></i> BỨC TRANH MỤC TIÊU & CHỈ SỐ THÁNG 9
                     </h3>
                 </div>
                 <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">
-                    <i class='bx bx-group'></i> Nhân sự Sale: <strong style="color: var(--text-main);">2 TVV Fulltime</strong> (Khánh Linh & Hồng Thơm) · TB <strong style="color: var(--warning);">~1.5 đơn/ngày/bạn</strong>
+                    <i class='bx bx-group'></i> Nhân sự Sale: <strong style="color: var(--text-main);">2 TVV</strong> (Khánh Linh & Hồng Thơm) · Định mức: <strong style="color: var(--warning);">~1.5 đơn/ngày/bạn</strong>
                 </div>
             </div>
 
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px;">
                 <!-- Card 1: SALE -->
-                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 10px 12px;">
+                <div style="background: #FFFFFF; border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 8px; padding: 10px 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                        <span style="font-weight: 800; font-size: 0.78rem; color: var(--primary); text-transform: uppercase;"><i class='bx bx-dollar-circle'></i> 1. SALE (300M)</span>
-                        <span style="font-size: 0.68rem; background: rgba(212,175,55,0.15); color: var(--primary); padding: 1px 6px; border-radius: 4px; font-weight: 700;">44 New + 10 Up</span>
+                        <span style="font-weight: 800; font-size: 0.78rem; color: var(--text-main); text-transform: uppercase;"><i class='bx bx-dollar-circle' style="color: var(--primary);"></i> 1. SALE (300M)</span>
+                        <span style="font-size: 0.68rem; background: rgba(212,175,55,0.15); color: #8D6E63; padding: 1px 6px; border-radius: 4px; font-weight: 700;">44 New + 10 Up</span>
                     </div>
-                    <div style="font-size: 0.73rem; color: var(--text-muted); line-height: 1.45;">
-                        • <b>Khánh Linh:</b> 150M (22 New + 5 Up) — Duy trì phong độ<br>
-                        • <b>Hồng Thơm:</b> 150M (22 New + 5 Up) — Bứt phá x2<br>
-                        • <i>Ưu tiên Combo Topik 13–14M, hạn chế đơn lẻ &lt;1M</i>
+                    <div style="font-size: 0.74rem; color: var(--text-muted); line-height: 1.5;">
+                        • <b>Khánh Linh:</b> 150.000.000 VNĐ (22 New + 5 Up)<br>
+                        • <b>Hồng Thơm:</b> 150.000.000 VNĐ (22 New + 5 Up)<br>
+                        • <i>Định mức TB: ~1.5 đơn/ngày · AOV mục tiêu: 5.56M</i>
                     </div>
                 </div>
 
                 <!-- Card 2: MKT -->
-                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 10px 12px;">
+                <div style="background: #FFFFFF; border: 1px solid rgba(21, 101, 192, 0.2); border-radius: 8px; padding: 10px 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                        <span style="font-weight: 800; font-size: 0.78rem; color: var(--info); text-transform: uppercase;"><i class='bx bx-line-chart'></i> 2. MKT (Huyền)</span>
-                        <span style="font-size: 0.68rem; background: rgba(33,150,243,0.15); color: var(--info); padding: 1px 6px; border-radius: 4px; font-weight: 700;">280 Leads</span>
+                        <span style="font-weight: 800; font-size: 0.78rem; color: var(--text-main); text-transform: uppercase;"><i class='bx bx-line-chart' style="color: var(--info);"></i> 2. MKT (Huyền)</span>
+                        <span style="font-size: 0.68rem; background: rgba(21,101,192,0.12); color: var(--info); padding: 1px 6px; border-radius: 4px; font-weight: 700;">280 Leads</span>
                     </div>
-                    <div style="font-size: 0.73rem; color: var(--text-muted); line-height: 1.45;">
-                        • <b>Leads SĐT:</b> 280 · CPL <b>&lt; 100K</b> · CP/DT <b>&lt; 15%</b><br>
+                    <div style="font-size: 0.74rem; color: var(--text-muted); line-height: 1.5;">
+                        • <b>Leads SĐT:</b> 280 · CPL <b>&lt; 100K</b> · CP Ads/DT <b>&lt; 15%</b><br>
                         • <b>Fanpage:</b> +100 follow · <b>Cộng đồng:</b> +300 TV<br>
                         • <b>Livestream:</b> C Thuý & Minji TB <b>&gt; 30 mắt/buổi</b>
                     </div>
                 </div>
 
                 <!-- Card 3: QLCL -->
-                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 10px 12px;">
+                <div style="background: #FFFFFF; border: 1px solid rgba(46, 125, 50, 0.2); border-radius: 8px; padding: 10px 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                        <span style="font-weight: 800; font-size: 0.78rem; color: var(--success); text-transform: uppercase;"><i class='bx bx-award'></i> 3. QLCL (Admin)</span>
-                        <span style="font-size: 0.68rem; background: rgba(76,175,80,0.15); color: var(--success); padding: 1px 6px; border-radius: 4px; font-weight: 700;">Chuẩn T8</span>
+                        <span style="font-weight: 800; font-size: 0.78rem; color: var(--text-main); text-transform: uppercase;"><i class='bx bx-award' style="color: var(--success);"></i> 3. QLCL (Admin)</span>
+                        <span style="font-size: 0.68rem; background: rgba(46,125,50,0.12); color: var(--success); padding: 1px 6px; border-radius: 4px; font-weight: 700;">5 Lớp Kết Khóa</span>
                     </div>
-                    <div style="font-size: 0.73rem; color: var(--text-muted); line-height: 1.45;">
+                    <div style="font-size: 0.74rem; color: var(--text-muted); line-height: 1.5;">
                         • <b>Hài lòng CSAT:</b> &ge; 4.5/5 · <b>Đạt chuẩn:</b> &ge; 85%<br>
-                        • <b>Chuyên cần:</b> &ge; 80% (Cải thiện GT2K138ON)<br>
-                        • <b>Hoàn thành:</b> &ge; 90% · <b>BTVN đúng hạn:</b> &gt; 80%
+                        • <b>Chuyên cần:</b> &ge; 80% · <b>Hoàn thành:</b> &ge; 90%<br>
+                        • <b>BTVN nộp đúng hạn:</b> &gt; 80%
                     </div>
                 </div>
 
                 <!-- Card 4: ACTION -->
-                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 10px 12px;">
+                <div style="background: #FFFFFF; border: 1px solid rgba(198, 40, 40, 0.2); border-radius: 8px; padding: 10px 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                        <span style="font-weight: 800; font-size: 0.78rem; color: var(--danger); text-transform: uppercase;"><i class='bx bxs-hot bx-tada'></i> 4. HÀNH ĐỘNG NÓNG</span>
-                        <span style="font-size: 0.68rem; background: rgba(244,67,54,0.15); color: var(--danger); padding: 1px 6px; border-radius: 4px; font-weight: 700;">Deadline 15/9</span>
+                        <span style="font-weight: 800; font-size: 0.78rem; color: var(--text-main); text-transform: uppercase;"><i class='bx bx-calendar-check' style="color: var(--danger);"></i> 4. TIẾN ĐỘ TRỌNG TÂM</span>
+                        <span style="font-size: 0.68rem; background: rgba(198,40,40,0.12); color: var(--danger); padding: 1px 6px; border-radius: 4px; font-weight: 700;">Mục tiêu tuần</span>
                     </div>
-                    <div style="font-size: 0.73rem; color: var(--text-muted); line-height: 1.45;">
-                        • <b>TOPIK34K114ON</b> (08/9 - Vũ Dần+Minji): <i>Push data gấp!</i><br>
-                        • <b>CS-01 (1-10/9):</b> Cọc sớm tặng PXPA (300K), Combo tặng Elearning (1.5M)<br>
-                        • <b>Upsale T8:</b> T1 gọi 100% 41 HV; 15/9 chốt cọc &ge; 6/10 HV UP
+                    <div style="font-size: 0.74rem; color: var(--text-muted); line-height: 1.5;">
+                        • <b>Lớp TOPIK34K114ON:</b> Khai giảng 08/9 (Vũ Dần + Minji)<br>
+                        • <b>Chính sách CS-01:</b> Cọc sớm (1-10/9) tặng PXPA (300K)<br>
+                        • <b>Upsell:</b> Chăm sóc học viên kết khóa, chỉ tiêu 10 đơn Up
                     </div>
                 </div>
             </div>
@@ -1304,20 +1307,10 @@ function renderSalesList() {
                 ? 'background: rgba(255, 152, 0, 0.15); color: #FFB74D; border: 1px solid rgba(255, 152, 0, 0.3);'
                 : 'background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.1);');
 
-        let roleBadge = '';
-        if (selectedMonth === "09-2026") {
-            if (name === 'Khánh Linh') {
-                roleBadge = `<div style="font-size: 0.65rem; color: var(--primary); font-weight: 600; margin-top: 2px;">Duy trì phong độ · Combo Topik 13–14M</div>`;
-            } else if (name === 'Hồng Thơm') {
-                roleBadge = `<div style="font-size: 0.65rem; color: var(--warning); font-weight: 600; margin-top: 2px;">Bứt phá x2 · Combo Topik 13–14M</div>`;
-            }
-        }
-
         return `
         <tr style="background: rgba(255, 255, 255, 0.02); transition: background 0.2s;">
             <td style="padding: 10px; vertical-align: middle; width: 22%;">
                 <div style="font-weight: 700; font-size: 0.82rem; color: var(--text-main);">${name}</div>
-                ${roleBadge}
             </td>
 
             <td style="padding: 10px; vertical-align: middle; width: 24%;">
