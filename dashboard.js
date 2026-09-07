@@ -859,24 +859,24 @@ function renderWeeklySprint() {
 
     container.style.display = 'block';
     container.innerHTML = `
-        <div style="background: var(--bg-panel); border: 1.5px solid rgba(212, 175, 55, 0.4); padding: 16px 20px; border-radius: var(--card-radius); box-shadow: var(--glass-shadow); margin-bottom: 20px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(121, 85, 72, 0.12); padding-bottom: 10px; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <span style="background: var(--primary); color: #fff; padding: 3px 8px; border-radius: 6px; font-weight: 800; font-size: 0.72rem; letter-spacing: 0.5px;">THÁNG 09/2026</span>
-                    <h3 style="margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: -0.2px;">
+        <div style="background: var(--bg-panel); border: 1.5px solid rgba(212, 175, 55, 0.35); padding: 18px 22px; border-radius: var(--card-radius); box-shadow: var(--glass-shadow); margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(121, 85, 72, 0.12); padding-bottom: 10px; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="background: var(--primary); color: #fff; padding: 4px 10px; border-radius: 6px; font-weight: 800; font-size: 0.74rem; letter-spacing: 0.6px;">THÁNG 09/2026</span>
+                    <h3 style="margin: 0; font-size: 1rem; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.2px;">
                         <i class='bx bxs-bullseye' style="color: var(--primary);"></i> BỨC TRANH MỤC TIÊU & CHỈ SỐ THÁNG 9
                     </h3>
                 </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;">
                 <!-- Card 1: SALE -->
-                <div style="background: #FFFFFF; border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 8px; padding: 10px 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                        <span style="font-weight: 800; font-size: 0.78rem; color: var(--text-main); text-transform: uppercase;"><i class='bx bx-dollar-circle' style="color: var(--primary);"></i> 1. SALE (300M)</span>
-                        <span style="font-size: 0.68rem; background: rgba(212,175,55,0.15); color: #8D6E63; padding: 1px 6px; border-radius: 4px; font-weight: 700;">44 New + 10 Up</span>
+                <div style="background: #FFFFFF; border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 10px; padding: 14px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span style="font-weight: 800; font-size: 0.82rem; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.3px;"><i class='bx bx-dollar-circle' style="color: var(--primary); font-size: 1rem; vertical-align: middle;"></i> 1. SALE (300M)</span>
+                        <span style="font-size: 0.7rem; background: rgba(212,175,55,0.15); color: #8D6E63; padding: 2px 8px; border-radius: 4px; font-weight: 700;">44 New + 10 Up</span>
                     </div>
-                    <div style="font-size: 0.74rem; color: var(--text-muted); line-height: 1.5;">
+                    <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.75;">
                         • <b>Khánh Linh:</b> 150.000.000 VNĐ (22 New + 5 Up)<br>
                         • <b>Hồng Thơm:</b> 150.000.000 VNĐ (22 New + 5 Up)<br>
                         • <i>AOV mục tiêu: 5.56M / đơn</i>
@@ -884,12 +884,12 @@ function renderWeeklySprint() {
                 </div>
 
                 <!-- Card 2: MKT -->
-                <div style="background: #FFFFFF; border: 1px solid rgba(21, 101, 192, 0.2); border-radius: 8px; padding: 10px 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                        <span style="font-weight: 800; font-size: 0.78rem; color: var(--text-main); text-transform: uppercase;"><i class='bx bx-line-chart' style="color: var(--info);"></i> 2. MKT (Huyền)</span>
-                        <span style="font-size: 0.68rem; background: rgba(21,101,192,0.12); color: var(--info); padding: 1px 6px; border-radius: 4px; font-weight: 700;">280 Leads</span>
+                <div style="background: #FFFFFF; border: 1px solid rgba(21, 101, 192, 0.2); border-radius: 10px; padding: 14px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span style="font-weight: 800; font-size: 0.82rem; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.3px;"><i class='bx bx-line-chart' style="color: var(--info); font-size: 1rem; vertical-align: middle;"></i> 2. MKT (Huyền)</span>
+                        <span style="font-size: 0.7rem; background: rgba(21,101,192,0.12); color: var(--info); padding: 2px 8px; border-radius: 4px; font-weight: 700;">280 Leads</span>
                     </div>
-                    <div style="font-size: 0.74rem; color: var(--text-muted); line-height: 1.5;">
+                    <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.75;">
                         • <b>Leads SĐT:</b> 280 · CPL <b>&lt; 100K</b> · CP Ads/DT <b>&lt; 15%</b><br>
                         • <b>Fanpage:</b> +100 follow · <b>Cộng đồng:</b> +300 TV<br>
                         • <b>Livestream:</b> C Thuý & Minji TB <b>&gt; 30 mắt/buổi</b>
@@ -897,12 +897,12 @@ function renderWeeklySprint() {
                 </div>
 
                 <!-- Card 3: QLCL -->
-                <div style="background: #FFFFFF; border: 1px solid rgba(46, 125, 50, 0.2); border-radius: 8px; padding: 10px 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                        <span style="font-weight: 800; font-size: 0.78rem; color: var(--text-main); text-transform: uppercase;"><i class='bx bx-award' style="color: var(--success);"></i> 3. QLCL (Admin)</span>
-                        <span style="font-size: 0.68rem; background: rgba(46,125,50,0.12); color: var(--success); padding: 1px 6px; border-radius: 4px; font-weight: 700;">5 Lớp Kết Khóa</span>
+                <div style="background: #FFFFFF; border: 1px solid rgba(46, 125, 50, 0.2); border-radius: 10px; padding: 14px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span style="font-weight: 800; font-size: 0.82rem; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.3px;"><i class='bx bx-award' style="color: var(--success); font-size: 1rem; vertical-align: middle;"></i> 3. QLCL (Admin)</span>
+                        <span style="font-size: 0.7rem; background: rgba(46,125,50,0.12); color: var(--success); padding: 2px 8px; border-radius: 4px; font-weight: 700;">5 Lớp Kết Khóa</span>
                     </div>
-                    <div style="font-size: 0.74rem; color: var(--text-muted); line-height: 1.5;">
+                    <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.75;">
                         • <b>Hài lòng CSAT:</b> &ge; 4.5/5 · <b>Đạt chuẩn:</b> &ge; 85%<br>
                         • <b>Chuyên cần:</b> &ge; 80% · <b>Hoàn thành:</b> &ge; 90%<br>
                         • <b>BTVN nộp đúng hạn:</b> &gt; 80%
@@ -910,12 +910,12 @@ function renderWeeklySprint() {
                 </div>
 
                 <!-- Card 4: ACTION -->
-                <div style="background: #FFFFFF; border: 1px solid rgba(198, 40, 40, 0.2); border-radius: 8px; padding: 10px 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                        <span style="font-weight: 800; font-size: 0.78rem; color: var(--text-main); text-transform: uppercase;"><i class='bx bx-calendar-check' style="color: var(--danger);"></i> 4. TIẾN ĐỘ TRỌNG TÂM</span>
-                        <span style="font-size: 0.68rem; background: rgba(198,40,40,0.12); color: var(--danger); padding: 1px 6px; border-radius: 4px; font-weight: 700;">Mục tiêu tuần</span>
+                <div style="background: #FFFFFF; border: 1px solid rgba(198, 40, 40, 0.2); border-radius: 10px; padding: 14px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span style="font-weight: 800; font-size: 0.82rem; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.3px;"><i class='bx bx-calendar-check' style="color: var(--danger); font-size: 1rem; vertical-align: middle;"></i> 4. TIẾN ĐỘ TRỌNG TÂM</span>
+                        <span style="font-size: 0.7rem; background: rgba(198,40,40,0.12); color: var(--danger); padding: 2px 8px; border-radius: 4px; font-weight: 700;">Mục tiêu tuần</span>
                     </div>
-                    <div style="font-size: 0.74rem; color: var(--text-muted); line-height: 1.5;">
+                    <div style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.75;">
                         • <b>Lớp TOPIK34K114ON:</b> Khai giảng 08/9 (Vũ Dần + Minji)<br>
                         • <b>Chính sách CS-01:</b> Cọc sớm (1-10/9) tặng PXPA (300K)<br>
                         • <b>Upsell:</b> Chăm sóc học viên kết khóa, chỉ tiêu 10 đơn Up
