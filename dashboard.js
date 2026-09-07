@@ -860,9 +860,6 @@ function renderWeeklySprint() {
                         <i class='bx bxs-bullseye' style="color: var(--primary);"></i> BỨC TRANH MỤC TIÊU & CHỈ SỐ THÁNG 9
                     </h3>
                 </div>
-                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">
-                    <i class='bx bx-group'></i> Nhân sự Sale: <strong style="color: var(--text-main);">2 TVV</strong> (Khánh Linh & Hồng Thơm) · Định mức: <strong style="color: var(--warning);">~1.5 đơn/ngày/bạn</strong>
-                </div>
             </div>
 
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px;">
@@ -875,7 +872,7 @@ function renderWeeklySprint() {
                     <div style="font-size: 0.74rem; color: var(--text-muted); line-height: 1.5;">
                         • <b>Khánh Linh:</b> 150.000.000 VNĐ (22 New + 5 Up)<br>
                         • <b>Hồng Thơm:</b> 150.000.000 VNĐ (22 New + 5 Up)<br>
-                        • <i>Định mức TB: ~1.5 đơn/ngày · AOV mục tiêu: 5.56M</i>
+                        • <i>AOV mục tiêu: 5.56M / đơn</i>
                     </div>
                 </div>
 
