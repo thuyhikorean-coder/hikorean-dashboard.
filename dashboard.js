@@ -505,20 +505,24 @@ function processAllData(data) {
             if (!isFromTargetMonth(row[0])) return;
             const name = row[1]?.trim();
             if (!name) return;
-            const interaction = parseInt(row[2]) || 0;
-            const deepLeads = parseInt(row[5]) || 0;
+            const inboxPC = parseInt(row[2]) || 0;
+            const dataPC = parseInt(row[3]) || 0;
+            const totalPC = inboxPC + dataPC; // Tổng Data PC (Inbox PC + Data PC)
+            const totalRemind = parseInt(row[5]) || 0; // Tổng tương tác/remind khách cũ
+            const deepLeads = parseInt(row[6]) || 0; // Số Lead tương tác sâu/nhiệt (>3 câu)
             const stdDate = standardizeDate(row[0]);
             
-            if (!engagement[name]) engagement[name] = { interaction: 0, deepLeads: 0, dailyPC: 0, dailyDeep: 0, latestDate: '' };
+            if (!engagement[name]) engagement[name] = { interaction: 0, deepLeads: 0, totalRemind: 0, dailyPC: 0, dailyDeep: 0, latestDate: '' };
             
             // Monthly accumulation
-            engagement[name].interaction += interaction;
+            engagement[name].interaction += totalPC;
             engagement[name].deepLeads += deepLeads;
+            engagement[name].totalRemind += totalRemind;
             
             // Track latest date per person (only if they have actual data)
-            if ((interaction > 0 || deepLeads > 0) && stdDate > (engagement[name].latestDate || '')) {
+            if ((totalPC > 0 || deepLeads > 0) && stdDate > (engagement[name].latestDate || '')) {
                 engagement[name].latestDate = stdDate;
-                engagement[name].dailyPC = interaction;
+                engagement[name].dailyPC = totalPC;
                 engagement[name].dailyDeep = deepLeads;
             }
         });
@@ -546,8 +550,8 @@ function processAllData(data) {
 
         if (Object.keys(engagement).length === 0 || !engagement['Khánh Linh']) {
             if (selectedMonth === "09-2026") {
-                if (!engagement['Khánh Linh']) engagement['Khánh Linh'] = { interaction: 76, deepLeads: 337, dailyPC: 11, dailyDeep: 40, latestDate: '2026-09-06' };
-                if (!engagement['Hồng Thơm']) engagement['Hồng Thơm'] = { interaction: 54, deepLeads: 364, dailyPC: 13, dailyDeep: 63, latestDate: '2026-09-06' };
+                if (!engagement['Khánh Linh']) engagement['Khánh Linh'] = { interaction: 127, deepLeads: 75, totalRemind: 431, dailyPC: 23, dailyDeep: 12, latestDate: '2026-09-07' };
+                if (!engagement['Hồng Thơm']) engagement['Hồng Thơm'] = { interaction: 88, deepLeads: 83, totalRemind: 428, dailyPC: 12, dailyDeep: 12, latestDate: '2026-09-07' };
             }
         }
 
