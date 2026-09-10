@@ -217,8 +217,6 @@ function processAllData(data) {
         }
         let revByCourse = {}, comboCount = {}, orderCount = {}, dailyMap = {}, bonusMap = {};
         let seenStudentsBySale = new Set();
-        let seenMktAdsStudents = {};
-
         rowsSale.slice(1).forEach(row => {
             if (!isFromTargetMonth(row[0])) return;
             const status = row[9]?.toUpperCase();
@@ -227,31 +225,18 @@ function processAllData(data) {
             const isNewOrder = type.includes('MỚI') || type.includes('NEW');
             const isUpOrder = type.includes('CŨ') || type.includes('UPSELL') || type.includes('UP');
             const isMktAds = (source.includes('MKT-ADS') || source.includes('MKT ADS') || source.includes('MKT- ADS')) && !source.includes('RE-MARKETING') && !source.includes('RE- MARKETING');
-            const isNewMktAds = isMktAds && (isNewOrder || (!isNewOrder && !isUpOrder));
 
             // Unique student identification
             const studentName = (row[1] || '').trim().toLowerCase();
             const rawPhone = (row[2] || '').trim().replace(/[^0-9]/g, '');
             const studentKey = rawPhone.length >= 6 ? rawPhone : studentName;
 
-            // 1. MKT Ads New Revenue = Doanh thu Khách mới từ MKT Ads + Công nợ hợp đồng
-            if (isNewMktAds && (status === 'DONE' || status === 'DEPOSIT' || status === 'PENDING')) {
-                const paidAmt = parseMoney(row[8]);
-                const fullContractVal = parseMoney(row[10]);
-                const effectiveAmt = fullContractVal > paidAmt ? fullContractVal : paidAmt;
+            // 1. MKT Ads New Revenue = Doanh thu nguồn MKT Ads từ đơn Khách mới + Công nợ
+            const isDebtOrder = type.includes('CÔNG NỢ') || type.includes('CONG NO');
+            const isTargetMktAds = isMktAds && (isNewOrder || isDebtOrder) && !isUpOrder;
 
-                if (studentKey) {
-                    if (seenMktAdsStudents[studentKey] === undefined) {
-                        seenMktAdsStudents[studentKey] = effectiveAmt;
-                        totalMktAdsRev += effectiveAmt;
-                    } else if (effectiveAmt > seenMktAdsStudents[studentKey]) {
-                        const diff = effectiveAmt - seenMktAdsStudents[studentKey];
-                        seenMktAdsStudents[studentKey] = effectiveAmt;
-                        totalMktAdsRev += diff;
-                    }
-                } else {
-                    totalMktAdsRev += effectiveAmt;
-                }
+            if (isTargetMktAds && (status === 'DONE' || status === 'DEPOSIT')) {
+                totalMktAdsRev += parseMoney(row[8]);
             }
 
             // 2. Sale Performance Metrics (Chỉ tính thực thu / cọc DONE & DEPOSIT, không tính PENDING)
