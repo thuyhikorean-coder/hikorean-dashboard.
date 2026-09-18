@@ -410,20 +410,12 @@
             <!-- Câu hỏi tiếp tục học -->
             <div class="form-group">
                 <label><i class='bx bx-rocket'></i> 6. Bạn sẽ tiếp tục học tiếp khoá sau chứ?</label>
-                <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 8px;">
-                    <label style="display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 0.95rem; cursor: pointer; padding: 12px 16px; border: 2px solid rgba(93, 64, 55, 0.15); border-radius: 10px; transition: all 0.2s ease; background: #fff;">
-                        <input type="radio" name="continueStudy" value="Chắc chắn. Tôi sẽ học tiếp và không bỏ cuộc" required style="accent-color: var(--primary); width: 18px; height: 18px;">
-                        Chắc chắn. Tôi sẽ học tiếp và không bỏ cuộc 💪
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 0.95rem; cursor: pointer; padding: 12px 16px; border: 2px solid rgba(93, 64, 55, 0.15); border-radius: 10px; transition: all 0.2s ease; background: #fff;">
-                        <input type="radio" name="continueStudy" value="Tôi đang cân nhắc" style="accent-color: var(--primary); width: 18px; height: 18px;">
-                        Tôi đang cân nhắc 🤔
-                    </label>
-                    <label style="display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 0.95rem; cursor: pointer; padding: 12px 16px; border: 2px solid rgba(93, 64, 55, 0.15); border-radius: 10px; transition: all 0.2s ease; background: #fff;">
-                        <input type="radio" name="continueStudy" value="Tôi có việc nên không tham gia được" style="accent-color: var(--primary); width: 18px; height: 18px;">
-                        Tôi có việc nên không tham gia được 😔
-                    </label>
-                </div>
+                <select id="continueStudy" name="continueStudy" required>
+                    <option value="" disabled selected>-- Vui lòng chọn --</option>
+                    <option value="Chắc chắn. Tôi sẽ học tiếp và không bỏ cuộc">💪 Chắc chắn. Tôi sẽ học tiếp và không bỏ cuộc</option>
+                    <option value="Tôi đang cân nhắc">🤔 Tôi đang cân nhắc</option>
+                    <option value="Tôi có việc nên không tham gia được">😔 Tôi có việc nên không tham gia được</option>
+                </select>
             </div>
 
             <!-- Ý kiến khác -->
@@ -567,8 +559,8 @@
             }
 
             // Check if continueStudy is selected
-            const continueStudyChecked = document.querySelector('input[name="continueStudy"]:checked');
-            if (!continueStudyChecked) {
+            const continueStudyVal = document.getElementById('continueStudy').value;
+            if (!continueStudyVal) {
                 alert("Vui lòng cho biết bạn có tiếp tục học khoá sau không nhé!");
                 return;
             }
@@ -598,7 +590,7 @@
                 formData.append('r5', r5);
                 formData.append('avg', avg);
                 formData.append('comments', document.getElementById('comments').value || "");
-                formData.append('continueStudy', document.querySelector('input[name="continueStudy"]:checked').value);
+                formData.append('continueStudy', document.getElementById('continueStudy').value);
 
                 // -- PHẦN NÀY ĐỂ MỞ RỘNG GỬI LÊN GOOGLE SHEETS --
                 const GOOGLE_APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyhzOcbHS9mHIo3w-80WHmYPaoUR6hEBNHZXsRv06t8bb8BYnYxHuu0JUt_DOzrQINV/exec"; // Sẽ điền link Apps Script của Google Sheets vào đây
