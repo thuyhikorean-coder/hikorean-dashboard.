@@ -1,6 +1,6 @@
 const CONFIG = {
     SALE_REVENUE_URL: 'https://docs.google.com/spreadsheets/d/19XKkxjrQjs7zoeGMQFPyRhAORW5tD14FhvQP-Oj8Scw/gviz/tq?tqx=out:csv&gid=1757451089',
-    MKT_ADS_URL: 'https://docs.google.com/spreadsheets/d/1VpBHpfY7foI6gLCCm62ABkXOYEMFlo_-/gviz/tq?tqx=out:csv&gid=323525620',
+    MKT_ADS_URL: 'https://docs.google.com/spreadsheets/d/1VpBHpfY7foI6gLCCm62ABkXOYEMFlo_-/gviz/tq?tqx=out:csv&gid=394632649',
     QLCL_DAILY_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQY7qRLepn6kX8qNTuJqABTf5Xm7UBm6bPs89gSAZ6_fNbFfE6ULg8Jlxab5TD3oA/pub?gid=1405301812&single=true&output=csv',
     QLCL_OUTCOME_URL: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQY7qRLepn6kX8qNTuJqABTf5Xm7UBm6bPs89gSAZ6_fNbFfE6ULg8Jlxab5TD3oA/pub?gid=531665888&single=true&output=csv',
     SALE_TRACKING_URL: 'https://docs.google.com/spreadsheets/d/19XKkxjrQjs7zoeGMQFPyRhAORW5tD14FhvQP-Oj8Scw/export?format=csv&gid=11036957',
@@ -440,15 +440,57 @@ function processAllData(data) {
         };
     }
 
-    // 2. CUSTOMER
+    // 2. CUSTOMER — Parse new MKT matrix format (Page chính only)
     if (rowsMkt.length > 1) {
         let mktCost = 0, mktLeads = 0, mktData = 0;
-        rowsMkt.slice(1).forEach(row => {
-            if (!isFromTargetMonth(row[0])) return;
-            if (row[1]) mktCost += parseMoney(row[1]);
-            if (row[4]) mktData += (parseInt(row[4].replace(/[^0-9]/g, '')) || 0);
-            if (row[5]) mktLeads += (parseInt(row[5].replace(/[^0-9]/g, '')) || 0);
-        });
+
+        // Find the month block matching selected month (e.g. "T09" for month 09)
+        const monthLabel = 'T' + selM; // e.g. "T09", "T08"
+        let blockStartIdx = -1;
+        for (let i = 0; i < rowsMkt.length; i++) {
+            if (rowsMkt[i][0] && rowsMkt[i][0].trim() === monthLabel) {
+                blockStartIdx = i;
+                break;
+            }
+        }
+
+        if (blockStartIdx >= 0) {
+            // The month header row has dates in columns 3+ (col 0=month, col 1=empty, col 2=empty, col 3+=day dates)
+            // Rows below the header contain metrics. We scan until we hit an empty row or next month block.
+            const blockEnd = Math.min(blockStartIdx + 25, rowsMkt.length); // max ~22 rows per block
+
+            for (let i = blockStartIdx + 1; i < blockEnd; i++) {
+                const label = (rowsMkt[i][0] || '').trim();
+                if (!label || label.startsWith('Max') || label.startsWith('Chỉ số')) break; // next block
+
+                if (label === 'Chi phí Page chính') {
+                    // Sum daily cost values from columns 3 onwards
+                    for (let c = 3; c < rowsMkt[i].length; c++) {
+                        if (rowsMkt[i][c]) mktCost += parseMoney(rowsMkt[i][c]);
+                    }
+                } else if (label === 'Page chính - Mess') {
+                    // Sum daily mess counts (col 1 has total, but we use col 1 directly if available)
+                    const totalVal = rowsMkt[i][1];
+                    if (totalVal) {
+                        mktData = parseInt(totalVal.toString().replace(/[^0-9]/g, '')) || 0;
+                    } else {
+                        for (let c = 3; c < rowsMkt[i].length; c++) {
+                            if (rowsMkt[i][c]) mktData += (parseInt(rowsMkt[i][c].toString().replace(/[^0-9]/g, '')) || 0);
+                        }
+                    }
+                } else if (label === 'Page chính - Lead') {
+                    const totalVal = rowsMkt[i][1];
+                    if (totalVal) {
+                        mktLeads = parseInt(totalVal.toString().replace(/[^0-9]/g, '')) || 0;
+                    } else {
+                        for (let c = 3; c < rowsMkt[i].length; c++) {
+                            if (rowsMkt[i][c]) mktLeads += (parseInt(rowsMkt[i][c].toString().replace(/[^0-9]/g, '')) || 0);
+                        }
+                    }
+                }
+            }
+        }
+
         DASHBOARD_DATA.summary.mktCost = mktCost;
 
         // Fix: MKT Cost Ratio is strictly against MKT-ADS revenue sum (totalMktAdsRevenue)
