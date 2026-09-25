@@ -672,7 +672,17 @@ function processAllData(data) {
         if (finishedClasses.length === 0) {
             const selector = document.getElementById('monthSelector');
             const selectedMonth = selector ? selector.value : "09-2026";
-            if (selectedMonth === "09-2026") {
+            if (selectedMonth === "10-2026") {
+                finishedClasses = [
+                    { id: "NT-MATCHUM1K190ON", teacher: "Trịnh Mai Linh", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "NT-MATCHUM4K118ON", teacher: "Trần Thị Cẩm Tú", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "NT-SCK170OFF", teacher: "Bùi Ngọc Anh", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "NT-SCK188ON", teacher: "Lê Ngọc Ánh", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "NT-SCK189ON", teacher: "Đặng Thị Thúy", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "TOPIK34K04OFF", teacher: "Lê Ngọc Ánh", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
+                    { id: "TOPIK34K113ON", teacher: "Đoàn Thị Thu Hằng", students: "-", passRate: "- %", csat: "0", attendance: "- %" }
+                ];
+            } else if (selectedMonth === "09-2026") {
                 finishedClasses = [
                     { id: "MATCHUM2K191OFF 1:2", teacher: "Lê Ngọc Ánh", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
                     { id: "NT-MATCHUM1K189ON", teacher: "Nguyễn Thị Thu Lan", students: "-", passRate: "- %", csat: "0", attendance: "- %" },
